@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>お知らせ管理 | pol</title>
+    <title>管理ダッシュボード | pol</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -14,319 +14,520 @@
     <link rel="stylesheet" href="style.css">
     <style>
         .admin-container {
-            max-width: 900px;
-            margin: 120px auto 50px;
-            padding: 40px;
+            max-width: 1000px;
+            margin: 110px auto 50px;
+            padding: 30px;
             background: var(--color-white);
-            border-radius: 15px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
         }
 
-        .admin-header {
-            text-align: center;
-            margin-bottom: 40px;
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
             padding-bottom: 20px;
             border-bottom: 2px solid var(--color-secondary);
         }
 
-        .admin-header h1 {
+        .dashboard-header h1 {
             color: var(--color-primary);
-            font-size: 2rem;
-            margin-bottom: 10px;
-        }
-
-        .admin-header p {
-            color: var(--color-text);
-            opacity: 0.7;
-        }
-
-        .add-news-section {
-            background: linear-gradient(135deg, rgba(232, 220, 196, 0.3) 0%, rgba(212, 165, 154, 0.2) 100%);
-            padding: 30px;
-            border-radius: 10px;
-            margin-bottom: 40px;
-        }
-
-        .add-news-section h2 {
-            color: var(--color-primary);
-            font-size: 1.3rem;
-            margin-bottom: 20px;
-        }
-
-        .news-input-group {
+            font-size: 1.8rem;
+            margin: 0;
             display: flex;
-            gap: 15px;
-            margin-bottom: 15px;
+            align-items: center;
+            gap: 12px;
         }
 
-        .news-input-group input {
-            flex: 1;
+        .dashboard-card {
+            background: #fff;
+            border: 1px solid #eee;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
         }
 
-        .news-list-section h2 {
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 700;
             color: var(--color-primary);
-            font-size: 1.3rem;
             margin-bottom: 20px;
-        }
-
-        .admin-news-item {
+            padding-bottom: 10px;
+            border-bottom: 1px solid #f9f9f9;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 15px;
-            border: 1px solid #E8DCC4;
+        }
+
+        /* リストテーブル形式 */
+        .list-container {
+            margin-bottom: 15px;
+        }
+
+        .list-header {
+            display: flex;
+            padding: 10px 15px;
+            background: #fcfcfc;
             border-radius: 8px;
-            margin-bottom: 10px;
-            transition: var(--transition-base);
+            font-weight: 600;
+            color: #888;
+            font-size: 0.8rem;
+            border-bottom: 1px solid #eee;
         }
 
-        .admin-news-item:hover {
-            background: rgba(232, 220, 196, 0.2);
+        .list-row {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            border-bottom: 1px solid #f5f5f5;
+            transition: background 0.2s;
+            gap: 15px;
         }
 
-        .admin-news-info {
+        .list-row:hover {
+            background: #fafafa;
+        }
+
+        .col-name {
+            flex: 2;
+            font-weight: 500;
+        }
+
+        .col-price {
+            flex: 0.8;
+            color: #f57c00;
+            font-weight: 600;
+        }
+
+        .col-category {
             flex: 1;
         }
 
-        .admin-news-date {
-            font-weight: 700;
+        .col-date {
+            flex: 1;
+            font-weight: 600;
             color: var(--color-primary);
-            margin-right: 15px;
         }
 
-        .admin-news-content {
-            color: var(--color-text);
+        .col-content {
+            flex: 4;
         }
 
-        .btn-delete {
-            background-color: #e74c3c;
+        .col-action {
+            flex: 0.3;
+            text-align: right;
+        }
+
+        .tag-category {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            background: #fff3e0;
+            color: #f57c00;
+            font-weight: 500;
+        }
+
+        /* 1行追加フォーム */
+        .inline-add-form {
+            display: flex;
+            gap: 10px;
+            padding: 15px;
+            background: #fdfdfd;
+            border: 1px dashed #ddd;
+            border-radius: 12px;
+            margin-top: 10px;
+            align-items: center;
+        }
+
+        .inline-add-form .form-input {
+            margin-bottom: 0;
+            padding: 10px;
+            font-size: 0.9rem;
+            border: 1px solid #ddd;
+            background: #fff;
+        }
+
+        /* ボタンスタイル */
+        .footer-buttons {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .btn-main {
+            background: #f57c00;
             color: white;
-            padding: 8px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: var(--transition-base);
-        }
-
-        .btn-delete:hover {
-            background-color: #c0392b;
-            transform: translateY(-2px);
-        }
-
-        .btn-download {
-            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
-            color: white;
-            padding: 15px 40px;
+            padding: 10px 25px;
             border: none;
             border-radius: 50px;
-            font-size: 1.1rem;
-            font-weight: 500;
+            font-weight: 600;
             cursor: pointer;
-            transition: var(--transition-base);
-            display: block;
-            margin: 30px auto 0;
+            font-size: 0.9rem;
+            transition: transform 0.2s, box-shadow 0.2s;
         }
 
-        .btn-download:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(76, 175, 80, 0.3);
+        .btn-main:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(245, 124, 0, 0.2);
+        }
+
+        .btn-text {
+            background: none;
+            border: none;
+            color: #999;
+            text-decoration: underline;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .btn-icon-delete {
+            background: none;
+            border: none;
+            color: #ccc;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        .btn-icon-delete:hover {
+            color: #e74c3c;
+            background: #fff0f0;
+        }
+
+        .sync-badge {
+            font-size: 0.7rem;
+            padding: 4px 12px;
+            background: #e8f5e9;
+            color: #2e7d32;
+            border-radius: 50px;
+            font-weight: 600;
         }
 
         .instruction-box {
-            background: #fff3cd;
-            border-left: 4px solid #ffc107;
+            background: #fcfcfc;
+            border: 1px solid #eee;
             padding: 20px;
-            border-radius: 5px;
-            margin-top: 30px;
-        }
-
-        .instruction-box h3 {
-            color: #856404;
-            font-size: 1.1rem;
-            margin-bottom: 10px;
-        }
-
-        .instruction-box ol {
-            margin-left: 20px;
-            color: #856404;
-        }
-
-        .instruction-box li {
-            margin-bottom: 8px;
+            border-radius: 10px;
+            margin-top: 40px;
+            font-size: 0.85rem;
+            color: #777;
+            line-height: 1.6;
         }
 
         .back-link {
-            display: inline-block;
-            margin-top: 20px;
+            display: block;
+            text-align: center;
+            margin-top: 30px;
             color: var(--color-primary);
-            text-decoration: underline;
+            text-decoration: none;
+            font-weight: 500;
         }
 
-        .back-link:hover {
-            color: var(--color-text);
+        /* ゴミ箱アイコン */
+        .icon-trash::before {
+            content: "";
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            background-color: currentColor;
+            -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 448 512'%3E%3Cpath d='M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z'/%3E%3C/svg%3E") no-repeat center;
+            mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 448 512'%3E%3Cpath d='M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z'/%3E%3C/svg%3E") no-repeat center;
+        }
+
+        @media (max-width: 768px) {
+            .inline-add-form {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .list-header {
+                display: none;
+            }
+
+            .list-row {
+                flex-wrap: wrap;
+            }
+
+            .col-name {
+                flex: 1 1 100%;
+                font-size: 1.1rem;
+            }
+
+            .col-date {
+                flex: 1 1 100%;
+            }
         }
     </style>
 </head>
 
 <body>
     <div class="admin-container">
-        <div class="admin-header">
-            <h1>📢 お知らせ管理</h1>
-            <p>お知らせの追加・削除を行えます</p>
+        <div class="dashboard-header">
+            <h1>⚙️ 管理ダッシュボード</h1>
+            <div class="sync-badge">Live Sync Active</div>
         </div>
 
-        <div class="add-news-section" style="background: linear-gradient(135deg, #e0f2f1 0%, #b2dfdb 100%);">
-            <h2>🆕 イベント・キャンペーン情報の追加</h2>
-            <div class="news-input-group">
-                <input type="date" id="event-date" class="form-input">
-                <input type="text" id="event-content" class="form-input" placeholder="イベント内容を入力...">
+        <!-- 商品管理 -->
+        <div class="dashboard-card">
+            <div class="card-title">🛒 お取り置き商品の設定</div>
+            <div class="list-container">
+                <div class="list-header">
+                    <div class="col-name">商品名</div>
+                    <div class="col-price">価格</div>
+                    <div class="col-category">カテゴリ</div>
+                    <div class="col-action"></div>
+                </div>
+                <div id="product-list-rows"></div>
             </div>
-            <button onclick="addEventItem()" class="btn btn-primary" style="background-color: #00897b;">追加
-                (イベント)</button>
-        </div>
-
-        <div class="news-list-section">
-            <h2>🎉 現在のイベント情報</h2>
-            <div id="admin-event-list"></div>
-        </div>
-
-        <button onclick="downloadJSON(eventData, 'event_news.json')" class="btn-download"
-            style="background: #00897b; margin-bottom: 50px;">📥 event_news.jsonをダウンロード</button>
-
-        <hr style="margin: 40px 0; border: 0; border-top: 2px dashed #ccc;">
-
-        <div class="add-news-section">
-            <h2>📰 更新記録の追加</h2>
-            <div class="news-input-group">
-                <input type="date" id="news-date" class="form-input">
-                <input type="text" id="news-content" class="form-input" placeholder="更新内容を入力...">
+            <div class="inline-add-form">
+                <input type="text" id="p-name" class="form-input" placeholder="商品名" style="flex: 2;">
+                <input type="number" id="p-price" class="form-input" placeholder="価格" style="flex: 0.8;">
+                <select id="p-category" class="form-input" style="flex: 1;">
+                    <option value="酵母パン">酵母パン</option>
+                    <option value="焼き菓子">焼き菓子</option>
+                    <option value="その他">その他</option>
+                </select>
+                <button onclick="addProduct()" class="btn btn-primary" style="margin:0; background:#f57c00;">追加</button>
             </div>
-            <button onclick="addNewsItem()" class="btn btn-primary">追加 (更新記録)</button>
-        </div>
-
-        <div class="news-list-section">
-            <h2>📜 現在の更新記録</h2>
-            <div id="admin-news-list">
-                <p style="text-align: center; color: #999;">読み込み中...</p>
+            <div class="footer-buttons">
+                <button onclick="downloadProducts()" class="btn-main">📥 products.json を書き出す</button>
+                <button onclick="syncData(PRODUCT_Key, 'products.json', 'products')" class="btn-text">サーバーから再取得</button>
             </div>
         </div>
 
-        <button onclick="downloadJSON(newsData, 'news.json')" class="btn-download">📥 news.jsonをダウンロード</button>
+        <!-- イベント情報 -->
+        <div class="dashboard-card">
+            <div class="card-title">🎉 イベント情報</div>
+            <div class="list-container">
+                <div class="list-header">
+                    <div class="col-date">日付</div>
+                    <div class="col-content">内容</div>
+                    <div class="col-action"></div>
+                </div>
+                <div id="event-list-rows"></div>
+            </div>
+            <div class="inline-add-form">
+                <input type="date" id="e-date" class="form-input" style="flex: 1;">
+                <input type="text" id="e-content" class="form-input" placeholder="イベント内容..." style="flex: 3;">
+                <button onclick="addEvent()" class="btn btn-primary" style="margin:0; background:#00897b;">追加</button>
+            </div>
+            <div class="footer-buttons">
+                <button onclick="downloadJSON(eventData, 'event_news.json')" class="btn-main"
+                    style="background:#00897b;">📥 event_news.json を書き出す</button>
+                <button onclick="syncData(EVENT_Key, 'event_news.json', 'event')" class="btn-text">サーバーから再取得</button>
+            </div>
+        </div>
+
+        <!-- 更新記録 -->
+        <div class="dashboard-card">
+            <div class="card-title">📜 更新記録 (News)</div>
+            <div class="list-container">
+                <div class="list-header">
+                    <div class="col-date">日付</div>
+                    <div class="col-content">内容</div>
+                    <div class="col-action"></div>
+                </div>
+                <div id="news-list-rows"></div>
+            </div>
+            <div class="inline-add-form">
+                <input type="date" id="n-date" class="form-input" style="flex: 1;">
+                <input type="text" id="n-content" class="form-input" placeholder="更新内容..." style="flex: 3;">
+                <button onclick="addNews()" class="btn btn-primary" style="margin:0;">追加</button>
+            </div>
+            <div class="footer-buttons">
+                <button onclick="downloadJSON(newsData, 'news.json')" class="btn-main">📥 news.json を書き出す</button>
+                <button onclick="syncData(NEWS_Key, 'news.json', 'news')" class="btn-text">サーバーから再取得</button>
+            </div>
+        </div>
 
         <div class="instruction-box">
-            <h3>💡 使い方</h3>
-            <ol>
-                <li>上のフォームから「イベント」または「更新記録」を追加できます</li>
-                <li>それぞれ独立して管理されます</li>
-                <li>変更が完了したら、各セクションの「ダウンロード」ボタンをクリック</li>
-                <li>ダウンロードしたファイルを、それぞれ <code>event_news.json</code> / <code>news.json</code> と置き換えてください</li>
-                <li>ページをリロードすると、変更が反映されます</li>
-            </ol>
+            <b>💡 運用フロー:</b><br>
+            1. リストを編集（追加・削除）すると即座に予約フォームに反映されます。<br>
+            2. 全ての編集が終わったら「書き出す」ボタンでファイルを保存してください。<br>
+            3. 保存したファイルをサーバーにアップロードすることで公開設定が完了します。
         </div>
 
-        <a href="index.html" class="back-link">← ホームページに戻る</a>
+        <a href="index.html" class="back-link">← サイトトップへ戻る</a>
     </div>
 
     <script>
         const NEWS_Key = 'pol_news_data';
         const EVENT_Key = 'pol_event_data';
+        const PRODUCT_Key = 'pol_product_data';
 
         let newsData = [];
         let eventData = [];
+        let productItemsFlat = [];
 
         document.addEventListener('DOMContentLoaded', async () => {
-            // 今日の日付セット
+            // 日付の初期値
             const today = new Date().toISOString().split('T')[0];
-            document.getElementById('news-date').value = today;
-            document.getElementById('event-date').value = today;
+            document.getElementById('e-date').value = today;
+            document.getElementById('n-date').value = today;
 
-            // データ読み込み
             await Promise.all([
-                loadData(NEWS_Key, 'news.json', d => { newsData = d; renderList('admin-news-list', newsData, 'deleteNewsItem'); }),
-                loadData(EVENT_Key, 'event_news.json', d => { eventData = d; renderList('admin-event-list', eventData, 'deleteEventItem'); })
+                initData(NEWS_Key, 'news.json', d => { newsData = d; renderNews(); }),
+                initData(EVENT_Key, 'event_news.json', d => { eventData = d; renderEvents(); }),
+                initData(PRODUCT_Key, 'products.json', d => { flattenProducts(d); renderProducts(); })
             ]);
         });
 
-        async function loadData(storageKey, jsonFile, callback) {
-            try {
-                const stored = localStorage.getItem(storageKey);
-                if (stored) {
-                    callback(JSON.parse(stored));
-                } else {
-                    const res = await fetch(`${jsonFile}?t=${Date.now()}`);
-                    if (res.ok) {
-                        const data = await res.json();
-                        callback(data);
-                        localStorage.setItem(storageKey, JSON.stringify(data));
-                    } else {
-                        callback([]);
-                    }
-                }
-            } catch (e) {
-                console.error(e);
-                callback([]);
+        async function initData(key, file, cb) {
+            const stored = localStorage.getItem(key);
+            if (stored && JSON.parse(stored).length > 0) {
+                cb(JSON.parse(stored));
+            } else {
+                await syncData(key, file, null, cb);
             }
         }
 
-        function renderList(elementId, data, deleteFuncName) {
-            const el = document.getElementById(elementId);
-            if (data.length === 0) {
-                el.innerHTML = '<p style="text-align: center; color: #999;">データがありません</p>';
-                return;
-            }
-            el.innerHTML = data.map((item, i) => `
-                <div class="admin-news-item">
-                    <div class="admin-news-info">
-                        <span class="admin-news-date">${item.date}</span>
-                        <span class="admin-news-content">${item.content}</span>
+        async function syncData(key, file, type, cb) {
+            try {
+                const res = await fetch(`${file}?t=${Date.now()}`);
+                if (res.ok) {
+                    const data = await res.json();
+                    localStorage.setItem(key, JSON.stringify(data));
+                    if (cb) cb(data);
+                    else if (type === 'products') { flattenProducts(data); renderProducts(); }
+                    else if (type === 'event') { eventData = data; renderEvents(); }
+                    else if (type === 'news') { newsData = data; renderNews(); }
+                    if (type) alert(`${file} を読み込みました`);
+                }
+            } catch (e) { console.error(e); }
+        }
+
+        function flattenProducts(nested) {
+            productItemsFlat = [];
+            nested.forEach(cat => {
+                cat.items.forEach(item => {
+                    productItemsFlat.push({ ...item, category: cat.category });
+                });
+            });
+        }
+
+        function renderProducts() {
+            const container = document.getElementById('product-list-rows');
+            if (productItemsFlat.length === 0) { container.innerHTML = '<p style="text-align:center;padding:20px;color:#999;">商品がありません</p>'; return; }
+            container.innerHTML = productItemsFlat.map((item, i) => `
+                <div class="list-row">
+                    <div class="col-name">${item.name}</div>
+                    <div class="col-price">¥${item.price.toLocaleString()}</div>
+                    <div class="col-category">
+                        <select onchange="changeProductCategory(${i}, this.value)" class="form-input" style="padding: 2px 5px; font-size: 0.8rem; width: auto;">
+                            <option value="酵母パン" ${item.category === '酵母パン' ? 'selected' : ''}>酵母パン</option>
+                            <option value="焼き菓子" ${item.category === '焼き菓子' ? 'selected' : ''}>焼き菓子</option>
+                            <option value="その他" ${item.category === 'その他' ? 'selected' : ''}>その他</option>
+                        </select>
                     </div>
-                    <button class="btn-delete" onclick="${deleteFuncName}(${i})">削除</button>
+                    <div class="col-action">
+                        <button class="btn-icon-delete" onclick="deleteProduct(${i})"><i class="icon-trash"></i></button>
+                    </div>
                 </div>
             `).join('');
         }
 
-        // --- News Functions ---
-        window.addNewsItem = () => addItem('news', newsData, NEWS_Key, () => renderList('admin-news-list', newsData, 'deleteNewsItem'));
-        window.deleteNewsItem = (i) => deleteItem(i, newsData, NEWS_Key, () => renderList('admin-news-list', newsData, 'deleteNewsItem'));
+        window.changeProductCategory = (i, newCat) => {
+            productItemsFlat[i].category = newCat;
+            saveProducts();
+            // 再描画は不要（セレクトボックスは既に変わっているため）、保存のみ
+        };
 
-        // --- Event Functions ---
-        window.addEventItem = () => addItem('event', eventData, EVENT_Key, () => renderList('admin-event-list', eventData, 'deleteEventItem'));
-        window.deleteEventItem = (i) => deleteItem(i, eventData, EVENT_Key, () => renderList('admin-event-list', eventData, 'deleteEventItem'));
+        function renderEvents() { renderSimpleList('event-list-rows', eventData, 'deleteEvent'); }
+        function renderNews() { renderSimpleList('news-list-rows', newsData, 'deleteNews'); }
 
-        // Generic Add
-        function addItem(prefix, dataArray, storageKey, renderCb) {
-            const dateInput = document.getElementById(`${prefix}-date`);
-            const contentInput = document.getElementById(`${prefix}-content`);
-            const date = dateInput.value.replace(/-/g, '.');
-            const content = contentInput.value.trim();
-
-            if (!content) return alert('内容を入力してください');
-
-            dataArray.unshift({ date, content });
-            localStorage.setItem(storageKey, JSON.stringify(dataArray));
-            renderCb();
-
-            contentInput.value = '';
-            alert('追加しました！');
+        function renderSimpleList(id, data, delFn) {
+            const container = document.getElementById(id);
+            if (data.length === 0) { container.innerHTML = '<p style="text-align:center;padding:10px;color:#999;">データがありません</p>'; return; }
+            container.innerHTML = data.map((item, i) => `
+                <div class="list-row">
+                    <div class="col-date">${item.date}</div>
+                    <div class="col-content">${item.content}</div>
+                    <div class="col-action">
+                        <button class="btn-icon-delete" onclick="${delFn}(${i})"><i class="icon-trash"></i></button>
+                    </div>
+                </div>
+            `).join('');
         }
 
-        // Generic Delete
-        function deleteItem(index, dataArray, storageKey, renderCb) {
+        // Action Functions
+        window.addProduct = () => {
+            const name = document.getElementById('p-name').value.trim();
+            const price = parseInt(document.getElementById('p-price').value);
+            const cat = document.getElementById('p-category').value;
+            if (!name || isNaN(price)) return alert('正しい値を入力してください');
+            productItemsFlat.push({ id: 'p-' + Date.now(), name, price, category: cat });
+            saveProducts();
+            renderProducts();
+            document.getElementById('p-name').value = '';
+            document.getElementById('p-price').value = '';
+        };
+
+        window.deleteProduct = (i) => {
             if (!confirm('削除しますか？')) return;
-            dataArray.splice(index, 1);
-            localStorage.setItem(storageKey, JSON.stringify(dataArray));
-            renderCb();
+            productItemsFlat.splice(i, 1);
+            saveProducts();
+            renderProducts();
+        };
+
+        function saveProducts() {
+            const nested = [];
+            const cats = [...new Set(productItemsFlat.map(p => p.category))];
+            cats.forEach(c => {
+                nested.push({
+                    category: c,
+                    items: productItemsFlat.filter(p => p.category === c).map(({ id, name, price }) => ({ id, name, price }))
+                });
+            });
+            localStorage.setItem(PRODUCT_Key, JSON.stringify(nested));
         }
 
-        // Generic Download
+        window.addEvent = () => addSimple('e', eventData, EVENT_Key, renderEvents);
+        window.deleteEvent = (i) => deleteSimple(i, eventData, EVENT_Key, renderEvents);
+        window.addNews = () => addSimple('n', newsData, NEWS_Key, renderNews);
+        window.deleteNews = (i) => deleteSimple(i, newsData, NEWS_Key, renderNews);
+
+        function addSimple(pre, data, key, render) {
+            const content = document.getElementById(`${pre}-content`).value.trim();
+            const date = document.getElementById(`${pre}-date`).value.replace(/-/g, '.');
+            if (!content) return alert('内容を入力してください');
+            data.unshift({ date, content });
+            localStorage.setItem(key, JSON.stringify(data));
+            render();
+            document.getElementById(`${pre}-content`).value = '';
+        }
+
+        function deleteSimple(i, data, key, render) {
+            if (!confirm('削除しますか？')) return;
+            data.splice(i, 1);
+            localStorage.setItem(key, JSON.stringify(data));
+            render();
+        }
+
+        window.downloadProducts = () => {
+            const nested = [];
+            const cats = [...new Set(productItemsFlat.map(p => p.category))];
+            cats.forEach(c => {
+                nested.push({
+                    category: c,
+                    items: productItemsFlat.filter(p => p.category === c).map(({ id, name, price }) => ({ id, name, price }))
+                });
+            });
+            downloadJSON(nested, 'products.json');
+        };
+
         window.downloadJSON = (data, filename) => {
             const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
-            a.href = url;
-            a.download = filename;
-            document.body.appendChild(a);
-            a.click();
+            a.href = url; a.download = filename;
+            document.body.appendChild(a); a.click();
             document.body.removeChild(a);
         };
     </script>
