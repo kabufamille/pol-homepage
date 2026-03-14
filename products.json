@@ -3,34 +3,53 @@
     "category": "焼き菓子",
     "items": [
       {
-        "id": "prod-y72tfzr66",
-        "name": "ディアマンコーヒークッキー",
-        "price": 350
+        "id": "p-matcha-pound",
+        "name": "抹茶パウンドケーキ",
+        "price": 350,
+        "image": "images/store/matcha-pound.jpg",
+        "description": "宇治抹茶を贅沢に使用した、香り高いパウンドケーキです。"
       },
       {
-        "id": "p-1771311357133",
-        "name": "チョコマフィン",
-        "price": 350
-      },
-      {
-        "id": "p-1771311370660",
-        "name": "ディアマンクッキー",
-        "price": 250
-      },
-      {
-        "id": "p-1771311383173",
-        "name": "パウンドケーキ",
-        "price": 400
-      },
-      {
-        "id": "p-1771311394434",
-        "name": "ブールドネージュ",
-        "price": 350
-      },
-      {
-        "id": "p-1771311404838",
+        "id": "p-financier",
         "name": "フィナンシェ",
-        "price": 380
+        "price": 280,
+        "image": "images/store/financier.jpg",
+        "description": "焦がしバターのコクとアーモンドの香ばしさが楽しめます。"
+      },
+      {
+        "id": "p-boule-de-neige",
+        "name": "ブールドネージュ",
+        "price": 280,
+        "image": "images/store/boule-de-neige.jpg",
+        "description": "口の中でほろほろと溶ける、雪のような白いクッキーです。"
+      },
+      {
+        "id": "p-chiffon",
+        "name": "シフォンケーキ",
+        "price": 280,
+        "image": "images/store/chiffon.jpg",
+        "description": "ふわふわ、しっとりとした食感のプレーンシフォンです。"
+      },
+      {
+        "id": "p-caramel-financier",
+        "name": "キャラメルフィナンシェ",
+        "price": 300,
+        "image": "images/store/caramel-financier.jpg",
+        "description": "自家製キャラメルのほろ苦さがアクセントのフィナンシェ。"
+      },
+      {
+        "id": "p-kouglof-chocolat",
+        "name": "クグロフショコラ",
+        "price": 320,
+        "image": "images/store/kouglof-chocolat.jpg",
+        "description": "濃厚なチョコ生地にオレンジピールを合わせた贅沢な一品。"
+      },
+      {
+        "id": "p-pound-cake",
+        "name": "パウンドケーキ",
+        "price": 300,
+        "image": "images/store/pound-cake.jpg",
+        "description": "シンプルながらも素材の味が引き立つ王道の味わい。"
       }
     ]
   },
@@ -38,14 +57,18 @@
     "category": "酵母パン",
     "items": [
       {
-        "id": "p-1771311329072",
+        "id": "p-focaccia",
         "name": "フォカッチャ",
-        "price": 420
+        "price": 420,
+        "image": "images/store/focaccia.jpg",
+        "description": "オリーブオイルの香りとゲランドの塩がアクセント。"
       },
       {
-        "id": "p-1771311344365",
+        "id": "p-petit-pain",
         "name": "プチパン",
-        "price": 350
+        "price": 350,
+        "image": "images/store/petit-pain.jpg",
+        "description": "お食事のお供にぴったりな、シンプルな酵母パン。"
       }
     ]
   }

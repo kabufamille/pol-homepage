@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Online Shop | pol</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -13,87 +15,297 @@
     <link rel="icon" href="images/pol_logo.JPG" type="image/png">
     <link rel="stylesheet" href="style.css">
     <script src="main.js" defer></script>
+    <style>
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            color: var(--color-text);
+        }
+
+        .font-kiwi { font-family: 'Kiwi Maru', serif; }
+        .font-serif-jp { font-family: 'Noto Serif JP', serif; }
+
+        /* カート内のカスタムスクロールバー */
+        .cart-items::-webkit-scrollbar { width: 6px; }
+        .cart-items::-webkit-scrollbar-track { background: #f1f1f1; }
+        .cart-items::-webkit-scrollbar-thumb { background: #ccc; border-radius: 10px; }
+
+        /* 商品カードのアニメーション */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in { animation: fadeInUp 0.6s ease-out forwards; }
+    </style>
 </head>
 
 <body>
+    <div class="hero-bg" style="background-image: url('images/hero_sweets_bread.png');"></div>
+    <div class="hero-overlay"></div>
+
     <header class="header">
         <div class="container header-container">
             <h1 class="logo"><a href="index.html"><img src="images/pol_logo.JPG" alt="pol"><span class="logo-text"><span
                             class="text-sand">p</span>ol cake<span class="text-raspberry">&</span>bread</span></a></h1>
-            <nav class="nav">
-                <ul>
-                    <li><a href="index.html#hero">ホーム</a></li>
-                    <li><a href="index.html#news">お知らせ</a></li>
-                    <li><a href="index.html#about">こだわり</a></li>
-                    <li><a href="index.html#menu">商品紹介</a></li>
-                    <li><a href="online_shop.html" class="active">オンラインショップ</a></li>
-                    <li><a href="reservation.html">お取り置き</a></li>
-                    <li><a href="index.html#contact">アクセス</a></li>
+            <nav class="hidden md:block">
+                <ul class="flex gap-8 text-sm font-medium">
+                    <li><a href="index.html#hero" class="hover:text-[#c1a173] transition">ホーム</a></li>
+                    <li><a href="index.html#news" class="hover:text-[#c1a173] transition">お知らせ</a></li>
+                    <li><a href="index.html#about" class="hover:text-[#c1a173] transition">こだわり</a></li>
+                    <li><a href="index.html#menu" class="hover:text-[#c1a173] transition">商品紹介</a></li>
+                    <li><a href="online_shop.html" class="text-[#c1a173] border-b-2 border-[#c1a173]">オンラインショップ</a></li>
+                    <li><a href="reservation.html" class="hover:text-[#c1a173] transition">お取り置き</a></li>
+                    <li><a href="index.html#contact" class="hover:text-[#c1a173] transition">アクセス</a></li>
                 </ul>
             </nav>
-            <div class="mobile-menu-toggle">
-                <span></span>
-                <span></span>
-                <span></span>
+            <div class="md:hidden mobile-menu-toggle">
+                <span></span><span></span><span></span>
             </div>
         </div>
     </header>
+
+    <!-- Cart Sidebar -->
+    <div id="cart-sidebar" class="fixed top-0 right-[-100%] w-full max-w-md h-full bg-white z-[1100] shadow-2xl transition-all duration-300 flex flex-col">
+        <div class="p-6 border-b flex justify-between items-center bg-gray-50">
+            <h3 class="text-lg font-bold font-kiwi">ショッピングカート</h3>
+            <button id="close-cart" class="text-3xl text-gray-400 hover:text-gray-600 transition">&times;</button>
+        </div>
+        <div id="cart-items" class="flex-1 overflow-y-auto p-6 scroll-smooth">
+            <p class="text-center text-gray-400 mt-10">カートは空です</p>
+        </div>
+        <div class="p-6 border-t bg-[#fdfbf7]">
+            <div class="flex justify-between items-center text-xl font-bold mb-6 text-[#7d6b5d]">
+                <span>合計:</span>
+                <span id="cart-total-amount">¥0</span>
+            </div>
+            <button id="checkout-btn" class="w-full bg-[#7d6b5d] text-white py-4 rounded-lg font-bold hover:bg-[#6c5b4e] transition-all transform active:scale-95 shadow-lg">レジへ進む</button>
+            <p class="text-center text-xs text-gray-400 mt-4">※決済はStripeを使用し、安全に処理されます</p>
+        </div>
+    </div>
+    <div id="cart-overlay" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-[1050] hidden opacity-0 transition-opacity duration-300"></div>
+
+    <!-- Floating Cart Button -->
+    <button id="cart-toggle" class="fixed bottom-8 right-8 w-16 h-16 bg-[#7d6b5d] text-white rounded-full shadow-2xl z-[999] flex items-center justify-center transition-transform hover:scale-110 active:scale-90 group">
+        <span class="text-2xl group-hover:rotate-12 transition-transform">🛒</span>
+        <span id="cart-count" class="absolute -top-1 -right-1 bg-[#d98d8d] text-white text-xs w-6 h-6 rounded-full border-2 border-white flex items-center justify-center font-bold">0</span>
+    </button>
 
     <main>
         <section class="section">
             <div class="container">
                 <div class="section-header">
-                    <span class="section-subtitle">Online Shop</span>
+                    <span class="section-subtitle">ONLINE SHOP</span>
                     <h3 class="section-title">オンラインショップ</h3>
                 </div>
-                <!-- Gallery Grid -->
-                <div class="gallery-grid">
-                    <div class="gallery-item">
-                        <img src="images/pound_cake.png" alt="焼き菓子">
-                        <div class="gallery-info">
-                            <h4>焼き菓子</h4>
-                            <p>芳醇なバターと厳選素材のハーモニー</p>
-                            <p class="price">¥350</p>
-                            <button class="btn btn-shop" data-product="焼き菓子">カートに入れる</button>
-                        </div>
-                    </div>
-                    <div class="gallery-item">
-                        <img src="images/pol cake.jpg" alt="ケーキ">
-                        <div class="gallery-info">
-                            <h4>ケーキ</h4>
-                            <p>特別な日を彩る、華やかなデコレーション</p>
-                            <p class="price">¥350</p>
-                            <button class="btn btn-shop" data-product="ケーキ">カートに入れる</button>
-                        </div>
-                    </div>
-                    <div class="gallery-item">
-                        <img src="images/yeast_bread.png" alt="酵母パン">
-                        <div class="gallery-info">
-                            <h4>酵母パン</h4>
-                            <p>自然の力で膨らませた、風味豊かな味わい</p>
-                            <p class="price">¥350</p>
-                            <button class="btn btn-shop" data-product="酵母パン">カートに入れる</button>
-                        </div>
-                    </div>
-                    <div class="gallery-item">
-                        <img src="images/crepe2.png" alt="クレープ">
-                        <div class="gallery-info">
-                            <h4>クレープ</h4>
-                            <p>もちもち生地とフレッシュフルーツの出会い</p>
-                            <p class="price">¥400</p>
-                            <button class="btn btn-shop" data-product="クレープ">カートに入れる</button>
-                        </div>
-                    </div>
+                <!-- Category Filter -->
+                <div class="flex justify-center gap-4 mb-12">
+                    <button class="filter-btn active px-6 py-2 rounded-full border border-[#7d6b5d] bg-[#7d6b5d] text-white transition-all shadow-md" data-category="all">すべて</button>
+                    <button class="filter-btn px-6 py-2 rounded-full border border-[#7d6b5d] text-[#7d6b5d] hover:bg-orange-50 transition-all" data-category="焼き菓子">焼き菓子</button>
+                </div>
+
+                <div id="products-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                    <!-- 商品データがJavaScriptによってここに挿入されます -->
                 </div>
             </div>
         </section>
     </main>
 
-    <footer class="footer">
-        <div class="container">
-            <p>&copy; 2024 pol. All Rights Reserved.</p>
+    <footer class="bg-white py-8 border-t border-gray-100 mt-20">
+        <div class="container mx-auto px-4 text-center">
+            <p class="text-gray-400 text-sm font-kiwi">&copy; 2024 pol cake & bread. All Rights Reserved.</p>
         </div>
     </footer>
+
+    <script>
+        // --- 商品データを直接定義 (CORSエラー回避) ---
+        const products = [
+            { id: "p-matcha-pound", name: "抹茶パウンドケーキ", price: 350, image: "images/store/matcha-pound.jpg", description: "宇治抹茶を贅沢に使用した、香り高いパウンドケーキです。", category: "焼き菓子" },
+            { id: "p-pound-cake", name: "プレーンパウンド", price: 300, image: "images/store/pound-cake.jpg", description: "シンプルながらも素材の味が引き立つ王道の味わい。", category: "焼き菓子" },
+            { id: "p-financier", name: "フィナンシェ", price: 280, image: "images/store/financier.jpg", description: "焦がしバターのコクとアーモンドの香ばしさが楽しめます。", category: "焼き菓子" },
+            { id: "p-boule-de-neige", name: "ブールドネージュ", price: 280, image: "images/store/boule-de-neige.jpg", description: "口の中でほろほろと溶ける、雪のような白いクッキーです。", category: "焼き菓子" },
+            { id: "p-muffin", name: "マフィン", price: 320, image: "images/store/muffin.jpg", description: "外はカリッと中はしっとり。素材の甘みが広がるマフィンです。", category: "焼き菓子" },
+            { id: "p-diamant-cookie", name: "ディアマンクッキー", price: 300, image: "images/store/diamant-cookie.jpg", description: "ザクザクとした食感とバターの香りが豊かな、端に砂糖をまぶしたクッキーです。", category: "焼き菓子" }
+        ];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const productsContainer = document.getElementById('products-container');
+            const cartSidebar = document.getElementById('cart-sidebar');
+            const cartOverlay = document.getElementById('cart-overlay');
+            const cartToggle = document.getElementById('cart-toggle');
+            const closeCart = document.getElementById('close-cart');
+            const cartItemsContainer = document.getElementById('cart-items');
+            const cartTotalAmount = document.getElementById('cart-total-amount');
+            const cartCount = document.getElementById('cart-count');
+            const checkoutBtn = document.getElementById('checkout-btn');
+            const filterBtns = document.querySelectorAll('.filter-btn');
+
+            let cart = JSON.parse(localStorage.getItem('pol_cart')) || [];
+
+            function renderProducts(filter = 'all') {
+                const filtered = filter === 'all' ? products : products.filter(p => p.category === filter);
+                
+                productsContainer.innerHTML = filtered.map((product, index) => `
+                    <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 animate-fade-in group border border-gray-50 flex flex-col h-full" style="animation-delay: ${index * 0.1}s">
+                        <div class="relative overflow-hidden aspect-square bg-gray-50">
+                            <img src="${product.image}" alt="${product.name}" 
+                                class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 opacity-0 transition-opacity" 
+                                onload="this.classList.remove('opacity-0')"
+                                onerror="this.src='images/pol_logo.JPG'">
+                            <span class="absolute top-4 left-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-[10px] font-bold tracking-widest text-[#7d6b5d] shadow-sm">
+                                ${product.category}
+                            </span>
+                        </div>
+                        <div class="p-6 flex flex-col flex-1">
+                            <h3 class="text-lg font-bold text-gray-800 mb-2 font-kiwi">${product.name}</h3>
+                            <p class="text-xs text-gray-500 mb-4 flex-1">${product.description}</p>
+                            <div class="flex items-center justify-between mt-auto">
+                                <span class="text-xl font-bold text-[#7d6b5d]">¥${product.price.toLocaleString()}</span>
+                                <button onclick="addToCart('${product.id}')" 
+                                    class="bg-white border-2 border-[#7d6b5d] text-[#7d6b5d] hover:bg-[#7d6b5d] hover:text-white px-4 py-2 rounded-full text-sm font-bold transition-all transform active:scale-90 flex items-center gap-2">
+                                    <span>🛒</span> 追加
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    filterBtns.forEach(b => b.classList.remove('active', 'bg-[#7d6b5d]', 'text-white'));
+                    filterBtns.forEach(b => b.classList.add('text-[#7d6b5d]'));
+                    btn.classList.add('active', 'bg-[#7d6b5d]', 'text-white');
+                    btn.classList.remove('text-[#7d6b5d]');
+                    renderProducts(btn.dataset.category);
+                });
+            });
+
+            window.addToCart = (id) => {
+                const product = products.find(p => p.id === id);
+                const existing = cart.find(item => item.id === id);
+                if (existing) {
+                    existing.quantity += 1;
+                } else {
+                    cart.push({ ...product, quantity: 1 });
+                }
+                saveCart();
+                updateCartUI();
+                openCart();
+            };
+
+            window.updateQuantity = (id, delta) => {
+                const item = cart.find(item => item.id === id);
+                if (item) {
+                    item.quantity += delta;
+                    if (item.quantity <= 0) {
+                        cart = cart.filter(i => i.id !== id);
+                    }
+                    saveCart();
+                    updateCartUI();
+                }
+            };
+
+            window.removeFromCart = (id) => {
+                cart = cart.filter(item => item.id !== id);
+                saveCart();
+                updateCartUI();
+            };
+
+            function saveCart() {
+                localStorage.setItem('pol_cart', JSON.stringify(cart));
+            }
+
+            function updateCartUI() {
+                const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+                cartCount.textContent = count;
+                cartCount.className = count > 0 ? 
+                    "absolute -top-1 -right-1 bg-[#d98d8d] text-white text-xs w-6 h-6 rounded-full border-2 border-white flex items-center justify-center font-bold animate-pulse" : 
+                    "absolute -top-1 -right-1 bg-[#d98d8d] text-white text-xs w-6 h-6 rounded-full border-2 border-white flex items-center justify-center font-bold hidden";
+
+                if (cart.length === 0) {
+                    cartItemsContainer.innerHTML = `
+                        <div class="flex flex-col items-center justify-center h-full opacity-40">
+                            <span class="text-6xl mb-4">🛒</span>
+                            <p class="font-kiwi">カートは空です</p>
+                        </div>
+                    `;
+                    cartTotalAmount.textContent = '¥0';
+                } else {
+                    cartItemsContainer.innerHTML = cart.map(item => `
+                        <div class="flex gap-4 mb-6 border-b border-gray-50 pb-6 animate-fade-in">
+                            <img src="${item.image}" alt="${item.name}" class="w-16 h-16 object-cover rounded-lg shadow-sm" onerror="this.src='images/pol_logo.JPG'">
+                            <div class="flex-1">
+                                <h5 class="text-sm font-bold text-gray-800 font-kiwi">${item.name}</h5>
+                                <p class="text-xs text-[#7d6b5d] font-bold">¥${item.price.toLocaleString()}</p>
+                                <div class="flex items-center gap-3 mt-2">
+                                    <div class="flex items-center gap-3 bg-gray-100 rounded-full px-3 py-1">
+                                        <button onclick="updateQuantity('${item.id}', -1)" class="text-lg leading-none hover:text-[#d98d8d] transition">−</button>
+                                        <span class="text-sm font-bold w-4 text-center">${item.quantity}</span>
+                                        <button onclick="updateQuantity('${item.id}', 1)" class="text-lg leading-none hover:text-[#d98d8d] transition">+</button>
+                                    </div>
+                                    <button onclick="removeFromCart('${item.id}')" class="text-[10px] text-gray-400 hover:text-red-500 transition ml-auto">削除</button>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('');
+
+                    const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                    cartTotalAmount.textContent = `¥${total.toLocaleString()}`;
+                }
+            }
+
+            checkoutBtn.addEventListener('click', async () => {
+                if (cart.length === 0) return;
+                
+                checkoutBtn.disabled = true;
+                checkoutBtn.innerHTML = '<span class="flex items-center justify-center gap-2"><svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> 接続中...</span>';
+                
+                try {
+                    const response = await fetch('/api/checkout', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            items: cart.map(item => ({
+                                name: item.name,
+                                price: item.price,
+                                quantity: item.quantity,
+                                image: window.location.origin + '/' + item.image
+                            }))
+                        }),
+                    });
+
+                    const data = await response.json();
+                    if (data.url) {
+                        window.location.href = data.url;
+                    } else {
+                        throw new Error(data.error || '決済エラーが発生しました');
+                    }
+                } catch (err) {
+                    console.error('Checkout Error:', err);
+                    alert('決済ページへの移動に失敗しました。サーバー設定（Vercel等）を確認してください。');
+                    checkoutBtn.disabled = false;
+                    checkoutBtn.textContent = 'レジへ進む';
+                }
+            });
+
+            const openCart = () => {
+                cartSidebar.style.right = '0';
+                cartOverlay.classList.remove('hidden');
+                setTimeout(() => cartOverlay.style.opacity = '1', 10);
+            };
+            const closeCartSidebar = () => {
+                cartSidebar.style.right = '-100%';
+                cartOverlay.style.opacity = '0';
+                setTimeout(() => cartOverlay.classList.add('hidden'), 300);
+            };
+
+            cartToggle.addEventListener('click', openCart);
+            closeCart.addEventListener('click', closeCartSidebar);
+            cartOverlay.addEventListener('click', closeCartSidebar);
+
+            renderProducts();
+            updateCartUI();
+        });
+    </script>
 </body>
 
 </html>

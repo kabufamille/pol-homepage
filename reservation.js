@@ -55,11 +55,13 @@ document.addEventListener('DOMContentLoaded', () => {
         {
             category: "焼き菓子",
             items: [
-                { id: "prod-chocomuffin", name: "チョコマフィン", price: 350 },
-                { id: "prod-diamant", name: "ディアマンクッキー", price: 250 },
-                { id: "prod-pound", name: "パウンドケーキ", price: 400 },
-                { id: "prod-boule", name: "ブールドネージュ", price: 350 },
-                { id: "prod-financier", name: "フィナンシェ", price: 380 }
+                { id: "prod-maccha", name: "抹茶フルーツケーキ", price: 350 },
+                { id: "prod-financier", name: "フィナンシェ", price: 280 },
+                { id: "prod-boule", name: "ブールドネージュ", price: 280 },
+                { id: "prod-chiffon", name: "シフォンケーキ", price: 280 },
+                { id: "prod-caramel", name: "キャラメルフィナンシェ", price: 300 },
+                { id: "prod-kouglof", name: "クグロフショコラ", price: 320 },
+                { id: "prod-pound", name: "パウンドケーキ", price: 300 }
             ]
         }
     ];
@@ -71,27 +73,20 @@ document.addEventListener('DOMContentLoaded', () => {
         let categories = null;
 
         try {
-            // 1. LocalStorage を最優先 (管理画面での変更を即時反映)
-            const stored = localStorage.getItem(PRODUCT_Key);
-            if (stored) {
-                categories = JSON.parse(stored);
-                console.log('Loaded products from LocalStorage');
-            }
-
-            // 2. LocalStorage にない、または空の場合は サーバーから取得
-            if (!categories || categories.length === 0) {
-                const response = await fetch(`products.json?t=${Date.now()}`);
-                if (response.ok) {
-                    categories = await response.json();
-                    localStorage.setItem(PRODUCT_Key, JSON.stringify(categories));
-                    console.log('Loaded products from server JSON');
-                }
+            // 常にサーバーから最新の products.json を取得する (LocalStorage の古いキャッシュを無視)
+            const response = await fetch(`products.json?t=${Date.now()}`);
+            if (response.ok) {
+                categories = await response.json();
+                console.log('Loaded products from server JSON');
+                
+                // 必要であれば次回以降のオフライン用途等で更新しておく
+                localStorage.setItem(PRODUCT_Key, JSON.stringify(categories));
             }
         } catch (e) {
             console.warn('Dynamic loading failed, falling back to defaults:', e);
         }
 
-        // 3. 全て失敗した場合はデフォルトデータを使用
+        // 全て失敗した場合はデフォルトデータを使用
         if (!categories || categories.length === 0) {
             categories = DEFAULT_PRODUCTS;
             console.log('Using default backup products');
