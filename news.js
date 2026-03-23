@@ -2,6 +2,52 @@
 const NEWS_STORAGE_KEY = 'pol_news_data';
 const EVENT_STORAGE_KEY = 'pol_event_data';
 
+const defaultNewsData = [
+  {
+    "date": "2026.02.18",
+    "content": "お取り置きline通知の人数を増やす"
+  },
+  {
+    "date": "2026.02.17",
+    "content": "お取り置き項目で商品の追加・削除を簡易的にする"
+  },
+  {
+    "date": "2026.01.28",
+    "content": "お取り置き選択中の欄追加"
+  },
+  {
+    "date": "2026.01.20",
+    "content": "ロゴにリンク挿入"
+  },
+  {
+    "date": "2026.01.19",
+    "content": "インスタグラムのリンクのみ追加"
+  },
+  {
+    "date": "2026.01.16",
+    "content": "お取り置きバグ修正"
+  },
+  {
+    "date": "2026.01.16",
+    "content": "お取り置き複数追加機能追加"
+  },
+  {
+    "date": "2026.01.16",
+    "content": "機能更新"
+  },
+  {
+    "date": "2026.01.15",
+    "content": "お知らせ機能追加"
+  }
+];
+
+const defaultEventData = [
+  {
+    "date": "2026.01.19",
+    "content": "1月27日　9：30～14：00　アソビナリビング販売！"
+  }
+];
+
 document.addEventListener('DOMContentLoaded', async () => {
     // 1. 更新履歴(News)の読み込み
     await loadAndRenderNews(
@@ -32,9 +78,17 @@ async function loadAndRenderNews(selector, storageKey, jsonFile, label) {
         if (storedData) {
             data = JSON.parse(storedData);
         } else {
-            const response = await fetch(jsonFile);
-            if (response.ok) {
-                data = await response.json();
+            try {
+                const response = await fetch(jsonFile);
+                if (response.ok) {
+                    data = await response.json();
+                } else {
+                    console.warn(`[${label}] API response not ok. Using default data.`);
+                    data = label === 'イベント情報' ? [...defaultEventData] : [...defaultNewsData];
+                }
+            } catch (fetchError) {
+                console.warn(`[${label}] Fetch failed, possibly running locally. Using default data.`, fetchError);
+                data = label === 'イベント情報' ? [...defaultEventData] : [...defaultNewsData];
             }
         }
 
@@ -50,28 +104,16 @@ async function loadAndRenderNews(selector, storageKey, jsonFile, label) {
 
         data.forEach(item => {
             const row = document.createElement('dl');
+            row.className = label === 'イベント情報' ? 'news-item event-item' : 'news-item';
 
-            // イベント情報の場合は特別なクラスを追加し、日付を表示しない
-            if (label === 'イベント情報') {
-                row.className = 'news-item event-item';
-                // 日付要素は作成しない、または非表示にする
-                // ここでは内容のみを表示する簡単な構造にする
-                const dd = document.createElement('dd');
-                dd.textContent = item.content;
-                row.appendChild(dd);
-            } else {
-                // 通常のお知らせ
-                row.className = 'news-item';
+            const dt = document.createElement('dt');
+            dt.textContent = item.date;
 
-                const dt = document.createElement('dt');
-                dt.textContent = item.date;
+            const dd = document.createElement('dd');
+            dd.textContent = item.content;
 
-                const dd = document.createElement('dd');
-                dd.textContent = item.content;
-
-                row.appendChild(dt);
-                row.appendChild(dd);
-            }
+            row.appendChild(dt);
+            row.appendChild(dd);
 
             listElement.appendChild(row);
         });
@@ -91,14 +133,22 @@ window.addNews = async function (content) {
         let newsData;
 
         // まずローカルストレージをチェック
-        const storedData = localStorage.getItem(STORAGE_KEY);
+        const storedData = localStorage.getItem(NEWS_STORAGE_KEY);
 
         if (storedData) {
             newsData = JSON.parse(storedData);
         } else {
             // ローカルストレージにデータがない場合はJSONファイルから読み込み
-            const response = await fetch('news.json');
-            newsData = await response.json();
+            try {
+                const response = await fetch('news.json');
+                if (response.ok) {
+                    newsData = await response.json();
+                } else {
+                    newsData = [...defaultNewsData];
+                }
+            } catch (fetchError) {
+                newsData = [...defaultNewsData];
+            }
         }
 
         // 今日の日付を取得(YYYY.MM.DD形式)
@@ -116,7 +166,7 @@ window.addNews = async function (content) {
         newsData.unshift(newNewsItem);
 
         // ローカルストレージに保存
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(newsData));
+        localStorage.setItem(NEWS_STORAGE_KEY, JSON.stringify(newsData));
         console.log('お知らせをローカルストレージに保存しました');
 
         // JSONデータをコンソールに出力(バックアップ用)

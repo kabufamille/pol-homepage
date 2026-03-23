@@ -304,6 +304,108 @@ h4 {
 }
 
 /* About */
+.about {
+    position: relative;
+    overflow: hidden;
+}
+
+.about .container {
+    position: relative;
+    z-index: 1;
+}
+
+.yeast-bubbles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0;
+    transition: opacity 1.5s ease-in-out;
+}
+
+.yeast-bubbles.active {
+    opacity: 1;
+}
+
+.yeast-bubble {
+    position: absolute;
+    bottom: -20px;
+    background-color: rgba(255, 255, 255, 0.6);
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5), inset 0 0 5px rgba(255, 255, 255, 0.8);
+    animation: yeastRise infinite ease-in;
+}
+
+@keyframes yeastRise {
+    0% {
+        bottom: -20px;
+        transform: translateX(0) scale(1);
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    50% {
+        transform: translateX(20px) scale(1.2);
+    }
+    90% {
+        opacity: 1;
+    }
+    100% {
+        bottom: 100%;
+        transform: translateX(-20px) scale(0.9);
+        opacity: 0;
+    }
+}
+
+/* Steam Animation */
+.steam-field {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0;
+    transition: opacity 1.5s ease-in-out;
+}
+
+.steam-field.active {
+    opacity: 1;
+}
+
+.steam {
+    position: absolute;
+    bottom: -50px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0) 70%);
+    border-radius: 50%;
+    filter: blur(8px);
+    opacity: 0;
+}
+
+@keyframes riseSteam {
+    0% {
+        transform: translateY(0) scaleX(1);
+        opacity: 0;
+    }
+    30% {
+        transform: translateY(-20vh) scaleX(1.3);
+        opacity: 0.7;
+    }
+    70% {
+        transform: translateY(-50vh) scaleX(1.8);
+        opacity: 0.3;
+    }
+    100% {
+        transform: translateY(-80vh) scaleX(2.2);
+        opacity: 0;
+    }
+}
+
 .about-content {
     max-width: 800px;
     margin: 0 auto;
@@ -919,49 +1021,7 @@ h4 {
     margin-bottom: 30px;
 }
 
-/* Event News Styling */
-.event-item {
-    display: block;
-    padding: 30px;
-    background-image: linear-gradient(rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.7)), url('images/whole_cake.png');
-    background-size: cover;
-    background-position: center;
-    border: none;
-    /* Removed border */
-    border-radius: 8px;
-    margin-bottom: 20px;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
-    text-align: center;
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-}
-
-/* Removed the left colored border/tag */
-
-.event-item:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-}
-
-.event-item dd {
-    margin: 0;
-    font-size: 1.25rem;
-    font-weight: 500;
-    color: #4A3B32;
-    /* Darker brown for readability against image */
-    line-height: 1.6;
-    font-family: 'Kiwi Maru', serif;
-    letter-spacing: 0.05em;
-    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.8);
-}
-
-/* Responsive adjustments */
-@media (max-width: 600px) {
-    .event-item dd {
-        font-size: 1.1rem;
-    }
-}
+/* Event News Styling removed for simpler display matching .news-item */
 
 .btn-secondary {
     background-color: var(--color-secondary);
