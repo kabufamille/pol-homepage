@@ -119,7 +119,7 @@
             }
             .rating-options {
                 width: 100%;
-                margin-top: 15px;
+                margin-top: 5px;
             }
             .survey-form-container {
                 padding: 20px;
@@ -200,8 +200,8 @@
                             <label class="form-label">この商品を、次はどんな時に食べたい（または誰と食べたい）ですか？ <span class="required">*</span></label>
                             <div class="radio-group-vertical">
                                 <label><input type="radio" name="nextOccasion" value="ひとりのご褒美タイムに" required> ひとりのご褒美タイムに</label>
-                                <label><input type="radio" name="nextOccasion" value="家族との朝食で"> 家族との朝食で</label>
-                                <label><input type="radio" name="nextOccasion" value="友人への手土産として"> 友人への手土産として</label>
+                                <label><input type="radio" name="nextOccasion" value="ご家族と"> ご家族と</label>
+                                <label><input type="radio" name="nextOccasion" value="お友達への手土産として"> お友達への手土産として</label>
                                 <label><input type="radio" name="nextOccasion" value="ちょっとしたおやつに"> ちょっとしたおやつに</label>
                                 <label><input type="radio" name="nextOccasion" value="今回で満足した"> 今回で満足した</label>
                             </div>
@@ -218,12 +218,11 @@
                             </div>
                         </div>
 
-                        <!-- ================= 自由回答 ================= -->
-                        <h4 class="survey-group-title">4. 自由回答</h4>
+                        <!-- ================= ご意見・ご感想 ================= -->
+                        <h4 class="survey-group-title">4. ご意見・ご感想</h4>
 
                         <div class="form-group">
-                            <label for="message" class="form-label">もっとこうなったら嬉しい！というご要望や、新作リクエスト、店主への応援メッセージなどをお聞かせください。</label>
-                            <textarea id="message" name="message" class="form-textarea" rows="5"></textarea>
+                            <textarea id="message" name="message" class="form-textarea" rows="5" aria-label="ご意見・ご感想"></textarea>
                         </div>
 
                         <div class="form-actions" style="margin-top: 40px;">
