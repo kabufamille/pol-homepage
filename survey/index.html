@@ -24,7 +24,7 @@
         @media (max-width: 768px) { .rating-group { flex-direction: column; align-items: flex-start; } .rating-options { width: 100%; margin-top: 15px; } .survey-form-container { padding: 20px; } }
         .header-title-text { font-family: 'Noto Serif JP', serif; font-size: 1.5rem; color: #5a4a42; font-weight: 400; letter-spacing: 0.05em; }
 
-        /* --- 修正：チェックマークアニメーション --- */
+        /* --- 完了アニメーション --- */
         #success-message { text-align: center; display: none; padding: 60px 20px; }
         #success-message.active { display: block; animation: fadeInUp 0.8s ease forwards; }
         
@@ -166,7 +166,7 @@
     </main>
 
     <script>
-        const GAS_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbw801aLX7xRtEcTISrEoUaCkqDOKdPK_rkQ5ZUtO9VFPy-r-I5L2XmHhVailoGxoxaI4Q/exec';
+        const GAS_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbzMxJyg_4_7fyNVrqh5dDvVyY_mHhqxLfY7lPuqDLghh0-yBvWqn4E1bg3ZcuyvHh3sPg/exec';
         
         let loadedRatings = [];
         document.addEventListener('DOMContentLoaded', async () => {
@@ -216,10 +216,9 @@
                 try {
                     await fetch(GAS_WEBAPP_URL, { method: 'POST', body: JSON.stringify(formData), headers: { 'Content-Type': 'text/plain' } });
                     
-                    // --- 修正箇所：確実にアニメーションクラスを付与 ---
                     document.getElementById('survey-form').style.display = 'none';
                     const successArea = document.getElementById('success-message');
-                    successArea.classList.add('active'); // activeクラスを付けてアニメーション開始
+                    successArea.classList.add('active');
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                 } catch (err) { 
                     alert('送信に失敗しました。');
