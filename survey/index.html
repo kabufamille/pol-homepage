@@ -1,201 +1,93 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>お客様アンケート | Ferme</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@300;400;500&family=Noto+Sans+JP:wght@300;400;500&family=Noto+Serif+JP:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="icon" href="../images/pol_logo.JPG" type="image/png">
-    <link rel="stylesheet" href="../style.css">
-    <style>
-        .survey-section { padding: 80px 0; background-color: #fcf9f2; }
-        .survey-form-container { background: #ffffff; padding: 40px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); max-width: 800px; margin: 0 auto; }
-        .survey-group-title { border-bottom: 2px solid #5a4a42; padding-bottom: 10px; margin: 40px 0 20px; color: #5a4a42; font-family: 'Noto Serif JP', serif; font-size: 1.2rem; }
-        .rating-group { display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; padding: 10px; background: #fafaf5; border-radius: 6px; }
-        .rating-label { flex: 0 0 120px; font-weight: 500; color: #5a4a42; }
-        .rating-options { display: flex; flex: 1; justify-content: space-between; max-width: 450px; }
-        .rating-options label { display: flex; flex-direction: column; align-items: center; font-size: 0.85rem; cursor: pointer; color: #666; }
-        .rating-options input { margin-bottom: 5px; transform: scale(1.2); cursor: pointer; accent-color: #A32D2D; }
-        .radio-group-vertical { display: flex; flex-direction: column; gap: 15px; margin-top: 10px; }
-        .radio-group-vertical label { display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 10px; background: #fafaf5; border-radius: 6px; }
-        .radio-group-inline { display: flex; gap: 20px; flex-wrap: wrap; margin-top: 5px; }
-        @media (max-width: 768px) { .rating-group { flex-direction: column; align-items: flex-start; } .rating-options { width: 100%; margin-top: 15px; } .survey-form-container { padding: 20px; } }
-        
-        .header-title-text {
-            font-family: 'Noto Serif JP', serif;
-            font-size: 1.5rem;
-            color: #5a4a42;
-            font-weight: 400;
-            letter-spacing: 0.05em;
-        }
-    </style>
-</head>
-<body>
-    <header class="header">
-        <div class="container header-container">
-            <h1 class="logo">
-                <span class="header-title-text">Fermeアンケート</span>
-            </h1>
-        </div>
-    </header>
+// ⚠️ 新しく再発行した「チャネルアクセストークン」をここに入力
+const CHANNEL_ACCESS_TOKEN = '【ここにチャネルアクセストークンを貼り付け】';
 
-    <main style="padding-top: 100px;">
-        <section class="section survey-section">
-            <div class="container">
-                <div class="section-header">
-                    <h3 class="section-title">お客様アンケート</h3>
-                </div>
-                
-                <div class="survey-form-container">
-                    <form id="survey-form">
-                        <h4 class="survey-group-title">1. 基本情報</h4>
-                        <div class="form-group">
-                            <label for="productName" class="form-label">ご購入いただいた商品 <span class="required">*</span></label>
-                            <select id="productName" name="productName" class="form-select" required>
-                                <option value="">読み込み中...</option>
-                            </select>
-                        </div>
+const LINE_USER_IDS = ['U05dad93ac65e1cdf5d1fe876da6583ea', 'U730ca49cfddbe1db10660ebaf5e46a2a'];
 
-                        <div class="form-group">
-                            <label class="form-label">性別 <span class="required">*</span></label>
-                            <div class="radio-group-inline">
-                                <label><input type="radio" name="gender" value="男性" required> 男性</label>
-                                <label><input type="radio" name="gender" value="女性"> 女性</label>
-                                <label><input type="radio" name="gender" value="回答しない"> 回答しない</label>
-                            </div>
-                        </div>
+// ★変更：アンケートを新しくした日付（バージョン名）
+const SURVEY_VERSION = '2026.03.31'; 
 
-                        <div class="form-group">
-                            <label for="ageGroup" class="form-label">年代 <span class="required">*</span></label>
-                            <select id="ageGroup" name="ageGroup" class="form-select" required>
-                                <option value="">選択してください</option>
-                                <option value="10代以下">10代以下</option>
-                                <option value="20代">20代</option>
-                                <option value="30代">30代</option>
-                                <option value="40代">40代</option>
-                                <option value="50代">50代</option>
-                                <option value="60代以上">60代以上</option>
-                            </select>
-                        </div>
+function doGet(e) {
+  try {
+    const ss = SpreadsheetApp.getActiveSpreadsheet();
+    const sheet = ss.getSheetByName('設定');
+    const products = sheet.getRange('A2:A' + sheet.getLastRow()).getValues().flat().filter(String);
+    const ratings = sheet.getRange('B2:B' + sheet.getLastRow()).getValues().flat().filter(String);
+    return ContentService.createTextOutput(JSON.stringify({ products: products, ratings: ratings }))
+      .setMimeType(ContentService.MimeType.JSON);
+  } catch (error) {
+    return ContentService.createTextOutput(JSON.stringify({ error: error.message }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
 
-                        <h4 class="survey-group-title">2. 商品の評価</h4>
-                        <div id="ratings-container"></div>
+function doPost(e) {
+  try {
+    const data = JSON.parse(e.postData.contents);
+    const ss = SpreadsheetApp.getActiveSpreadsheet();
+    
+    // ここで「回答_2026.03.31」という名前のタブを探す（なければ作る）
+    const targetSheetName = '回答_' + SURVEY_VERSION;
+    let sheet = ss.getSheetByName(targetSheetName);
+    
+    if (!sheet) {
+      sheet = ss.insertSheet(targetSheetName);
+      // 見出しに「飲み物」を追加
+      sheet.appendRow(['送信日時', '商品名', '性別', '年代', '飲んだ飲み物', '次回シーン', '次回の決め手', 'メッセージ', '満足度評価']);
+      sheet.getRange("A1:I1").setFontWeight("bold").setBackground("#f3f3f3");
+    }
+    
+    let ratingsString = '';
+    for (const [key, value] of Object.entries(data.ratings || {})) {
+      ratingsString += `${key}: ${value}\n`;
+    }
+    
+    // データを書き込む
+    sheet.appendRow([
+      new Date(),                
+      data.productName || '',    
+      data.gender || '',         
+      data.ageGroup || '',       
+      data.drink || 'なし',      
+      data.nextOccasion || '',   
+      data.decisiveFactor || '', 
+      data.message || '',        
+      ratingsString.trim()       
+    ]);
+    
+    // --- LINE通知メッセージ作成 ---
+    let messageText = `📋 新規アンケート回答\n\n`;
+    messageText += `【お客様情報】\n商品: ${data.productName || '未選択'}\n回答者: ${data.gender || '未回答'} / ${data.ageGroup || '未回答'}\n\n`;
+    
+    if(data.drink) {
+      messageText += `【お供の飲み物】\n${data.drink}\n\n`;
+    }
 
-                        <div class="form-group" style="margin-top: 40px;">
-                            <label for="drink" class="form-label">商品と一緒に飲んだ「お気に入り」の飲み物はございますか？</label>
-                            <input type="text" id="drink" name="drink" class="form-input" placeholder="例：コーヒー、紅茶、ミルクなど">
-                        </div>
+    messageText += `【満足度評価】\n`;
+    for (const [key, value] of Object.entries(data.ratings || {})) {
+      messageText += `・${key}: ${value || '未回答'}\n`;
+    }
+    
+    messageText += `\n【リピート・今後のご意向】\n次回シーン: ${data.nextOccasion || '未回答'}\n次回の決め手: ${data.decisiveFactor || '未回答'}\n\n`;
+    messageText += `【メッセージ】\n${data.message || 'なし'}`;
+    
+    sendLinePush(messageText);
+    
+    return ContentService.createTextOutput(JSON.stringify({ status: 'success' }))
+      .setMimeType(ContentService.MimeType.JSON);
+      
+  } catch (error) {
+    return ContentService.createTextOutput(JSON.stringify({ status: 'error', message: error.message }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
 
-                        <h4 class="survey-group-title">3. 購入した商品について</h4>
-                        
-                        <div class="form-group">
-                            <label class="form-label">どんな時に食べたいですか？ <span class="required">*</span></label>
-                            <div class="radio-group-vertical">
-                                <label><input type="radio" name="nextOccasion" value="ひとりのご褒美に" required> ひとりのご褒美に</label>
-                                <label><input type="radio" name="nextOccasion" value="家族と一緒に"> 家族と一緒に</label>
-                                <label><input type="radio" name="nextOccasion" value="友人への手土産に"> 友人への手土産に</label>
-                                <label><input type="radio" name="nextOccasion" value="ちょっとしたおやつに"> ちょっとしたおやつに</label>
-                                <label><input type="radio" name="nextOccasion" value="食事として"> 食事として</label>
-                            </div>
-                        </div>
-
-                        <div class="form-group" style="margin-top: 40px;">
-                            <label class="form-label">この商品を選んでいただいた理由をお聞かせください。 <span class="required">*</span></label>
-                            <div class="radio-group-vertical">
-                                <label><input type="radio" name="decisiveFactor" value="味が忘れられない" required> 味が忘れられない</label>
-                                <label><input type="radio" name="decisiveFactor" value="食感が好み"> 食感が好み</label>
-                                <label><input type="radio" name="decisiveFactor" value="見た目が可愛い"> 見た目が可愛い</label>
-                                <label><input type="radio" name="decisiveFactor" value="値段とバランスが良い"> 値段とバランスが良い</label>
-                                <label><input type="radio" name="decisiveFactor" value="初めての購入"> 初めての購入</label>
-                            </div>
-                        </div>
-
-                        <h4 class="survey-group-title">4. ご意見・ご感想</h4>
-                        <div class="form-group">
-                            <textarea id="message" name="message" class="form-textarea" rows="4" placeholder="もっとこうなったら嬉しい！というご要望や、新作リクエスト、店主への応援メッセージなどをお聞かせください。"></textarea>
-                        </div>
-
-                        <div style="text-align: center; margin-top: 60px; margin-bottom: 20px;">
-                            <button type="submit" class="btn btn-primary btn-submit">アンケートを送信する</button>
-                        </div>
-                    </form>
-                    <div id="success-message" style="display: none; text-align: center; padding: 40px;">
-                        <h4>送信完了いたしました！</h4>
-                        <p>ご協力ありがとうございました。</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <script>
-        const GAS_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbyn6zgJLHMbmk48654V96u5y9z7mez_YzkxxwQG797G0nZTmUrJjMJrIc-YpwJo3XwU7w/exec';
-        
-        let loadedRatings = [];
-
-        document.addEventListener('DOMContentLoaded', async () => {
-            const selectEl = document.getElementById('productName');
-            
-            try {
-                const response = await fetch(GAS_WEBAPP_URL);
-                const config = await response.json();
-                selectEl.innerHTML = '<option value="">選択してください</option>';
-                config.products.forEach(p => {
-                    const opt = document.createElement('option');
-                    opt.value = p; opt.textContent = p;
-                    selectEl.appendChild(opt);
-                });
-                
-                const container = document.getElementById('ratings-container');
-                loadedRatings = config.ratings;
-                config.ratings.forEach((r, idx) => {
-                    const group = document.createElement('div');
-                    group.className = 'rating-group';
-                    let options = '';
-                    for(let i=5; i>=1; i--) {
-                        options += `<label><input type="radio" name="rating_${idx}" value="${i}" required><span>${i}</span></label>`;
-                    }
-                    group.innerHTML = `<div class="rating-label">${r} <span class="required" style="color:#A32D2D">*</span></div><div class="rating-options">${options}</div>`;
-                    container.appendChild(group);
-                });
-            } catch (err) { console.error(err); }
-
-            document.getElementById('survey-form').addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const ratingsData = {};
-                loadedRatings.forEach((r, idx) => {
-                    ratingsData[r] = document.querySelector(`input[name="rating_${idx}"]:checked`)?.value || '';
-                });
-
-                const formData = {
-                    productName: selectEl.value,
-                    drink: document.getElementById('drink').value,
-                    gender: document.querySelector('input[name="gender"]:checked')?.value,
-                    ageGroup: document.getElementById('ageGroup').value,
-                    ratings: ratingsData,
-                    nextOccasion: document.querySelector('input[name="nextOccasion"]:checked')?.value,
-                    decisiveFactor: document.querySelector('input[name="decisiveFactor"]:checked')?.value,
-                    message: document.getElementById('message').value
-                };
-
-                const submitBtn = document.querySelector('.btn-submit');
-                submitBtn.disabled = true;
-                submitBtn.textContent = '送信中...';
-
-                try {
-                    await fetch(GAS_WEBAPP_URL, { method: 'POST', body: JSON.stringify(formData), headers: { 'Content-Type': 'text/plain' } });
-                    document.getElementById('survey-form').style.display = 'none';
-                    document.getElementById('success-message').style.display = 'block';
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                } catch (err) { 
-                    alert('送信に失敗しました。');
-                    submitBtn.disabled = false;
-                    submitBtn.textContent = 'アンケートを送信する';
-                }
-            });
-        });
-    </script>
-</body>
-</html>
+function sendLinePush(text) {
+  const url = 'https://api.line.me/v2/bot/message/multicast';
+  const payload = { to: LINE_USER_IDS, messages: [{ type: 'text', text: text }] };
+  const options = {
+    method: 'post',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + CHANNEL_ACCESS_TOKEN },
+    payload: JSON.stringify(payload)
+  };
+  UrlFetchApp.fetch(url, options);
+}
