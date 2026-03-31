@@ -22,42 +22,27 @@
         .radio-group-vertical label { display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 10px; background: #fafaf5; border-radius: 6px; }
         .radio-group-inline { display: flex; gap: 20px; flex-wrap: wrap; margin-top: 5px; }
         @media (max-width: 768px) { .rating-group { flex-direction: column; align-items: flex-start; } .rating-options { width: 100%; margin-top: 15px; } .survey-form-container { padding: 20px; } }
-        
-        .header-title-text {
-            font-family: 'Noto Serif JP', serif;
-            font-size: 1.5rem;
-            color: #5a4a42;
-            font-weight: 400;
-            letter-spacing: 0.05em;
-        }
+        .header-title-text { font-family: 'Noto Serif JP', serif; font-size: 1.5rem; color: #5a4a42; font-weight: 400; letter-spacing: 0.05em; }
     </style>
 </head>
 <body>
     <header class="header">
         <div class="container header-container">
-            <h1 class="logo">
-                <span class="header-title-text">Fermeアンケート</span>
-            </h1>
+            <h1 class="logo"><span class="header-title-text">Fermeアンケート</span></h1>
         </div>
     </header>
 
     <main style="padding-top: 100px;">
         <section class="section survey-section">
             <div class="container">
-                <div class="section-header">
-                    <h3 class="section-title">お客様アンケート</h3>
-                </div>
-                
+                <div class="section-header"><h3 class="section-title">お客様アンケート</h3></div>
                 <div class="survey-form-container">
                     <form id="survey-form">
                         <h4 class="survey-group-title">1. 基本情報</h4>
                         <div class="form-group">
                             <label for="productName" class="form-label">ご購入いただいた商品 <span class="required">*</span></label>
-                            <select id="productName" name="productName" class="form-select" required>
-                                <option value="">読み込み中...</option>
-                            </select>
+                            <select id="productName" name="productName" class="form-select" required><option value="">読み込み中...</option></select>
                         </div>
-
                         <div class="form-group">
                             <label class="form-label">性別 <span class="required">*</span></label>
                             <div class="radio-group-inline">
@@ -66,30 +51,23 @@
                                 <label><input type="radio" name="gender" value="回答しない"> 回答しない</label>
                             </div>
                         </div>
-
                         <div class="form-group">
                             <label for="ageGroup" class="form-label">年代 <span class="required">*</span></label>
                             <select id="ageGroup" name="ageGroup" class="form-select" required>
                                 <option value="">選択してください</option>
-                                <option value="10代以下">10代以下</option>
-                                <option value="20代">20代</option>
-                                <option value="30代">30代</option>
-                                <option value="40代">40代</option>
-                                <option value="50代">50代</option>
-                                <option value="60代以上">60代以上</option>
+                                <option value="10代以下">10代以下</option><option value="20代">20代</option><option value="30代">30代</option>
+                                <option value="40代">40代</option><option value="50代">50代</option><option value="60代以上">60代以上</option>
                             </select>
                         </div>
 
                         <h4 class="survey-group-title">2. 商品の評価</h4>
                         <div id="ratings-container"></div>
-
                         <div class="form-group" style="margin-top: 40px;">
                             <label for="drink" class="form-label">商品と一緒に飲んだ「お気に入り」の飲み物はございますか？</label>
                             <input type="text" id="drink" name="drink" class="form-input" placeholder="例：コーヒー、紅茶、ミルクなど">
                         </div>
 
                         <h4 class="survey-group-title">3. 購入した商品について</h4>
-                        
                         <div class="form-group">
                             <label class="form-label">どんな時に食べたいですか？ <span class="required">*</span></label>
                             <div class="radio-group-vertical">
@@ -100,7 +78,6 @@
                                 <label><input type="radio" name="nextOccasion" value="食事として"> 食事として</label>
                             </div>
                         </div>
-
                         <div class="form-group" style="margin-top: 40px;">
                             <label class="form-label">この商品を選んでいただいた理由をお聞かせください。 <span class="required">*</span></label>
                             <div class="radio-group-vertical">
@@ -131,14 +108,12 @@
     </main>
 
     <script>
-        // ▼ いただいた最新のデプロイURLを反映しました
-        const GAS_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbyy64XPtzE_Yc5Rfy9D5_bhHx_OXYC5axIMPnC6wiUdHDTEkVQzw9oDLxhR5mPDRcne9g/exec';
+        // ▼ たった今デプロイされた最新URLです
+        const GAS_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbw5RXeDcHFAfQaIyA3DaoeUxgDbFvnNfp3884XvXWfsSSFWEtgsFaVkQDOKb7teb1l1Vw/exec';
         
         let loadedRatings = [];
-
         document.addEventListener('DOMContentLoaded', async () => {
             const selectEl = document.getElementById('productName');
-            
             try {
                 const response = await fetch(GAS_WEBAPP_URL);
                 const config = await response.json();
@@ -148,7 +123,6 @@
                     opt.value = p; opt.textContent = p;
                     selectEl.appendChild(opt);
                 });
-                
                 const container = document.getElementById('ratings-container');
                 loadedRatings = config.ratings;
                 config.ratings.forEach((r, idx) => {
@@ -169,7 +143,6 @@
                 loadedRatings.forEach((r, idx) => {
                     ratingsData[r] = document.querySelector(`input[name="rating_${idx}"]:checked`)?.value || '';
                 });
-
                 const formData = {
                     productName: selectEl.value,
                     drink: document.getElementById('drink').value,
@@ -180,11 +153,9 @@
                     decisiveFactor: document.querySelector('input[name="decisiveFactor"]:checked')?.value,
                     message: document.getElementById('message').value
                 };
-
                 const submitBtn = document.querySelector('.btn-submit');
                 submitBtn.disabled = true;
                 submitBtn.textContent = '送信中...';
-
                 try {
                     await fetch(GAS_WEBAPP_URL, { method: 'POST', body: JSON.stringify(formData), headers: { 'Content-Type': 'text/plain' } });
                     document.getElementById('survey-form').style.display = 'none';
