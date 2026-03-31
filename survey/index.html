@@ -24,8 +24,8 @@
         @media (max-width: 768px) { .rating-group { flex-direction: column; align-items: flex-start; } .rating-options { width: 100%; margin-top: 15px; } .survey-form-container { padding: 20px; } }
         .header-title-text { font-family: 'Noto Serif JP', serif; font-size: 1.5rem; color: #5a4a42; font-weight: 400; letter-spacing: 0.05em; }
 
-        /* --- 完了アニメーション --- */
-        #success-message { text-align: center; display: none; padding: 60px 20px; }
+        /* --- 送信完了アニメーションの設定 --- */
+        #success-message { text-align: center; display: none; padding: 60px 20px; opacity: 0; }
         #success-message.active { display: block; animation: fadeInUp 0.8s ease forwards; }
         
         @keyframes fadeInUp {
@@ -36,7 +36,7 @@
         .success-icon-wrap { width: 80px; height: 80px; margin: 0 auto 30px; position: relative; }
         .success-circle { width: 80px; height: 80px; background-color: #A32D2D; border-radius: 50%; position: absolute; top: 0; left: 0; }
         
-        /* チェックマークの白い棒 */
+        /* チェックマークの描画設定 */
         .success-checkmark {
             position: absolute;
             top: 42px;
@@ -166,7 +166,8 @@
     </main>
 
     <script>
-        const GAS_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbzMxJyg_4_7fyNVrqh5dDvVyY_mHhqxLfY7lPuqDLghh0-yBvWqn4E1bg3ZcuyvHh3sPg/exec';
+        // ▼ たった今デプロイされた最新のURLを反映済みです
+        const GAS_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbx66OaEiFDXW5pNT7q1A-4YWbGfdf0_vH0w2c31Bp0vSAFWczijjJlMn_ETOj0xG6cQrw/exec';
         
         let loadedRatings = [];
         document.addEventListener('DOMContentLoaded', async () => {
@@ -216,6 +217,7 @@
                 try {
                     await fetch(GAS_WEBAPP_URL, { method: 'POST', body: JSON.stringify(formData), headers: { 'Content-Type': 'text/plain' } });
                     
+                    // フォームを非表示にし、完了メッセージにアニメーション用クラスを追加
                     document.getElementById('survey-form').style.display = 'none';
                     const successArea = document.getElementById('success-message');
                     successArea.classList.add('active');
