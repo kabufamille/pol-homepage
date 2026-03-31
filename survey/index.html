@@ -123,7 +123,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="form-label">この商品はどんな時に食べますか？ <span class="required">*</span></label>
+                            <label id="q1_label" class="form-label">読み込み中... <span class="required">*</span></label>
                             <div class="radio-group-vertical">
                                 <label><input type="radio" name="nextOccasion" value="ひとりのご褒美タイムに" required> ひとりのご褒美タイムに</label>
                                 <label><input type="radio" name="nextOccasion" value="家族と一緒に"> 家族と一緒に</label>
@@ -134,7 +134,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="form-label">この商品を選んだ理由は？ <span class="required">*</span></label>
+                            <label id="q2_label" class="form-label">読み込み中... <span class="required">*</span></label>
                             <div class="radio-group-vertical">
                                 <label><input type="radio" name="decisiveFactor" value="美味しさが忘れられないから" required> 美味しさが忘れられないから</label>
                                 <label><input type="radio" name="decisiveFactor" value="食感が好みだったから"> 食感が好みだったから</label>
@@ -163,7 +163,7 @@
     </main>
 
     <script>
-        const GAS_URL = 'https://script.google.com/macros/s/AKfycbze-_df2k_GNf2g94lmbcXDLLILA1yS8IwkUVil_N9q5ZtdnqcSGVoBZ3TXnWHsEX4Czg/exec';
+        const GAS_URL = 'https://script.google.com/macros/s/AKfycby5b3B5BsotI9WJzZbp21Iln942WFkPARZVxdN6Aa1-8SCBuluk0xugsPtGkGI3Vf3jbQ/exec';
         let loadedRatings = [];
         const EXCLUDE_RATINGS = ['見た目', 'ボリューム', '価格', '値段'];
 
@@ -172,6 +172,7 @@
                 const res = await fetch(GAS_URL);
                 const config = await res.json();
                 
+                // 1. 商品リスト反映
                 const selectEl = document.getElementById('productName');
                 selectEl.innerHTML = '<option value="">選択してください</option>';
                 config.products.forEach(p => {
@@ -180,6 +181,7 @@
                     selectEl.appendChild(opt);
                 });
 
+                // 2. 満足度評価反映（フィルタリング適用）
                 const rContainer = document.getElementById('ratings-container');
                 rContainer.innerHTML = '';
                 loadedRatings = config.ratings.filter(r => !EXCLUDE_RATINGS.includes(r));
@@ -194,6 +196,15 @@
                     group.innerHTML = `<div class="rating-label">${r} <span class="required">*</span></div><div class="rating-options">${opts}</div>`;
                     rContainer.appendChild(group);
                 });
+
+                // ★ 3. スプレッドシート（設定シートのC2・D2）から質問文を反映
+                if (config.q1Title) {
+                    document.getElementById('q1_label').innerHTML = `${config.q1Title} <span class="required">*</span>`;
+                }
+                if (config.q2Title) {
+                    document.getElementById('q2_label').innerHTML = `${config.q2Title} <span class="required">*</span>`;
+                }
+
             } catch (e) { console.error(e); }
         };
 
