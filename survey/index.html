@@ -39,6 +39,28 @@
         #success-message { display: none; text-align: center; padding: 60px 20px; }
         ::placeholder { color: #bbb; opacity: 0.7; font-weight: 300; }
         .form-subtext { font-size: 0.8rem; color: #808080; margin-bottom: 15px; margin-top: -10px; opacity: 0.8; }
+        
+        /* Success Animation */
+        .success-icon-container {
+            width: 90px; height: 90px; margin: 0 auto 30px;
+            background-color: var(--color-primary); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            transform: scale(0); animation: successPop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            box-shadow: 0 10px 25px rgba(142, 110, 83, 0.2);
+        }
+        .success-icon-container svg {
+            width: 50px; height: 50px; fill: none; stroke: white;
+            stroke-width: 5; stroke-linecap: round; stroke-linejoin: round;
+            stroke-dasharray: 100; stroke-dashoffset: 100;
+            animation: checkDraw 0.5s ease forwards 0.4s;
+        }
+        #success-message h4, #success-message p {
+            opacity: 0; transform: translateY(15px);
+            animation: textFadeUp 0.8s ease forwards 0.6s;
+        }
+        @keyframes successPop { 0% { transform: scale(0); } 100% { transform: scale(1); } }
+        @keyframes checkDraw { to { stroke-dashoffset: 0; } }
+        @keyframes textFadeUp { to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
@@ -78,7 +100,13 @@
                 <div class="form-group"><label class="form-label">ご意見・ご感想</label><textarea name="message" class="form-textarea" rows="4" placeholder="皆様のご意見をお聞かせください。"></textarea></div>
                 <button type="submit" id="submitBtn" class="btn-primary">アンケートを送信する</button>
             </form>
-            <div id="success-message"><h4>アンケートにお答えいただき、ありがとうございます</h4><p>いただいたお声は、これからのFermeのお菓子作りのために大切にさせていただきます。</p></div>
+            <div id="success-message">
+                <div class="success-icon-container">
+                    <svg viewBox="0 0 52 52"><path d="M14.1 27.2l7.1 7.2 16.7-16.8"/></svg>
+                </div>
+                <h4>アンケートにお答えいただき、ありがとうございます</h4>
+                <p>いただいたお声は、これからのFermeのお菓子作りのために大切にさせていただきます。</p>
+            </div>
         </div>
     </div></section></main>
     <script>
