@@ -37,6 +37,8 @@
         .radio-group-vertical label { display: flex; align-items: center; gap: 12px; cursor: pointer; padding: 12px 15px; background: #FAF9F6; border-radius: 8px; border: 1px solid transparent; }
         .btn-primary { width: 100%; padding: 18px; background-color: var(--color-primary); color: white; border: none; border-radius: 50px; font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: all 0.3s; margin-top: 20px; box-shadow: 0 4px 15px rgba(142, 110, 83, 0.2); }
         #success-message { display: none; text-align: center; padding: 60px 20px; }
+        ::placeholder { color: #bbb; opacity: 0.7; font-weight: 300; }
+        .form-subtext { font-size: 0.8rem; color: #808080; margin-bottom: 15px; margin-top: -10px; opacity: 0.8; }
     </style>
 </head>
 <body>
@@ -48,13 +50,32 @@
                 <h4 class="survey-group-title">1. 基本情報</h4>
                 <div class="form-group"><label class="form-label">ご購入いただいた商品 <span class="required">*</span></label><select id="productName" name="productName" class="form-select" required><option value="">選択してください (読み込み中...)</option></select></div>
                 <div class="form-group"><label class="form-label">性別 <span class="required">*</span></label><div style="display: flex; gap: 20px;"><label><input type="radio" name="gender" value="男性" required> 男性</label><label><input type="radio" name="gender" value="女性"> 女性</label><label><input type="radio" name="gender" value="回答しない"> 回答しない</label></div></div>
-                <div class="form-group"><label class="form-label">年代 *</label><select name="ageGroup" class="form-select" required><option value="30代">30代</option><option value="40代">40代</option><option value="その他">その他</option></select></div>
+                <div class="form-group"><label class="form-label">年代 *</label><select name="ageGroup" class="form-select" required><option value="">選択してください</option><option value="10代以下">10代以下</option><option value="20代">20代</option><option value="30代">30代</option><option value="40代">40代</option><option value="50代">50代</option><option value="60代以上">60代以上</option></select></div>
                 <h4 class="survey-group-title">2. 商品の評価</h4><div id="ratings-container"></div>
                 <h4 class="survey-group-title">3. 商品について</h4>
-                <div class="form-group"><label class="form-label">お気に入りの飲み物</label><input type="text" name="drink" class="form-input"></div>
-                <div class="form-group"><label class="form-label">どんな時に食べたいですか？ *</label><input type="text" name="nextOccasion" class="form-input" required></div>
-                <div class="form-group"><label class="form-label">選んだ理由は？ *</label><input type="text" name="decisiveFactor" class="form-input" required></div>
-                <div class="form-group"><label class="form-label">ご意見・ご感想</label><textarea name="message" class="form-textarea" rows="4"></textarea></div>
+                <div class="form-group">
+                    <label class="form-label">選んだ理由は？ <span class="required">*</span></label>
+                    <div class="radio-group-vertical">
+                        <label><input type="checkbox" name="purchaseTrigger" value="以前食べて美味しかったから"> 以前食べて美味しかったから</label>
+                        <label><input type="checkbox" name="purchaseTrigger" value="全粒粉や酵母などの素材へのこだわり"> 全粒粉や酵母などの素材へのこだわり</label>
+                        <label><input type="checkbox" name="purchaseTrigger" value="SNSやホームページを見て"> SNSやホームページを見て</label>
+                        <label><input type="checkbox" name="purchaseTrigger" value="知人・友人のおすすめ"> 知人・友人のおすすめ</label>
+                        <label><input type="checkbox" name="purchaseTrigger" value="通りがかりで気になった"> 通りがかりで気になった</label>
+                        <label><input type="checkbox" name="purchaseTrigger" value="初めて購入します"> 初めて購入します</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">どんな時に食べたいですか？ <span class="required">*</span></label>
+                    <div class="radio-group-vertical">
+                        <label><input type="checkbox" name="nextOccasion" value="食事として"> 食事として</label>
+                        <label><input type="checkbox" name="nextOccasion" value="おやつ・ティータイム"> おやつ・ティータイム</label>
+                        <label><input type="checkbox" name="nextOccasion" value="自分へのご褒美"> 自分へのご褒美</label>
+                        <label><input type="checkbox" name="nextOccasion" value="家族と一緒に"> 家族と一緒に</label>
+                        <label><input type="checkbox" name="nextOccasion" value="お土産として"> お土産として</label>
+                    </div>
+                </div>
+                <div class="form-group"><label class="form-label">この商品に合いそうな飲物は？</label><input type="text" name="drinkPaired" class="form-input" placeholder="（例：コーヒー、ハーブティーなど）"></div>
+                <div class="form-group"><label class="form-label">ご意見・ご感想</label><textarea name="message" class="form-textarea" rows="4" placeholder="皆様のご意見をお聞かせください。"></textarea></div>
                 <button type="submit" id="submitBtn" class="btn-primary">アンケートを送信する</button>
             </form>
             <div id="success-message"><h4>アンケートにお答えいただき、ありがとうございます</h4><p>いただいたお声は、これからのFermeのお菓子作りのために大切にさせていただきます。</p></div>
@@ -81,7 +102,21 @@
             e.preventDefault();
             const btn = document.getElementById('submitBtn'); btn.disabled = true; btn.textContent = '送信中...';
             const fd = new FormData(e.target);
-            const data = { productName: fd.get('productName'), gender: fd.get('gender'), ageGroup: fd.get('ageGroup'), drink: fd.get('drink'), nextOccasion: fd.get('nextOccasion'), decisiveFactor: fd.get('decisiveFactor'), message: fd.get('message'), ratings: {} };
+            
+            // 複数選択の値を結合
+            const purchaseTriggers = fd.getAll('purchaseTrigger').join('、');
+            const nextOccasions = fd.getAll('nextOccasion').join('、');
+
+            const data = { 
+                productName: fd.get('productName'), 
+                gender: fd.get('gender'), 
+                ageGroup: fd.get('ageGroup'), 
+                drinkPaired: fd.get('drinkPaired'), 
+                nextOccasion: nextOccasions, 
+                purchaseTrigger: purchaseTriggers, 
+                message: fd.get('message'), 
+                ratings: {} 
+            };
             ratingKeys.forEach((key, i) => { data.ratings[key] = fd.get(`r_${i}`); });
             await fetch(GAS_URL, { method: 'POST', body: JSON.stringify(data) });
             document.getElementById('survey-form').style.display = 'none';
