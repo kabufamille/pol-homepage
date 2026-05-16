@@ -1,0 +1,56 @@
+<!-- ===== ① <head>内の<link rel="stylesheet" href="style.css">の直後に追加 ===== -->
+<style>
+.business-calendar { max-width:380px; margin:30px auto 0; background:#fff; border-radius:16px; padding:20px; box-shadow:0 4px 20px rgba(0,0,0,0.05); font-family:'Noto Sans JP',sans-serif; }
+.bc-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; }
+.bc-title { font-size:1.05rem; font-weight:700; color:#7d6b5d; letter-spacing:0.04em; }
+.bc-nav { background:none; border:1px solid #ddd; width:28px; height:28px; border-radius:50%; cursor:pointer; color:#7d6b5d; font-size:14px; line-height:1; transition:all .2s; }
+.bc-nav:hover { background:#f5ecd9; border-color:#c9b89c; }
+.bc-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:4px; text-align:center; }
+.bc-dow { font-size:0.7rem; font-weight:600; color:#999; padding:4px 0; }
+.bc-dow.sun { color:#d98d8d; } .bc-dow.sat { color:#7a9bb8; }
+.bc-day { aspect-ratio:1/1; display:flex; align-items:center; justify-content:center; font-size:0.85rem; border-radius:50%; color:#555; }
+.bc-day.empty { color:transparent; }
+.bc-day.today { background:#fef9e9; border:1.5px solid #e8a13a; font-weight:700; color:#b8721a; }
+.bc-day.closed { background:#fce0e0; color:#c94d4d; text-decoration:line-through; }
+.bc-legend { display:flex; gap:14px; justify-content:center; margin-top:14px; font-size:0.7rem; color:#888; }
+.bc-legend-item { display:flex; align-items:center; gap:5px; }
+.bc-legend-dot { width:10px; height:10px; border-radius:50%; }
+.bc-legend-dot.closed-color { background:#fce0e0; border:1px solid #c94d4d; }
+.bc-legend-dot.today-color { background:#fef9e9; border:1px solid #e8a13a; }
+</style>
+
+<!-- ===== ② <p>営業時間: 10:00 - 19:00 (水曜定休)</p> の直後に貼り付け ===== -->
+<div class="business-calendar" id="business-calendar">
+    <div class="bc-header">
+        <button class="bc-nav" id="bc-prev" aria-label="前月">&lsaquo;</button>
+        <div class="bc-title" id="bc-title">YYYY年MM月</div>
+        <button class="bc-nav" id="bc-next" aria-label="翌月">&rsaquo;</button>
+    </div>
+    <div class="bc-grid" id="bc-grid"></div>
+    <div class="bc-legend">
+        <span class="bc-legend-item"><span class="bc-legend-dot today-color"></span>今日</span>
+        <span class="bc-legend-item"><span class="bc-legend-dot closed-color"></span>休業日</span>
+    </div>
+</div>
+
+<!-- ===== ③ </body> の直前に貼り付け ===== -->
+<script>
+(function(){
+    const DOW=['日','月','火','水','木','金','土'];
+    let cur=new Date(); cur.setDate(1);
+    let cal={regularClosedDays:[3],specialClosedDates:[],specialOpenDates:[]};
+    fetch('calendar.json?t='+Date.now()).then(r=>r.ok?r.json():null).then(d=>{if(d)cal=Object.assign(cal,d);render();}).catch(()=>render());
+    function isClosed(d){const iso=d.toISOString().split('T')[0];if(cal.specialOpenDates.includes(iso))return false;if(cal.specialClosedDates.includes(iso))return true;return cal.regularClosedDays.includes(d.getDay());}
+    function render(){
+        const y=cur.getFullYear(),m=cur.getMonth();
+        document.getElementById('bc-title').textContent=y+'年'+(m+1)+'月';
+        const grid=document.getElementById('bc-grid'); grid.innerHTML='';
+        DOW.forEach((d,i)=>{const el=document.createElement('div');el.className='bc-dow'+(i===0?' sun':'')+(i===6?' sat':'');el.textContent=d;grid.appendChild(el);});
+        const firstDay=new Date(y,m,1).getDay(),lastDate=new Date(y,m+1,0).getDate(),todayIso=new Date().toISOString().split('T')[0];
+        for(let i=0;i<firstDay;i++){const el=document.createElement('div');el.className='bc-day empty';el.textContent='0';grid.appendChild(el);}
+        for(let d=1;d<=lastDate;d++){const date=new Date(y,m,d),iso=date.toISOString().split('T')[0],el=document.createElement('div');el.className='bc-day';if(isClosed(date))el.classList.add('closed');if(iso===todayIso)el.classList.add('today');el.textContent=d;grid.appendChild(el);}
+    }
+    document.getElementById('bc-prev').addEventListener('click',()=>{cur.setMonth(cur.getMonth()-1);render();});
+    document.getElementById('bc-next').addEventListener('click',()=>{cur.setMonth(cur.getMonth()+1);render();});
+})();
+</script>

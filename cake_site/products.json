@@ -1,0 +1,57 @@
+[
+  {
+    "category": "焼き菓子",
+    "items": [
+      {
+        "id": "p-matcha-pound",
+        "name": "抹茶パウンドケーキ",
+        "price": 350
+      },
+      {
+        "id": "p-financier",
+        "name": "フィナンシェ",
+        "price": 280
+      },
+      {
+        "id": "p-boule-de-neige",
+        "name": "ブールドネージュ",
+        "price": 280
+      },
+      {
+        "id": "p-chiffon",
+        "name": "シフォンケーキ",
+        "price": 280
+      },
+      {
+        "id": "p-caramel-financier",
+        "name": "キャラメルフィナンシェ",
+        "price": 300
+      },
+      {
+        "id": "p-kouglof-chocolat",
+        "name": "クグロフショコラ",
+        "price": 320
+      },
+      {
+        "id": "p-pound-cake",
+        "name": "パウンドケーキ",
+        "price": 300
+      }
+    ]
+  },
+  {
+    "category": "酵母パン",
+    "items": [
+      {
+        "id": "p-focaccia",
+        "name": "フォカッチャ",
+        "price": 420
+      },
+      {
+        "id": "p-petit-pain",
+        "name": "プチパン",
+        "price": 350
+      }
+    ]
+  }
+]
