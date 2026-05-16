@@ -1,0 +1,12 @@
+---
+description: GitHub push 時は images フォルダも含める
+alwaysApply: true
+---
+
+# GitHub アップロード
+
+サイト（`index.html` ほか）は `images/` 内の写真を参照している。
+
+GitHub に push・commit するときは、HTML/CSS/JS とあわせて **`images/` フォルダ全体**（`images/store/` 含む）を必ず含める。画像だけローカルに残してリポジトリから欠かさない。
+
+`git add` の例: `git add index.html style.css images/`
