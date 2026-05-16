@@ -1,0 +1,87 @@
+<!-- ===== admin.htmlに追加：営業カレンダー管理カード =====
+   貼り付け位置: 「📝 更新記録 (News)」のカードの直後（</div>の後）に挿入
+-->
+<div class="dashboard-card">
+    <div class="card-title">📅 営業カレンダー管理</div>
+    <div style="margin-bottom:15px; font-size:0.85rem; color:#666;">
+        水曜は固定の定休日です。臨時休業日や水曜営業日を追加・削除できます。
+    </div>
+    <div class="list-container">
+        <div class="list-header">
+            <div class="col-date">日付</div>
+            <div class="col-content">区分</div>
+            <div class="col-action"></div>
+        </div>
+        <div id="calendar-list-rows"></div>
+    </div>
+    <div class="inline-add-form">
+        <input type="date" id="cal-date" class="form-input" style="flex:1.5;">
+        <select id="cal-type" class="form-input" style="flex:1;">
+            <option value="closed">臨時休業</option>
+            <option value="open">水曜だが営業</option>
+        </select>
+        <button onclick="addCalendarEntry()" class="btn btn-primary" style="margin:0; background:#c94d4d;">追加</button>
+    </div>
+    <div class="footer-buttons">
+        <button onclick="downloadJSON(getCalendarData(), 'calendar.json')" class="btn-main" style="background:#c94d4d;">📥 calendar.json を書き出す</button>
+        <button onclick="syncCalendar()" class="btn-text">サーバーから再取得</button>
+    </div>
+</div>
+
+<!-- ===== <script>内、PRODUCT_Key定数の直後に追加 ===== -->
+<script>
+const CALENDAR_Key = 'pol_calendar_data';
+let calendarData = { regularClosedDays:[3], specialClosedDates:[], specialOpenDates:[] };
+
+async function syncCalendar(){
+    try {
+        const res = await fetch('calendar.json?t='+Date.now());
+        if (res.ok) {
+            calendarData = Object.assign(calendarData, await res.json());
+            localStorage.setItem(CALENDAR_Key, JSON.stringify(calendarData));
+        }
+    } catch(e){ console.warn('calendar fetch failed', e); }
+    renderCalendarList();
+}
+function initCalendar(){
+    const stored = localStorage.getItem(CALENDAR_Key);
+    if (stored) { calendarData = Object.assign(calendarData, JSON.parse(stored)); renderCalendarList(); }
+    else syncCalendar();
+}
+function renderCalendarList(){
+    const c = document.getElementById('calendar-list-rows');
+    const rows = [];
+    calendarData.specialClosedDates.forEach((d,i)=> rows.push({date:d, type:'closed', idx:i}));
+    calendarData.specialOpenDates.forEach((d,i)=> rows.push({date:d, type:'open', idx:i}));
+    rows.sort((a,b)=> a.date.localeCompare(b.date));
+    if (rows.length === 0) { c.innerHTML = '<p style="text-align:center;padding:10px;color:#999;">登録なし（水曜定休のみ有効）</p>'; return; }
+    c.innerHTML = rows.map(r => `
+        <div class="list-row">
+            <div class="col-date">${r.date}</div>
+            <div class="col-content">${r.type==='closed'?'🔴 臨時休業':'🟢 水曜営業'}</div>
+            <div class="col-action"><button class="btn-icon-delete" onclick="deleteCalendarEntry('${r.type}','${r.date}')"><i class="icon-trash"></i></button></div>
+        </div>
+    `).join('');
+}
+window.addCalendarEntry = () => {
+    const date = document.getElementById('cal-date').value;
+    const type = document.getElementById('cal-type').value;
+    if (!date) return alert('日付を入力してください');
+    const arr = type==='closed' ? calendarData.specialClosedDates : calendarData.specialOpenDates;
+    if (arr.includes(date)) return alert('既に登録済みです');
+    arr.push(date); arr.sort();
+    localStorage.setItem(CALENDAR_Key, JSON.stringify(calendarData));
+    renderCalendarList();
+    document.getElementById('cal-date').value = '';
+};
+window.deleteCalendarEntry = (type, date) => {
+    if (!confirm(`${date} を削除しますか？`)) return;
+    const arr = type==='closed' ? calendarData.specialClosedDates : calendarData.specialOpenDates;
+    const idx = arr.indexOf(date);
+    if (idx >= 0) arr.splice(idx, 1);
+    localStorage.setItem(CALENDAR_Key, JSON.stringify(calendarData));
+    renderCalendarList();
+};
+window.getCalendarData = () => calendarData;
+// DOMContentLoaded内のPromise.all([...])の最後に追加: initCalendar()
+</script>

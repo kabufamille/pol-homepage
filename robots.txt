@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://kabufamille.github.io/pol-homepage/sitemap.xml
