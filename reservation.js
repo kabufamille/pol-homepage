@@ -46,22 +46,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // デフォルトの商品データ (読み込み失敗時の最終防衛ライン)
     const DEFAULT_PRODUCTS = [
         {
-            category: "酵母パン",
-            items: [
-                { id: "prod-focaccia", name: "フォカッチャ", price: 420 },
-                { id: "prod-petitpan", name: "プチパン", price: 350 }
-            ]
-        },
-        {
             category: "焼き菓子",
             items: [
-                { id: "prod-maccha", name: "抹茶フルーツケーキ", price: 350 },
-                { id: "prod-financier", name: "フィナンシェ", price: 280 },
-                { id: "prod-boule", name: "ブールドネージュ", price: 280 },
-                { id: "prod-chiffon", name: "シフォンケーキ", price: 280 },
-                { id: "prod-caramel", name: "キャラメルフィナンシェ", price: 300 },
-                { id: "prod-kouglof", name: "クグロフショコラ", price: 320 },
-                { id: "prod-pound", name: "パウンドケーキ", price: 300 }
+                { id: "p-matcha-pound", name: "抹茶パウンドケーキ", price: 350 },
+                { id: "p-pound-cake", name: "プレーンパウンド", price: 300 },
+                { id: "p-financier", name: "フィナンシェ", price: 280 },
+                { id: "p-boule-de-neige", name: "ブールドネージュ", price: 280 },
+                { id: "p-muffin", name: "マフィン", price: 320 },
+                { id: "p-diamant-cookie", name: "ディアマンクッキー", price: 300 }
             ]
         }
     ];

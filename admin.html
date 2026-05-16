@@ -160,6 +160,24 @@
             border-top: 1px solid #f0f0f0;
         }
 
+        .export-card {
+            background: #f9f6f1;
+            border-color: var(--color-secondary);
+        }
+
+        .export-desc {
+            color: #666;
+            font-size: 0.9rem;
+            line-height: 1.7;
+            margin-bottom: 18px;
+        }
+
+        .export-all-btn {
+            width: 100%;
+            font-size: 1rem;
+            padding: 14px 20px;
+        }
+
         .btn-main {
             background: #f57c00;
             color: white;
@@ -274,10 +292,10 @@
                 <h1>⚙️ 管理ダッシュボード</h1>
                 <div style="margin-top: 15px;">
                     <button onclick="setWorkingDirectory()" class="btn btn-primary" style="margin:0; font-size: 0.85rem; padding: 6px 16px; background: #607d8b; display: inline-flex; align-items: center; gap: 5px;">📁 保存先フォルダを設定する</button>
-                    <span id="dir-status" style="font-size: 0.85rem; color: #888; margin-left: 12px;">未設定 (設定すると1クリックで保存できます)</span>
+                    <span id="dir-status" style="font-size: 0.85rem; color: #888; margin-left: 12px;">保存先: pol-homepage</span>
                 </div>
             </div>
-            <div class="sync-badge">Live Sync Active</div>
+            <div class="sync-badge">自動保存</div>
         </div>
 
         <!-- 商品管理 -->
@@ -302,10 +320,6 @@
                 </select>
                 <button onclick="addProduct()" class="btn btn-primary" style="margin:0; background:#f57c00;">追加</button>
             </div>
-            <div class="footer-buttons">
-                <button onclick="downloadProducts()" class="btn-main">📥 products.json を書き出す</button>
-                <button onclick="syncData(PRODUCT_Key, 'products.json', 'products')" class="btn-text">サーバーから再取得</button>
-            </div>
         </div>
 
         <!-- イベント情報 -->
@@ -323,11 +337,6 @@
                 <input type="date" id="e-date" class="form-input" style="flex: 1;">
                 <input type="text" id="e-content" class="form-input" placeholder="イベント内容..." style="flex: 3;">
                 <button onclick="addEvent()" class="btn btn-primary" style="margin:0; background:#00897b;">追加</button>
-            </div>
-            <div class="footer-buttons">
-                <button onclick="downloadJSON(eventData, 'event_news.json')" class="btn-main"
-                    style="background:#00897b;">📥 event_news.json を書き出す</button>
-                <button onclick="syncData(EVENT_Key, 'event_news.json', 'event')" class="btn-text">サーバーから再取得</button>
             </div>
         </div>
 
@@ -347,17 +356,18 @@
                 <input type="text" id="n-content" class="form-input" placeholder="更新内容..." style="flex: 3;">
                 <button onclick="addNews()" class="btn btn-primary" style="margin:0;">追加</button>
             </div>
-            <div class="footer-buttons">
-                <button onclick="downloadJSON(newsData, 'news.json')" class="btn-main">📥 news.json を書き出す</button>
-                <button onclick="syncData(NEWS_Key, 'news.json', 'news')" class="btn-text">サーバーから再取得</button>
-            </div>
+        </div>
+
+        <div class="dashboard-card export-card">
+            <div class="card-title">📤 サイトに反映する</div>
+            <p class="export-desc">編集内容は自動で保存されています。公開するときだけ、下のボタンで3つのファイルをまとめて保存し、GitHub にアップロードしてください。</p>
+            <button type="button" onclick="exportAll()" class="btn-main export-all-btn">📥 3つのJSONをまとめて書き出す</button>
         </div>
 
         <div class="instruction-box">
-            <b>💡 運用フロー:</b><br>
-            1. リストを編集（追加・削除）すると即座に予約フォームに反映されます。<br>
-            2. 全ての編集が終わったら「書き出す」ボタンでファイルを保存してください。<br>
-            3. 保存したファイルをサーバーにアップロードすることで公開設定が完了します。
+            <b>💡 使い方（2ステップ）</b><br>
+            1. 商品・お知らせを追加・削除する → お取り置きページですぐ確認できます<br>
+            2. 終わったら「まとめて書き出す」→ 保存した3ファイルを GitHub にアップロード
         </div>
 
         <a href="index.html" class="back-link">← サイトトップへ戻る</a>
@@ -373,18 +383,93 @@
         let productItemsFlat = [];
         let workingDirectoryHandle = null;
 
+        const DEFAULT_SAVE_DIR_NAME = 'pol-homepage';
+        const SAVE_DIR_PICKER_ID = 'pol-homepage';
+        const HANDLE_DB = 'pol_admin_fs';
+        const HANDLE_STORE = 'directory';
+
+        function openHandleDb() {
+            return new Promise((resolve, reject) => {
+                const req = indexedDB.open(HANDLE_DB, 1);
+                req.onupgradeneeded = () => req.result.createObjectStore(HANDLE_STORE);
+                req.onsuccess = () => resolve(req.result);
+                req.onerror = () => reject(req.error);
+            });
+        }
+
+        async function persistDirectoryHandle(handle) {
+            const db = await openHandleDb();
+            await new Promise((resolve, reject) => {
+                const tx = db.transaction(HANDLE_STORE, 'readwrite');
+                tx.objectStore(HANDLE_STORE).put(handle, 'saveDir');
+                tx.oncomplete = resolve;
+                tx.onerror = () => reject(tx.error);
+            });
+            localStorage.setItem('pol_save_dir_name', handle.name);
+        }
+
+        async function ensureDirectoryPermission(handle) {
+            let perm = await handle.queryPermission({ mode: 'readwrite' });
+            if (perm === 'granted') return handle;
+            if (perm === 'prompt') {
+                perm = await handle.requestPermission({ mode: 'readwrite' });
+                if (perm === 'granted') return handle;
+            }
+            return null;
+        }
+
+        async function loadPersistedDirectoryHandle() {
+            if (!('indexedDB' in window)) return null;
+            try {
+                const db = await openHandleDb();
+                const handle = await new Promise((resolve, reject) => {
+                    const tx = db.transaction(HANDLE_STORE, 'readonly');
+                    const req = tx.objectStore(HANDLE_STORE).get('saveDir');
+                    req.onsuccess = () => resolve(req.result || null);
+                    req.onerror = () => reject(req.error);
+                });
+                if (!handle) return null;
+                return await ensureDirectoryPermission(handle);
+            } catch (e) {
+                console.warn('保存フォルダの復元に失敗しました', e);
+                return null;
+            }
+        }
+
+        function updateDirStatus(handle) {
+            const statusEl = document.getElementById('dir-status');
+            if (handle) {
+                statusEl.textContent = `保存先: ${handle.name}`;
+                statusEl.style.color = '#2e7d32';
+                statusEl.style.fontWeight = 'bold';
+            } else {
+                statusEl.textContent = `保存先: ${DEFAULT_SAVE_DIR_NAME}（初回のみフォルダを選ぶと次回から自動）`;
+                statusEl.style.color = '#888';
+                statusEl.style.fontWeight = 'normal';
+            }
+        }
+
+        async function initSaveDirectory() {
+            workingDirectoryHandle = await loadPersistedDirectoryHandle();
+            updateDirStatus(workingDirectoryHandle);
+        }
+
         async function setWorkingDirectory() {
             try {
-                if ('showDirectoryPicker' in window) {
-                    workingDirectoryHandle = await window.showDirectoryPicker();
-                    const statusEl = document.getElementById('dir-status');
-                    statusEl.textContent = `保存先: ${workingDirectoryHandle.name}`;
-                    statusEl.style.color = '#2e7d32';
-                    statusEl.style.fontWeight = 'bold';
-                    alert(`保存先を「${workingDirectoryHandle.name}」フォルダに設定しました。\n今後「書き出す」ボタンを押すと、このフォルダ内のファイルへ自動で上書き保存されます。`);
-                } else {
+                if (!('showDirectoryPicker' in window)) {
                     alert('お使いのブラウザはフォルダ選択に対応していません。');
+                    return;
                 }
+                workingDirectoryHandle = await window.showDirectoryPicker({
+                    id: SAVE_DIR_PICKER_ID,
+                    mode: 'readwrite'
+                });
+                await persistDirectoryHandle(workingDirectoryHandle);
+                updateDirStatus(workingDirectoryHandle);
+                const nameHint = workingDirectoryHandle.name === DEFAULT_SAVE_DIR_NAME
+                    ? ''
+                    : `\n（推奨フォルダ名: ${DEFAULT_SAVE_DIR_NAME}）`;
+                alert(`保存先を「${workingDirectoryHandle.name}」に設定しました。${nameHint}\n「まとめて書き出す」でこのフォルダ内の3ファイルを上書き保存します。`);
             } catch (error) {
                 if (error.name !== 'AbortError') {
                     console.error('フォルダ選択エラー:', error);
@@ -394,16 +479,11 @@
         }
 
         // --- フォールバックデータ開始 ---
+        // 初回読み込み失敗時のみ使用（news.json / products.json と同期）
         const defaultNewsData = [
+          { "date": "2026.05.16", "content": "追加項目設定" },
           { "date": "2026.02.18", "content": "お取り置きline通知の人数を増やす" },
-          { "date": "2026.02.17", "content": "お取り置き項目で商品の追加・削除を簡易的にする" },
-          { "date": "2026.01.28", "content": "お取り置き選択中の欄追加" },
-          { "date": "2026.01.20", "content": "ロゴにリンク挿入" },
-          { "date": "2026.01.19", "content": "インスタグラムのリンクのみ追加" },
-          { "date": "2026.01.16", "content": "お取り置きバグ修正" },
-          { "date": "2026.01.16", "content": "お取り置き複数追加機能追加" },
-          { "date": "2026.01.16", "content": "機能更新" },
-          { "date": "2026.01.15", "content": "お知らせ機能追加" }
+          { "date": "2026.02.17", "content": "お取り置き項目で商品の追加・削除を簡易的にする" }
         ];
 
         const defaultEventData = [
@@ -414,20 +494,12 @@
           {
             "category": "焼き菓子",
             "items": [
-              { "id": "p-matcha-pound", "name": "抹茶パウンドケーキ", "price": 350, "image": "images/store/matcha-pound.jpg", "description": "宇治抹茶を贅沢に使用した、香り高いパウンドケーキです。" },
-              { "id": "p-financier", "name": "フィナンシェ", "price": 280, "image": "images/store/financier.jpg", "description": "焦がしバターのコクとアーモンドの香ばしさが楽しめます。" },
-              { "id": "p-boule-de-neige", "name": "ブールドネージュ", "price": 280, "image": "images/store/boule-de-neige.jpg", "description": "口の中でほろほろと溶ける、雪のような白いクッキーです。" },
-              { "id": "p-chiffon", "name": "シフォンケーキ", "price": 280, "image": "images/store/chiffon.jpg", "description": "ふわふわ、しっとりとした食感のプレーンシフォンです。" },
-              { "id": "p-caramel-financier", "name": "キャラメルフィナンシェ", "price": 300, "image": "images/store/caramel-financier.jpg", "description": "自家製キャラメルのほろ苦さがアクセントのフィナンシェ。" },
-              { "id": "p-kouglof-chocolat", "name": "クグロフショコラ", "price": 320, "image": "images/store/kouglof-chocolat.jpg", "description": "濃厚なチョコ生地にオレンジピールを合わせた贅沢な一品。" },
-              { "id": "p-pound-cake", "name": "パウンドケーキ", "price": 300, "image": "images/store/pound-cake.jpg", "description": "シンプルながらも素材の味が引き立つ王道の味わい。" }
-            ]
-          },
-          {
-            "category": "酵母パン",
-            "items": [
-              { "id": "p-focaccia", "name": "フォカッチャ", "price": 420, "image": "images/store/focaccia.jpg", "description": "オリーブオイルの香りとゲランドの塩がアクセント。" },
-              { "id": "p-petit-pain", "name": "プチパン", "price": 350, "image": "images/store/petit-pain.jpg", "description": "お食事のお供にぴったりな、シンプルな酵母パン。" }
+              { "id": "p-matcha-pound", "name": "抹茶パウンドケーキ", "price": 350 },
+              { "id": "p-pound-cake", "name": "プレーンパウンド", "price": 300 },
+              { "id": "p-financier", "name": "フィナンシェ", "price": 280 },
+              { "id": "p-boule-de-neige", "name": "ブールドネージュ", "price": 280 },
+              { "id": "p-muffin", "name": "マフィン", "price": 320 },
+              { "id": "p-diamant-cookie", "name": "ディアマンクッキー", "price": 300 }
             ]
           }
         ];
@@ -439,6 +511,8 @@
             document.getElementById('e-date').value = today;
             document.getElementById('n-date').value = today;
 
+            await initSaveDirectory();
+
             await Promise.all([
                 initData(NEWS_Key, 'news.json', d => { newsData = d; renderNews(); }, defaultNewsData, 'news'),
                 initData(EVENT_Key, 'event_news.json', d => { eventData = d; renderEvents(); }, defaultEventData, 'event'),
@@ -448,44 +522,56 @@
 
         async function initData(key, file, cb, fallback, type) {
             const stored = localStorage.getItem(key);
-            if (stored && JSON.parse(stored).length > 0) {
-                cb(JSON.parse(stored));
-            } else {
-                await syncData(key, file, type, cb, fallback);
+            if (stored) {
+                try {
+                    const parsed = JSON.parse(stored);
+                    if (Array.isArray(parsed) && parsed.length > 0) {
+                        cb(parsed);
+                        return;
+                    }
+                } catch (_) { /* 破損時はJSONから読み込み */ }
+            }
+            await loadJsonFile(key, file, type, cb, fallback);
+        }
+
+        function getDefaultForKey(key) {
+            if (key === NEWS_Key) return [...defaultNewsData];
+            if (key === EVENT_Key) return [...defaultEventData];
+            if (key === PRODUCT_Key) return JSON.parse(JSON.stringify(defaultProductData));
+            return [];
+        }
+
+        function applySyncedData(key, type, data, cb) {
+            const list = Array.isArray(data) ? data : [];
+            localStorage.setItem(key, JSON.stringify(list));
+            if (cb) {
+                cb(list);
+                return;
+            }
+            if (type === 'products') {
+                flattenProducts(list);
+                renderProducts();
+            } else if (type === 'event') {
+                eventData = list;
+                renderEvents();
+            } else if (type === 'news') {
+                newsData = list;
+                renderNews();
             }
         }
 
-        async function syncData(key, file, type, cb, fallback) {
+        async function loadJsonFile(key, file, type, cb, fallback) {
             try {
-                const res = await fetch(`${file}?t=${Date.now()}`);
-                if (res.ok) {
-                    const data = await res.json();
-                    localStorage.setItem(key, JSON.stringify(data));
-                    if (cb) cb(data);
-                    else if (type === 'products') { flattenProducts(data); renderProducts(); }
-                    else if (type === 'event') { eventData = data; renderEvents(); }
-                    else if (type === 'news') { newsData = data; renderNews(); }
-                    // if (type && !fallback) alert(`${file} を読み込みました`);
-                } else {
-                    throw new Error('Response not ok');
-                }
+                const res = await fetch(`${file}?t=${Date.now()}`, { cache: 'no-store' });
+                if (!res.ok) throw new Error('Response not ok');
+                const data = await res.json();
+                applySyncedData(key, type, data, cb);
             } catch (e) {
-                console.warn(`${file} の取得に失敗しました。フォールバックデータを使用します。`, e);
-                // 再取得ボタンから呼ばれた場合 (fallbackは undefined) は、デフォルトデータでリセットする。
-                // そのため、手動で取得したい場合のデフォルト引き当て用としても使う。
-                let defaultFallback = [];
-                if (key === NEWS_Key) defaultFallback = [...defaultNewsData];
-                if (key === EVENT_Key) defaultFallback = [...defaultEventData];
-                if (key === PRODUCT_Key) defaultFallback = JSON.parse(JSON.stringify(defaultProductData)); 
-                                
-                const data = fallback || defaultFallback;
+                console.warn(`${file} の取得に失敗しました。`, e);
+                const data = fallback || getDefaultForKey(key);
                 if (data.length > 0) {
-                    localStorage.setItem(key, JSON.stringify(data));
+                    applySyncedData(key, type, data, cb);
                 }
-                if (cb) cb(data);
-                else if (type === 'products') { flattenProducts(data); renderProducts(); }
-                else if (type === 'event') { eventData = data; renderEvents(); }
-                else if (type === 'news') { newsData = data; renderNews(); }
             }
         }
 
@@ -596,7 +682,7 @@
             render();
         }
 
-        window.downloadProducts = () => {
+        function buildProductsNested() {
             const nested = [];
             const cats = [...new Set(productItemsFlat.map(p => p.category))];
             cats.forEach(c => {
@@ -605,10 +691,30 @@
                     items: productItemsFlat.filter(p => p.category === c).map(({ id, name, price }) => ({ id, name, price }))
                 });
             });
-            downloadJSON(nested, 'products.json');
+            return nested;
+        }
+
+        window.exportAll = async () => {
+            const files = [
+                [buildProductsNested(), 'products.json'],
+                [eventData, 'event_news.json'],
+                [newsData, 'news.json']
+            ];
+            try {
+                for (const [data, filename] of files) {
+                    await downloadJSON(data, filename, { silent: true });
+                }
+                alert('✅ products.json / event_news.json / news.json を保存しました。\nGitHub にアップロードするとサイトに反映されます。');
+            } catch (error) {
+                if (error.name !== 'AbortError') {
+                    console.error('書き出しエラー:', error);
+                    alert('保存に失敗しました: ' + error.message);
+                }
+            }
         };
 
-        window.downloadJSON = async (data, filename) => {
+        window.downloadJSON = async (data, filename, options = {}) => {
+            const silent = options.silent === true;
             try {
                 if (workingDirectoryHandle) {
                     // フォルダが設定されていれば、その中のファイルに直接サイレントに上書き
@@ -616,8 +722,8 @@
                     const writable = await fileHandle.createWritable();
                     await writable.write(JSON.stringify(data, null, 2));
                     await writable.close();
-                    alert(`✅ 自動上書き保存完了: ${filename}`);
-                } else if ('showSaveFilePicker' in window) {
+                    if (!silent) alert(`✅ 自動上書き保存完了: ${filename}`);
+                } else if ('showSaveFilePicker' in window && !silent) {
                     // フォルダ未設定の場合は個別にファイルを選択して上書き
                     const opts = {
                         suggestedName: filename,
@@ -627,7 +733,7 @@
                     const writable = await handle.createWritable();
                     await writable.write(JSON.stringify(data, null, 2));
                     await writable.close();
-                    alert(`${handle.name} を上書き保存しました！\n上に「保存先フォルダを設定」ボタンがあるので、次回からはそちらを使うと一括自動保存できて便利です。`);
+                    alert(`${handle.name} を上書き保存しました！\n「保存先フォルダを設定」しておくと、次回からまとめて書き出せます。`);
                 } else {
                     // 非対応の場合は従来のダウンロード方式
                     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
