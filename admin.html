@@ -704,7 +704,7 @@
                 for (const [data, filename] of files) {
                     await downloadJSON(data, filename, { silent: true });
                 }
-                alert('✅ products.json / event_news.json / news.json を保存しました。\nGitHub にアップロードするとサイトに反映されます。');
+                alert('✅ products.json / event_news.json / news.json を保存しました。\nGitHub に push 後、1〜2分で反映されます。\n表示が古いときはサイトをスーパーリロード（Ctrl+Shift+R）してください。');
             } catch (error) {
                 if (error.name !== 'AbortError') {
                     console.error('書き出しエラー:', error);

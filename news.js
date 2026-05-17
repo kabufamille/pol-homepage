@@ -4,26 +4,25 @@ document.addEventListener('DOMContentLoaded', async () => {
     await loadTimeline();
 });
 
+async function fetchJsonNoCache(filename) {
+    const res = await fetch(`${filename}?t=${Date.now()}`, { cache: 'no-store' });
+    return res.ok ? await res.json() : [];
+}
+
 async function loadTimeline() {
     const timelineEl = document.getElementById('news-timeline');
     if (!timelineEl) return;
 
     try {
-        // news.json を取得
         let newsData = [];
-        try {
-            const res = await fetch('news.json');
-            newsData = res.ok ? await res.json() : [];
-        } catch {
-            newsData = [];
-        }
-
-        // event_news.json を取得
         let eventData = [];
         try {
-            const res = await fetch('event_news.json');
-            eventData = res.ok ? await res.json() : [];
+            [newsData, eventData] = await Promise.all([
+                fetchJsonNoCache('news.json'),
+                fetchJsonNoCache('event_news.json')
+            ]);
         } catch {
+            newsData = [];
             eventData = [];
         }
 
