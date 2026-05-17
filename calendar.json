@@ -1,5 +1,8 @@
 {
-  "regularClosedDays": [3],
+  "regularClosedDays": [
+    0,
+    3
+  ],
   "specialClosedDates": [],
   "specialOpenDates": []
 }
