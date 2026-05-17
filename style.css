@@ -226,6 +226,16 @@ h4 {
     font-weight: 500;
 }
 
+.hero-lead {
+    font-size: 1.65rem;
+    color: #FFFFFF;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
+    font-weight: 400;
+    display: inline-block;
+    margin-top: 0.35em;
+    line-height: 1.6;
+}
+
 .hero-main {
     font-size: 3.5rem;
     color: #FFFFFF;
@@ -744,6 +754,15 @@ h4 {
         text-align: center;
     }
 
+    .hero-lead {
+        font-size: 1.15rem !important;
+        padding: 0 20px !important;
+        line-height: 1.7;
+        display: block;
+        margin-bottom: 12px;
+        text-align: center;
+    }
+
     .hero-main {
         font-size: 2.2rem !important;
         display: block;
@@ -809,6 +828,15 @@ h4 {
         word-break: normal;
         overflow-wrap: break-word;
         margin-bottom: 12px;
+        text-align: center;
+    }
+
+    .hero-lead {
+        font-size: 1rem !important;
+        padding: 0 15px !important;
+        line-height: 1.65;
+        display: block;
+        margin-bottom: 10px;
         text-align: center;
     }
 
