@@ -794,6 +794,19 @@ h4 {
         word-break: normal;
         overflow-wrap: break-word;
         text-align: center;
+        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
+    }
+
+    .hero-overlay {
+        background: rgba(0, 0, 0, 0.48);
+    }
+
+    .hero-main {
+        text-shadow: 0 2px 12px rgba(0, 0, 0, 0.75);
+    }
+
+    .hero-sub {
+        text-shadow: 0 2px 12px rgba(0, 0, 0, 0.75);
     }
 
     .header-container {
@@ -881,6 +894,7 @@ h4 {
         word-break: normal;
         overflow-wrap: break-word;
         text-align: center;
+        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
     }
 
     .btn {
