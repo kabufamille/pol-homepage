@@ -91,15 +91,11 @@
 
     <main>
         <section class="section">
-            <div class="container">
-                <div class="section-header">
-                    <span class="section-subtitle">ONLINE SHOP</span>
-                    <h3 class="section-title">オンラインショップ</h3>
-                </div>
-                <!-- Category Filter -->
+            <div class="contai                <!-- Category Filter -->
                 <div class="flex justify-center gap-4 mb-12">
                     <button class="filter-btn active px-6 py-2 rounded-full border border-[#7d6b5d] bg-[#7d6b5d] text-white transition-all shadow-md" data-category="all">すべて</button>
                     <button class="filter-btn px-6 py-2 rounded-full border border-[#7d6b5d] text-[#7d6b5d] hover:bg-orange-50 transition-all" data-category="焼き菓子">焼き菓子</button>
+                    <button class="filter-btn px-6 py-2 rounded-full border border-[#7d6b5d] text-[#7d6b5d] hover:bg-orange-50 transition-all" data-category="酵母パン">酵母パン</button>
                 </div>
 
                 <div id="products-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
@@ -116,17 +112,69 @@
     </footer>
 
     <script>
-        // --- 商品データを直接定義 (CORSエラー回避) ---
-        const products = [
-            { id: "p-matcha-pound", name: "抹茶パウンドケーキ", price: 350, image: "images/store/matcha-pound.jpg", description: "宇治抹茶を贅沢に使用した、香り高いパウンドケーキです。", category: "焼き菓子" },
-            { id: "p-pound-cake", name: "プレーンパウンド", price: 300, image: "images/store/pound-cake.jpg", description: "シンプルながらも素材の味が引き立つ王道の味わい。", category: "焼き菓子" },
-            { id: "p-financier", name: "フィナンシェ", price: 280, image: "images/store/financier.jpg", description: "焦がしバターのコクとアーモンドの香ばしさが楽しめます。", category: "焼き菓子" },
-            { id: "p-boule-de-neige", name: "ブールドネージュ", price: 280, image: "images/store/boule-de-neige.jpg", description: "口の中でほろほろと溶ける、雪のような白いクッキーです。", category: "焼き菓子" },
-            { id: "p-muffin", name: "マフィン", price: 320, image: "images/store/muffin.jpg", description: "外はカリッと中はしっとり。素材の甘みが広がるマフィンです。", category: "焼き菓子" },
-            { id: "p-diamant-cookie", name: "ディアマンクッキー", price: 300, image: "images/store/diamant-cookie.jpg", description: "ザクザクとした食感とバターの香りが豊かな、端に砂糖をまぶしたクッキーです。", category: "焼き菓子" }
-        ];
+        // --- 商品詳細データのデフォルトマッピング定義 ---
+        const DEFAULT_PRODUCT_DETAILS = {
+            "p-matcha-pound": {
+                name: "抹茶パウンドケーキ",
+                image: "images/store/matcha-pound.jpg",
+                description: "宇治抹茶を贅沢に使用した、香り高いパウンドケーキです。"
+            },
+            "p-pound-cake": {
+                name: "プレーンパウンド",
+                image: "images/store/pound-cake.jpg",
+                description: "シンプルながらも素材の味が引き立つ王道の味わい。"
+            },
+            "p-financier": {
+                name: "フィナンシェ",
+                image: "images/store/financier.jpg",
+                description: "焦がしバターのコクとアーモンドの香ばしさが楽しめます。"
+            },
+            "p-boule-de-neige": {
+                name: "ブールドネージュ",
+                image: "images/store/boule-de-neige.jpg",
+                description: "口の中でほろほろと溶ける、雪のような白いクッキーです。"
+            },
+            "p-muffin": {
+                name: "マフィン",
+                image: "images/store/muffin.jpg",
+                description: "外はカリッと中はしっとり。素材の甘みが広がるマフィンです。"
+            },
+            "p-diamant-cookie": {
+                name: "ディアマンクッキー",
+                image: "images/store/diamant-cookie.jpg",
+                description: "ザクザクとした食感とバターの香りが豊かな、端に砂糖をまぶしたクッキーです。"
+            },
+            "p-chiffon": {
+                name: "シフォンケーキ",
+                image: "images/pol_logo.JPG",
+                description: "ふわふわしっとりとした食感にこだわったpol特製のシフォンケーキです。"
+            },
+            "p-caramel-financier": {
+                name: "キャラメルフィナンシェ",
+                image: "images/store/financier.jpg",
+                description: "ほろ苦いキャラメルの風味をプラスした、コク深い味わいのフィナンシェです。"
+            },
+            "p-kouglof-chocolat": {
+                name: "クグロフショコラ",
+                image: "images/pol_logo.JPG",
+                description: "上品なチョコレートの甘みとナッツの香ばしさが詰まったクグロフです。"
+            },
+            "p-focaccia": {
+                name: "フォカッチャ",
+                image: "images/pol_logo.JPG",
+                description: "自家製フルーツ酵母を使用した、もっちりジューシーなオリーブ香るフォカッチャです。"
+            },
+            "p-petit-pain": {
+                name: "プチパン",
+                image: "images/pol_logo.JPG",
+                description: "自家製フルーツ酵母で焼き上げた、小麦本来の甘みが噛みしめるほどに広がるシンプルなプチパン。"
+            }
+        };
 
-        document.addEventListener('DOMContentLoaded', () => {
+        // 動的にロードされる商品データ配列
+        let products = [];
+
+        document.addEventListener('DOMContentLoaded', async () => {
             const productsContainer = document.getElementById('products-container');
             const cartSidebar = document.getElementById('cart-sidebar');
             const cartOverlay = document.getElementById('cart-overlay');
@@ -140,9 +188,60 @@
 
             let cart = JSON.parse(localStorage.getItem('pol_cart')) || [];
 
+            // --- products.json から商品データを動的取得 ---
+            async function loadProducts() {
+                try {
+                    const response = await fetch(`products.json?t=${Date.now()}`);
+                    if (!response.ok) throw new Error('Failed to fetch products');
+                    const categories = await response.json();
+                    
+                    products = [];
+                    categories.forEach(cat => {
+                        cat.items.forEach(item => {
+                            const details = DEFAULT_PRODUCT_DETAILS[item.id] || {
+                                image: "images/pol_logo.JPG",
+                                description: "自家製素材とこだわりの製法で仕上げた、pol自慢の一品です。"
+                            };
+                            products.push({
+                                id: item.id,
+                                name: item.name,
+                                price: item.price,
+                                category: cat.category,
+                                image: details.image,
+                                description: details.description
+                            });
+                        });
+                    });
+                    console.log('Products successfully loaded and synced:', products);
+                } catch (error) {
+                    console.error('Error loading products, using defaults:', error);
+                    // エラー時のフォールバックとしてデフォルト定義からデータを生成
+                    products = Object.keys(DEFAULT_PRODUCT_DETAILS).map(id => {
+                        const details = DEFAULT_PRODUCT_DETAILS[id];
+                        return {
+                            id,
+                            name: details.name,
+                            price: 300,
+                            category: id === "p-focaccia" || id === "p-petit-pain" ? "酵母パン" : "焼き菓子",
+                            image: details.image,
+                            description: details.description
+                        };
+                    });
+                }
+            }
+
             function renderProducts(filter = 'all') {
                 const filtered = filter === 'all' ? products : products.filter(p => p.category === filter);
                 
+                if (filtered.length === 0) {
+                    productsContainer.innerHTML = `
+                        <div class="col-span-full text-center py-20 text-gray-400">
+                            <p class="font-kiwi text-lg">現在、このカテゴリの商品はありません。</p>
+                        </div>
+                    `;
+                    return;
+                }
+
                 productsContainer.innerHTML = filtered.map((product, index) => `
                     <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 animate-fade-in group border border-gray-50 flex flex-col h-full" style="animation-delay: ${index * 0.1}s">
                         <div class="relative overflow-hidden aspect-square bg-white">
@@ -180,6 +279,7 @@
 
             window.addToCart = (id) => {
                 const product = products.find(p => p.id === id);
+                if (!product) return;
                 const existing = cart.find(item => item.id === id);
                 if (existing) {
                     existing.quantity += 1;
@@ -301,6 +401,8 @@
             closeCart.addEventListener('click', closeCartSidebar);
             cartOverlay.addEventListener('click', closeCartSidebar);
 
+            // 初期化処理を実行
+            await loadProducts();
             renderProducts();
             updateCartUI();
         });
