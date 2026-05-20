@@ -104,7 +104,7 @@
                     <button class="filter-btn px-6 py-2 rounded-full border border-[#7d6b5d] text-[#7d6b5d] hover:bg-orange-50 transition-all" data-category="酵母パン">酵母パン</button>
                 </div>
 
-                <div id="products-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                <div id="products-container" class="gallery-grid">
                     <!-- 商品データがJavaScriptによってここに挿入されます -->
                 </div>
             </div>
@@ -249,7 +249,7 @@
                 }
 
                 productsContainer.innerHTML = filtered.map((product, index) => `
-                    <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 animate-fade-in group border border-gray-50 flex flex-col h-full" style="animation-delay: ${index * 0.1}s">
+                    <div class="gallery-item animate-fade-in group" style="animation-delay: ${index * 0.1}s; height: 100%; border-radius: 10px; overflow: hidden; background-color: var(--color-white); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05); display: flex; flex-direction: column;">
                         <div class="relative overflow-hidden h-[200px] w-full bg-[#faf8f5] flex items-center justify-center p-2">
                             <img src="${product.image}" alt="${product.name}"
                                 class="max-w-full max-h-full object-contain rounded-lg group-hover:scale-105 transition-transform duration-700"
@@ -258,10 +258,10 @@
                                 ${product.category}
                             </span>
                         </div>
-                        <div class="p-6 flex flex-col flex-1">
-                            <h3 class="text-lg font-bold text-gray-800 mb-2 font-kiwi">${product.name}</h3>
-                            <p class="text-xs text-gray-500 mb-4 flex-1">${product.description}</p>
-                            <div class="flex items-center justify-between mt-auto">
+                        <div class="gallery-info flex flex-col flex-1" style="text-align: left; padding: 20px; color: var(--color-text);">
+                            <h4 class="font-kiwi" style="margin-bottom: 8px; color: var(--color-primary); font-size: 1.1rem; font-weight: bold;">${product.name}</h4>
+                            <p style="font-size: 0.85rem; opacity: 0.8; margin-bottom: 16px; flex-grow: 1; min-height: 40px;">${product.description}</p>
+                            <div class="flex items-center justify-between mt-auto w-full">
                                 <span class="text-xl font-bold text-[#7d6b5d]">¥${product.price.toLocaleString()}</span>
                                 <button onclick="addToCart('${product.id}')" 
                                     class="bg-white border-2 border-[#7d6b5d] text-[#7d6b5d] hover:bg-[#7d6b5d] hover:text-white px-4 py-2 rounded-full text-sm font-bold transition-all transform active:scale-90 flex items-center gap-2">
