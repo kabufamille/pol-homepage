@@ -25,20 +25,28 @@ document.addEventListener('DOMContentLoaded', () => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.classList.add('visible');
-                // Optional: Stop observing once visible to run only once
-                // observer.unobserve(entry.target); 
             }
         });
     }, {
-        threshold: 0.1
+        threshold: 0.12
     });
 
-    // Elements to animate on scroll
-    document.querySelectorAll('[data-scroll]').forEach((el) => {
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(30px)';
-        el.style.transition = 'all 0.8s ease-out';
-        observer.observe(el);
+    // Elements to animate on scroll — staggered by section (pattern C)
+    const scrollEls = document.querySelectorAll('[data-scroll]');
+    const sectionMap = new Map();
+    scrollEls.forEach((el) => {
+        const section = el.closest('section') || el.parentElement;
+        if (!sectionMap.has(section)) sectionMap.set(section, []);
+        sectionMap.get(section).push(el);
+    });
+    sectionMap.forEach((els) => {
+        els.forEach((el, i) => {
+            const delay = i * 0.18;
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(40px)';
+            el.style.transition = `opacity 0.85s cubic-bezier(0.16,1,0.3,1) ${delay}s, transform 0.85s cubic-bezier(0.16,1,0.3,1) ${delay}s`;
+            observer.observe(el);
+        });
     });
 
     // Add visible class logic dynamically for scroll elements
