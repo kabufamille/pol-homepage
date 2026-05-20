@@ -91,7 +91,13 @@
 
     <main>
         <section class="section">
-            <div class="contai                <!-- Category Filter -->
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-subtitle">ONLINE SHOP</span>
+                    <h3 class="section-title">オンラインショップ</h3>
+                </div>
+
+                <!-- Category Filter -->
                 <div class="flex justify-center gap-4 mb-12">
                     <button class="filter-btn active px-6 py-2 rounded-full border border-[#7d6b5d] bg-[#7d6b5d] text-white transition-all shadow-md" data-category="all">すべて</button>
                     <button class="filter-btn px-6 py-2 rounded-full border border-[#7d6b5d] text-[#7d6b5d] hover:bg-orange-50 transition-all" data-category="焼き菓子">焼き菓子</button>
@@ -244,9 +250,9 @@
 
                 productsContainer.innerHTML = filtered.map((product, index) => `
                     <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 animate-fade-in group border border-gray-50 flex flex-col h-full" style="animation-delay: ${index * 0.1}s">
-                        <div class="relative overflow-hidden aspect-square bg-white">
+                        <div class="relative overflow-hidden h-[200px] w-full bg-[#faf8f5] flex items-center justify-center p-2">
                             <img src="${product.image}" alt="${product.name}"
-                                class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                                class="max-w-full max-h-full object-contain rounded-lg group-hover:scale-105 transition-transform duration-700"
                                 onerror="this.src='images/pol_logo.JPG'">
                             <span class="absolute top-4 left-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-[10px] font-bold tracking-widest text-[#7d6b5d] shadow-sm">
                                 ${product.category}
