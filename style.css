@@ -498,7 +498,7 @@ h4 {
     color: var(--color-primary);
     /* Changed to primary for better contrast on white */
     margin-top: 10px;
-    display: block;
+    display: none;
 }
 
 /* Animations helper classes */
