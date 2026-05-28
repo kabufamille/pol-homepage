@@ -73,7 +73,7 @@
             <p class="text-center text-gray-400 mt-10">カートは空です</p>
         </div>
         <div class="p-6 border-t bg-[#fdfbf7]">
-            <div class="flex justify-between items-center text-xl font-bold mb-6 text-[#7d6b5d]">
+            <div class="flex justify-between items-center text-xl font-bold mb-6 text-[#7d6b5d]" style="display:none;">
                 <span>合計:</span>
                 <span id="cart-total-amount">¥0</span>
             </div>
@@ -262,7 +262,7 @@
                             <h4 class="font-kiwi" style="margin-bottom: 8px; color: var(--color-primary); font-size: 1.1rem; font-weight: bold;">${product.name}</h4>
                             <p style="font-size: 0.85rem; opacity: 0.8; margin-bottom: 16px; flex-grow: 1; min-height: 40px;">${product.description}</p>
                             <div class="flex items-center justify-between mt-auto w-full">
-                                <span class="text-xl font-bold text-[#7d6b5d]">¥${product.price.toLocaleString()}</span>
+                                <span class="text-xl font-bold text-[#7d6b5d]" style="display:none;">¥${product.price.toLocaleString()}</span>
                                 <button onclick="addToCart('${product.id}')" 
                                     class="bg-white border-2 border-[#7d6b5d] text-[#7d6b5d] hover:bg-[#7d6b5d] hover:text-white px-4 py-2 rounded-full text-sm font-bold transition-all transform active:scale-90 flex items-center gap-2">
                                     <span>🛒</span> 追加
@@ -340,7 +340,7 @@
                             <img src="${item.image}" alt="${item.name}" class="w-16 h-16 object-cover rounded-lg shadow-sm" onerror="this.src='images/pol_logo.webp'">
                             <div class="flex-1">
                                 <h5 class="text-sm font-bold text-gray-800 font-kiwi">${item.name}</h5>
-                                <p class="text-xs text-[#7d6b5d] font-bold">¥${item.price.toLocaleString()}</p>
+                                <p class="text-xs text-[#7d6b5d] font-bold" style="display:none;">¥${item.price.toLocaleString()}</p>
                                 <div class="flex items-center gap-3 mt-2">
                                     <div class="flex items-center gap-3 bg-gray-100 rounded-full px-3 py-1">
                                         <button onclick="updateQuantity('${item.id}', -1)" class="text-lg leading-none hover:text-[#d98d8d] transition">−</button>
