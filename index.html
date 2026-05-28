@@ -193,6 +193,22 @@
                             <p class="price">¥300</p>
                         </div>
                     </div>
+                    <div class="gallery-item" data-scroll>
+                        <img src="images/store/focaccia.webp" alt="ガーリックフォカッチャ">
+                        <div class="gallery-info">
+                            <h4>ガーリックフォカッチャ</h4>
+                            <p>天然酵母でじっくり発酵させた生地に、ガーリックをたっぷり。近日登場予定です。</p>
+                            <p class="price">¥420</p>
+                        </div>
+                    </div>
+                    <div class="gallery-item" data-scroll>
+                        <img src="images/store/scone.webp" alt="酵母スコーン">
+                        <div class="gallery-info">
+                            <h4>酵母スコーン</h4>
+                            <p>1号酵母を使ったスコーン。外はさっくり、中はしっとりとした仕上がりです。近日登場予定です。</p>
+                            <p class="price">¥350</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -299,20 +315,4 @@
         const y=cur.getFullYear(),m=cur.getMonth();
         document.getElementById('bc-title').textContent=y+'年'+(m+1)+'月';
         const grid=document.getElementById('bc-grid'); grid.innerHTML='';
-        DOW.forEach((d,i)=>{const el=document.createElement('div');el.className='bc-dow'+(i===0?' sun':'')+(i===6?' sat':'');el.textContent=d;grid.appendChild(el);});
-        const firstDay=new Date(y,m,1).getDay(),lastDate=new Date(y,m+1,0).getDate(),todayIso=new Date().toISOString().split('T')[0];
-        for(let i=0;i<firstDay;i++){const el=document.createElement('div');el.className='bc-day empty';el.textContent='0';grid.appendChild(el);}
-        for(let d=1;d<=lastDate;d++){const date=new Date(y,m,d),iso=date.toISOString().split('T')[0],el=document.createElement('div');el.className='bc-day';if(isClosed(date))el.classList.add('closed');if(iso===todayIso)el.classList.add('today');el.textContent=d;grid.appendChild(el);}
-    }
-    document.getElementById('bc-prev').addEventListener('click',()=>{cur.setMonth(cur.getMonth()-1);render();});
-    document.getElementById('bc-next').addEventListener('click',()=>{cur.setMonth(cur.getMonth()+1);render();});
-})();
-// FAQアコーディオン
-document.querySelectorAll('.faq-q').forEach(q=>{
-    q.addEventListener('click',()=>q.parentElement.classList.toggle('open'));
-});
-</script>
-
-</body>
-
-</html>
+        DOW.forEach((d,i)=>{const el=document.createElement('div');el.class
