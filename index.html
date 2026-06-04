@@ -374,17 +374,24 @@ document.querySelectorAll('.faq-q').forEach(q=>{
       if (!$bg.length) return;
       $bg.ripples({ resolution: 512, dropRadius: 9, perturbance: 0.012, interactive: true });
       document.body.classList.add('ripples-on');
-      // 一粒の雨が落ちたような細く綺麗な波紋を、ときどき落とす
-      setInterval(function () {
+      function dropOne(r, s) {
         var w = $bg.outerWidth(), h = $bg.outerHeight();
-        $bg.ripples('drop', Math.random() * w, Math.random() * h, 8, 0.022);
-      }, 2400);
+        $bg.ripples('drop', Math.random() * w, Math.random() * h, r, s);
+      }
+      // 立ち上がってすぐ波紋を見せる（最初の数粒を間髪入れずに落とす）
+      dropOne(11, 0.03);
+      setTimeout(function () { dropOne(8, 0.025); }, 220);
+      setTimeout(function () { dropOne(9, 0.028); }, 520);
+      // 以降は一粒の雨が落ちたように、ときどき
+      setInterval(function () { dropOne(8, 0.022); }, 2400);
     } catch (e) {
       console.warn('ripples init skipped (WebGL非対応など):', e); // CSS波紋にフォールバック
     }
   }
-  if (document.readyState === 'complete') initRipples();
-  else window.addEventListener('load', initRipples);
+  // 全画像の読み込み完了(load)を待たず、DOM準備ができたら早めに起動して
+  // 立ち上がってすぐ波紋を見せる
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initRipples);
+  else initRipples();
 })();
 </script>
 
