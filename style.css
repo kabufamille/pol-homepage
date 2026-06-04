@@ -188,7 +188,9 @@ h4 {
     background-size: cover;
     background-repeat: no-repeat;
     z-index: -2;
-    transform: scale(1.05);
+    /* 背景をぼかす。ぼかしで端がにじむので scale を少し大きめにして画面外で切る */
+    filter: blur(6px);
+    transform: scale(1.12);
     transition: transform 10s ease-out;
     will-change: transform;
 }
@@ -224,34 +226,35 @@ h4 {
 
 .hero-ripples .drop {
     position: absolute;
-    width: 14px;
-    height: 14px;
+    width: 16px;
+    height: 16px;
     border-radius: 50%;
-    border: 1.5px solid rgba(255, 255, 255, 0.55);
+    border: 1.5px solid rgba(255, 255, 255, 0.5);
     transform: scale(0);
     opacity: 0;
-    animation: rain-ripple 4.5s linear infinite;
+    /* ease-out で最初は速く・だんだんゆっくり広がる（水面の波紋らしい滑らかさ） */
+    animation: rain-ripple 7s ease-out infinite;
 }
 
 @keyframes rain-ripple {
-    0%   { transform: scale(0);  opacity: 0; box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.20); }
-    10%  { opacity: 0.7; }
-    100% { transform: scale(7);  opacity: 0; box-shadow: 0 0 0 12px rgba(255, 255, 255, 0); }
+    0%   { transform: scale(0);   opacity: 0; }
+    12%  { opacity: 0.55; }
+    100% { transform: scale(13);  opacity: 0; }
 }
 
 /* 落ちる位置とタイミングを散らして、雨が降り続けるように見せる */
-.hero-ripples .drop:nth-child(1)  { top: 18%; left: 12%; animation-delay: 0s;    animation-duration: 4.6s; }
-.hero-ripples .drop:nth-child(2)  { top: 52%; left: 26%; animation-delay: 1.1s;  animation-duration: 3.9s; }
-.hero-ripples .drop:nth-child(3)  { top: 74%; left: 18%; animation-delay: 2.3s;  animation-duration: 5.1s; }
-.hero-ripples .drop:nth-child(4)  { top: 30%; left: 44%; animation-delay: 0.6s;  animation-duration: 4.2s; }
-.hero-ripples .drop:nth-child(5)  { top: 63%; left: 50%; animation-delay: 2.9s;  animation-duration: 4.8s; }
-.hero-ripples .drop:nth-child(6)  { top: 12%; left: 62%; animation-delay: 1.7s;  animation-duration: 3.7s; }
-.hero-ripples .drop:nth-child(7)  { top: 45%; left: 70%; animation-delay: 0.3s;  animation-duration: 5.3s; }
-.hero-ripples .drop:nth-child(8)  { top: 80%; left: 64%; animation-delay: 3.4s;  animation-duration: 4.1s; }
-.hero-ripples .drop:nth-child(9)  { top: 24%; left: 84%; animation-delay: 2.0s;  animation-duration: 4.7s; }
-.hero-ripples .drop:nth-child(10) { top: 58%; left: 88%; animation-delay: 1.4s;  animation-duration: 3.8s; }
-.hero-ripples .drop:nth-child(11) { top: 88%; left: 38%; animation-delay: 3.0s;  animation-duration: 5.0s; }
-.hero-ripples .drop:nth-child(12) { top: 38%; left: 6%;  animation-delay: 2.6s;  animation-duration: 4.4s; }
+.hero-ripples .drop:nth-child(1)  { top: 18%; left: 12%; animation-delay: 0s;    animation-duration: 7.0s; }
+.hero-ripples .drop:nth-child(2)  { top: 52%; left: 26%; animation-delay: 1.6s;  animation-duration: 6.2s; }
+.hero-ripples .drop:nth-child(3)  { top: 74%; left: 18%; animation-delay: 3.4s;  animation-duration: 7.8s; }
+.hero-ripples .drop:nth-child(4)  { top: 30%; left: 44%; animation-delay: 0.9s;  animation-duration: 6.6s; }
+.hero-ripples .drop:nth-child(5)  { top: 63%; left: 50%; animation-delay: 4.2s;  animation-duration: 7.4s; }
+.hero-ripples .drop:nth-child(6)  { top: 12%; left: 62%; animation-delay: 2.5s;  animation-duration: 6.0s; }
+.hero-ripples .drop:nth-child(7)  { top: 45%; left: 70%; animation-delay: 0.4s;  animation-duration: 8.0s; }
+.hero-ripples .drop:nth-child(8)  { top: 80%; left: 64%; animation-delay: 5.0s;  animation-duration: 6.4s; }
+.hero-ripples .drop:nth-child(9)  { top: 24%; left: 84%; animation-delay: 3.0s;  animation-duration: 7.2s; }
+.hero-ripples .drop:nth-child(10) { top: 58%; left: 88%; animation-delay: 2.0s;  animation-duration: 6.1s; }
+.hero-ripples .drop:nth-child(11) { top: 88%; left: 38%; animation-delay: 4.6s;  animation-duration: 7.6s; }
+.hero-ripples .drop:nth-child(12) { top: 38%; left: 6%;  animation-delay: 3.8s;  animation-duration: 6.8s; }
 
 /* アニメーションを控えたい設定の人には止める */
 @media (prefers-reduced-motion: reduce) {
