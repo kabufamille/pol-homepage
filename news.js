@@ -1,5 +1,9 @@
 // お知らせをタイムライン形式で表示するスクリプト
 
+// お知らせの最大表示件数（イベント・キャンペーン＋営業情報の合計、新しい順）
+// 表示する数を変えたいときはこの数字だけ変更してください。
+const MAX_NEWS_ITEMS = 6;
+
 document.addEventListener('DOMContentLoaded', async () => {
     await loadTimeline();
 });
@@ -52,7 +56,8 @@ async function loadTimeline() {
             return;
         }
 
-        allItems.forEach(item => {
+        // 新しい順に最大 MAX_NEWS_ITEMS 件だけ表示する
+        allItems.slice(0, MAX_NEWS_ITEMS).forEach(item => {
             const isEvent = item.type === 'event';
             const el = document.createElement('div');
             el.className = 'tl-item';
