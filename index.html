@@ -234,7 +234,7 @@
                         <img src="images/store/focaccia.webp" alt="フォカッチャ" style="object-position: center 60%;">
                         <div class="gallery-info">
                             <h4>フォカッチャ</h4>
-                            <p>天然酵母でじっくり発酵させた生地に、ペッパーをきかせました。</p>
+                            <p>自家製酵母でじっくり発酵させた生地に、ペッパーをきかせました。</p>
                             <p class="price">¥420</p>
                         </div>
                     </div>
@@ -242,7 +242,7 @@
                         <img src="images/store/scone.webp" alt="酵母スコーン" style="object-position: right 88%;">
                         <div class="gallery-info">
                             <h4>酵母スコーン</h4>
-                            <p>苺酵母を使ったスコーン。外はさっくり、中はしっとりとした仕上がりです。</p>
+                            <p>自家製酵母を使ったスコーン。外はさっくり、中はしっとりとした仕上がりです。</p>
                             <p class="price">¥350</p>
                         </div>
                     </div>
@@ -384,10 +384,9 @@ document.querySelectorAll('.faq-q').forEach(q=>{
       }
       // 立ち上がってすぐ波紋を見せる（最初の数粒を間髪入れずに落とす）
       dropOne(11, 0.03);
-      setTimeout(function () { dropOne(8, 0.025); }, 220);
-      setTimeout(function () { dropOne(9, 0.028); }, 520);
-      // 以降は一粒の雨が落ちたように、ときどき
-      setInterval(function () { dropOne(8, 0.022); }, 2400);
+      setTimeout(function () { dropOne(8, 0.025); }, 300);
+      // 以降は一粒の雨が落ちたように、ときどき（頻度を下げて控えめに）
+      setInterval(function () { dropOne(8, 0.022); }, 5000);
     } catch (e) {
       console.warn('ripples init skipped (WebGL非対応など):', e); // CSS波紋にフォールバック
     }
