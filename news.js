@@ -71,6 +71,24 @@ async function loadTimeline() {
             timelineEl.appendChild(el);
         });
 
+        // 各項目を左右交互に「ビヨーン」と出す（スクロールで表示領域に入ったら）
+        if ('IntersectionObserver' in window &&
+            !(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches)) {
+            timelineEl.classList.add('js-reveal');
+            const items = timelineEl.querySelectorAll('.tl-item');
+            const io = new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        const el = entry.target;
+                        const idx = Array.prototype.indexOf.call(items, el);
+                        setTimeout(() => el.classList.add('in'), Math.min(idx, 5) * 110);
+                        io.unobserve(el);
+                    }
+                });
+            }, { threshold: 0.2 });
+            items.forEach((it) => io.observe(it));
+        }
+
     } catch (e) {
         console.error('タイムライン読み込みエラー:', e);
         timelineEl.innerHTML = `

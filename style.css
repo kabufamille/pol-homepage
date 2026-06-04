@@ -224,6 +224,34 @@ h4 {
     z-index: 2;
 }
 
+/* スクロール案内（SCROLL文字＋伸び縮みする線） */
+.scroll-hint {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    font-family: sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--color-white);
+    opacity: 0.85;
+}
+.scroll-hint span {
+    display: block;
+    width: 1px;
+    height: 46px;
+    background: var(--color-white);
+    margin: 10px auto 0;
+    transform-origin: top;
+    animation: scroll-line 2s ease-in-out infinite;
+}
+@keyframes scroll-line {
+    0%   { transform: scaleY(0); }
+    50%  { transform: scaleY(1); }
+    100% { transform: scaleY(0); transform-origin: bottom; }
+}
+
 /* 雨の波紋（背景の上・文字の下に重ねる） */
 .hero-ripples {
     position: absolute;
@@ -269,6 +297,7 @@ h4 {
 @media (prefers-reduced-motion: reduce) {
     .hero-ripples { display: none; }
     .hero-bg { animation: none; }
+    .scroll-hint span { animation: none; }
 }
 
 /* jQuery Ripples が有効になったら、CSSの簡易波紋は隠す（二重表示を防ぐ） */
