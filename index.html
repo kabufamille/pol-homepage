@@ -346,40 +346,19 @@ document.querySelectorAll('.faq-q').forEach(q=>{
       if (!window.jQuery || !jQuery.fn.ripples) return;
       var $bg = jQuery('.hero-bg');
       if (!$bg.length) return;
-      $bg.ripples({ resolution: 512, dropRadius: 18, perturbance: 0.025, interactive: true });
+      $bg.ripples({ resolution: 512, dropRadius: 9, perturbance: 0.012, interactive: true });
       document.body.classList.add('ripples-on');
-      // 青い水面に降る雨のように、自動で雨粒を落とす
+      // 一粒の雨が落ちたような細く綺麗な波紋を、ときどき落とす
       setInterval(function () {
         var w = $bg.outerWidth(), h = $bg.outerHeight();
-        $bg.ripples('drop', Math.random() * w, Math.random() * h, 16, 0.04);
-      }, 1300);
+        $bg.ripples('drop', Math.random() * w, Math.random() * h, 8, 0.022);
+      }, 2400);
     } catch (e) {
       console.warn('ripples init skipped (WebGL非対応など):', e); // CSS波紋にフォールバック
     }
   }
   if (document.readyState === 'complete') initRipples();
   else window.addEventListener('load', initRipples);
-})();
-</script>
-
-<!-- スクロールで波打つ演出（スクロール速度に応じて各セクションが少し傾く） -->
-<script>
-(function () {
-  if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  var sections = document.querySelectorAll('main .section');
-  if (!sections.length) return;
-  var last = window.pageYOffset, skew = 0;
-  function tick() {
-    var y = window.pageYOffset;
-    var v = y - last; last = y;
-    var target = Math.max(-2.5, Math.min(2.5, v * 0.12)); // スクロール速度→傾き(最大±2.5度)
-    skew += (target - skew) * 0.1;
-    if (Math.abs(skew) < 0.01) skew = 0;
-    var t = skew ? 'skewY(' + skew.toFixed(3) + 'deg)' : '';
-    for (var i = 0; i < sections.length; i++) sections[i].style.transform = t;
-    requestAnimationFrame(tick);
-  }
-  requestAnimationFrame(tick);
 })();
 </script>
 
