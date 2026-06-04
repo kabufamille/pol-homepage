@@ -428,7 +428,7 @@ h4 {
 .about-content {
     max-width: 800px;
     margin: 0 auto;
-    text-align: center;
+    text-align: left;
     font-size: 1.05rem;
     line-height: 2;
     letter-spacing: 0.03em;
@@ -476,7 +476,7 @@ h4 {
 
 .gallery-info {
     padding: 20px;
-    text-align: center;
+    text-align: left;
     color: var(--color-text);
 }
 
