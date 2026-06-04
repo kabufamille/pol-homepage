@@ -188,11 +188,20 @@ h4 {
     background-size: cover;
     background-repeat: no-repeat;
     z-index: -2;
-    /* 背景をぼかす。ぼかしで端がにじむので scale を少し大きめにして画面外で切る */
+    /* 背景をぼかす。ぼかし＆揺れで端がにじむので scale を大きめにして画面外で切る */
     filter: blur(6px);
-    transform: scale(1.12);
-    transition: transform 10s ease-out;
+    transform: scale(1.14);
     will-change: transform;
+    /* 水面が揺らぐようにゆっくり背景を動かす */
+    animation: hero-sway 16s ease-in-out infinite;
+}
+
+@keyframes hero-sway {
+    0%   { transform: scale(1.14) translate(0, 0); }
+    20%  { transform: scale(1.17) translate(-1.8%, 1.0%); }
+    50%  { transform: scale(1.15) translate(1.4%, -1.4%); }
+    80%  { transform: scale(1.17) translate(1.8%, 1.0%); }
+    100% { transform: scale(1.14) translate(0, 0); }
 }
 
 .hero-overlay {
@@ -259,6 +268,7 @@ h4 {
 /* アニメーションを控えたい設定の人には止める */
 @media (prefers-reduced-motion: reduce) {
     .hero-ripples { display: none; }
+    .hero-bg { animation: none; }
 }
 
 .hero-title {
