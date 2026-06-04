@@ -352,6 +352,11 @@ h4 {
     letter-spacing: 0.05em;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
 }
+/* 各フレーズを1かたまりに。PCは1フレーズ1行、モバイルは長いフレーズだけ
+   そのフレーズ内で自然に折り返す（隣のフレーズとくっつかない） */
+.hero-subtitle span {
+    display: block;
+}
 
 .btn {
     display: inline-block;
