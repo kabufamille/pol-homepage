@@ -271,6 +271,13 @@ h4 {
     .hero-bg { animation: none; }
 }
 
+/* jQuery Ripples が有効になったら、CSSの簡易波紋は隠す（二重表示を防ぐ） */
+.ripples-on .hero-ripples { display: none; }
+/* Ripplesプラグインは背景画像を読むので、揺れ(transform)とぼかしは無効化（競合回避） */
+.ripples-on .hero-bg { animation: none; filter: none; transform: none; }
+/* セクションの波打ち中も横スクロールバーを出さない安全策 */
+main { overflow-x: hidden; }
+
 .hero-title {
     font-size: 3.5rem;
     margin-bottom: 20px;
