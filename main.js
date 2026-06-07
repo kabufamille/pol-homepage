@@ -154,7 +154,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const tick = () => {
             if (i < text.length) {
                 el.innerHTML = text.slice(0, ++i).replace(/\n/g, '<br>') + '|';
-                setTimeout(tick, 70);
+                setTimeout(tick, 45);
             } else {
                 el.innerHTML = text.replace(/\n/g, '<br>');
                 el.style.color = '';
