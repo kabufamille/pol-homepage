@@ -313,11 +313,30 @@ h4 {
 }
 
 .hero-intro {
-    font-size: 2.6rem;
+    display: block;
+    /* PC/タブレットは横幅に合わせ自動縮小して1行（最大1.7rem＝900px枠に余裕を持って収まる上限） */
+    font-size: clamp(1.1rem, 2.9vw, 1.7rem);
+    white-space: nowrap;
     color: #FFD1DC;
     /* Light pink - contrasts well with brown/beige background */
     text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6), 0 0 20px rgba(0, 0, 0, 0.3);
     font-weight: 500;
+    margin-bottom: 14px;
+}
+/* 新文の2つの塊。各塊は途中で折り返さない（PCは1行、スマホは読点で改行） */
+.hero-intro .hi-part { white-space: nowrap; }
+
+/* 旧キャッチ（下げた行）。白文字・下のサブ文と同じ大きさ（ピンクは新文だけ） */
+.hero-brand {
+    display: block;
+    font-size: 1.3rem;
+    color: #FFFFFF;
+    font-family: var(--font-serif);
+    letter-spacing: 0.05em;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+    font-weight: 400;
+    opacity: 0.95;
+    margin-bottom: 8px;
 }
 
 .hero-lead {
@@ -908,14 +927,26 @@ h4 {
     }
 
     .hero-intro {
-        font-size: 1.5rem !important;
+        /* スマホは長文のため1行を強制せず、読みやすいサイズで自然に折り返す */
+        font-size: 1.2rem !important;
         letter-spacing: 0;
         line-height: 1.7;
+        white-space: normal;
         overflow-wrap: break-word;
-        padding: 0 20px !important;
+        padding: 0 18px !important;
         max-width: 100%;
         display: block;
-        margin-bottom: 15px;
+        margin-bottom: 14px;
+        text-align: center;
+    }
+
+    .hero-brand {
+        font-size: 1.15rem !important;
+        letter-spacing: 0.03em;
+        line-height: 1.6;
+        padding: 0 20px !important;
+        display: block;
+        margin-bottom: 10px;
         text-align: center;
     }
 
