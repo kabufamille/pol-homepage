@@ -145,6 +145,35 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // Typewriter effect (Instagram / Connect sections)
+    function runTypewriter(el) {
+        const text = el.textContent.trim();
+        el.textContent = '';
+        el.style.color = '#FFD1DC';
+        let i = 0;
+        const tick = () => {
+            if (i < text.length) {
+                el.textContent = text.slice(0, ++i) + '|';
+                setTimeout(tick, 35);
+            } else {
+                el.textContent = text;
+                el.style.color = '';
+            }
+        };
+        tick();
+    }
+
+    const twObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                runTypewriter(entry.target);
+                twObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.3 });
+
+    document.querySelectorAll('[data-typewriter]').forEach(el => twObserver.observe(el));
+
     // Mobile Menu Toggle
     const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
     const nav = document.querySelector('.nav');
