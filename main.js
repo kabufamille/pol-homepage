@@ -147,16 +147,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Typewriter effect (Instagram / Connect sections)
     function runTypewriter(el) {
-        const text = el.textContent.trim();
-        el.textContent = '';
+        const text = el.innerHTML.replace(/<br\s*\/?>/gi, '\n').replace(/<[^>]+>/g, '').trim();
+        el.innerHTML = '';
         el.style.color = '#FFD1DC';
         let i = 0;
         const tick = () => {
             if (i < text.length) {
-                el.textContent = text.slice(0, ++i) + '|';
+                el.innerHTML = text.slice(0, ++i).replace(/\n/g, '<br>') + '|';
                 setTimeout(tick, 70);
             } else {
-                el.textContent = text;
+                el.innerHTML = text.replace(/\n/g, '<br>');
                 el.style.color = '';
             }
         };
