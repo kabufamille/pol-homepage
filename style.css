@@ -879,9 +879,18 @@ h4 {
     opacity: 0.7;
 }
 
+.instagram-desc {
+    text-align: center;
+    color: #666;
+    font-size: 0.95rem;
+    line-height: 1.8;
+    margin: 20px auto 0;
+    max-width: 480px;
+}
+
 .instagram-link {
     text-align: center;
-    margin-top: 40px;
+    margin-top: 24px;
 }
 
 @media (max-width: 768px) {

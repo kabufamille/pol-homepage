@@ -154,7 +154,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const tick = () => {
             if (i < text.length) {
                 el.textContent = text.slice(0, ++i) + '|';
-                setTimeout(tick, 35);
+                setTimeout(tick, 70);
             } else {
                 el.textContent = text;
                 el.style.color = '';
