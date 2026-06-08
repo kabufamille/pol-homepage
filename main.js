@@ -43,8 +43,9 @@ document.addEventListener('DOMContentLoaded', () => {
         els.forEach((el, i) => {
             const delay = i * 0.18;
             el.style.opacity = '0';
-            el.style.transform = 'translateY(40px)';
-            el.style.transition = `opacity 0.85s cubic-bezier(0.16,1,0.3,1) ${delay}s, transform 0.85s cubic-bezier(0.16,1,0.3,1) ${delay}s`;
+            el.style.transform = 'translateY(30px)';
+            el.style.willChange = 'transform, opacity';
+            el.style.transition = `opacity 0.7s cubic-bezier(0.25,0.46,0.45,0.94) ${delay}s, transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94) ${delay}s`;
             observer.observe(el);
         });
     });
