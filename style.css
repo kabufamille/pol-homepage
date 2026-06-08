@@ -402,9 +402,11 @@ h4 {
 /* Sections General */
 .section {
     padding: 100px 0;
-    background-color: rgba(253, 251, 247, 0.9);
+    background-color: rgba(253, 251, 247, 0.92);
     /* Semi-transparent */
     backdrop-filter: blur(5px);
+    /* 隣接セクション間のサブピクセル隙間を潰す */
+    margin-bottom: -1px;
 }
 
 .section-header {
@@ -891,6 +893,28 @@ h4 {
 .instagram-link {
     text-align: center;
     margin-top: 24px;
+}
+
+/* Instagram → つながる セクション間の飾り線 */
+.newsletter {
+    position: relative;
+}
+.newsletter::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 55%;
+    height: 1px;
+    background: linear-gradient(
+        to right,
+        transparent,
+        rgba(201, 184, 156, 0.55),
+        rgba(142, 110, 83, 0.35),
+        rgba(201, 184, 156, 0.55),
+        transparent
+    );
 }
 
 @media (max-width: 768px) {
