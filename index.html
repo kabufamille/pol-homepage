@@ -48,8 +48,8 @@
 .faq-q::before { content:"Q"; flex-shrink:0; width:26px; height:26px; background:#7d6b5d; color:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.85rem; font-weight:700; }
 .faq-q::after { content:"+"; margin-left:auto; font-size:1.3rem; color:#c9b89c; transition:transform .25s; }
 .faq-item.open .faq-q::after { transform:rotate(45deg); }
-.faq-a { max-height:0; overflow:hidden; transition:max-height .3s ease; padding:0 20px 0 58px; color:#666; font-size:0.92rem; line-height:1.75; }
-.faq-item.open .faq-a { max-height:400px; padding-bottom:18px; padding-top:4px; border-top:1px dashed #f0f0f0; }
+.faq-a { max-height:0; overflow:hidden; transition:max-height .35s cubic-bezier(0.4,0,0.2,1); padding:4px 20px 18px 58px; color:#666; font-size:0.92rem; line-height:1.75; }
+.faq-item.open .faq-a { border-top:1px dashed #f0f0f0; }
 </style>
 
 </head>
@@ -284,7 +284,7 @@
                     <h3 class="section-title">よくある質問</h3>
                 </div>
                 <div class="faq-list">
-                    <div class="faq-item"><div class="faq-q">配送はどのエリアまでですか？</div><div class="faq-a">全国に配送可能です。沖縄・離島は別途送料がかかる場合があります。注文確定後にご連絡いたします。</div></div>
+                    <div class="faq-item" style="display:none;"><div class="faq-q">配送はどのエリアまでですか？</div><div class="faq-a">全国に配送可能です。沖縄・離島は別途送料がかかる場合があります。注文確定後にご連絡いたします。</div></div>
                     <div class="faq-item"><div class="faq-q">賞味期限・保存方法を教えてください</div><div class="faq-a">焼き菓子は製造日から約14日、酵母パンはお届け後3日以内が目安です。直射日光と高温多湿を避け、常温で保存してください。</div></div>
                     <div class="faq-item"><div class="faq-q">支払い方法は何が使えますか？</div><div class="faq-a">店頭でのお受け取り時は現金をご利用いただけます。オンラインショップは現在準備中です。</div></div>
                     <div class="faq-item"><div class="faq-q">注文後のキャンセル・変更はできますか？</div><div class="faq-a">発送前であれば変更・キャンセル可能です。お問い合わせフォームまたはお電話にてご連絡ください。</div></div>
@@ -359,7 +359,18 @@
 })();
 // FAQアコーディオン
 document.querySelectorAll('.faq-q').forEach(q=>{
-    q.addEventListener('click',()=>q.parentElement.classList.toggle('open'));
+    q.addEventListener('click',()=>{
+        const item=q.parentElement, ans=item.querySelector('.faq-a');
+        if(item.classList.contains('open')){
+            ans.style.maxHeight=ans.scrollHeight+'px';
+            item.classList.remove('open');
+            requestAnimationFrame(()=>{ ans.style.maxHeight='0'; });
+        } else {
+            item.classList.add('open');
+            ans.style.maxHeight=ans.scrollHeight+'px';
+            ans.addEventListener('transitionend',()=>{ if(item.classList.contains('open')) ans.style.maxHeight=''; },{once:true});
+        }
+    });
 });
 </script>
 
