@@ -29,13 +29,13 @@
 .bc-dow.sun { color:#d98d8d; } .bc-dow.sat { color:#7a9bb8; }
 .bc-day { aspect-ratio:1/1; display:flex; align-items:center; justify-content:center; font-size:0.95rem; border-radius:50%; color:#555; }
 .bc-day.empty { color:transparent; }
-.bc-day.today { background:#fef9e9; border:1.5px solid #e8a13a; font-weight:700; color:#b8721a; }
 .bc-day.closed { background:#fce0e0; color:#c94d4d; text-decoration:line-through; }
+.bc-day.today { background:#ffd88a; border:2px solid #d97e00; font-weight:700; color:#8a4b00; box-shadow:0 0 0 2px rgba(217,126,0,0.18); }
 .bc-legend { display:flex; gap:14px; justify-content:center; margin-top:14px; font-size:0.7rem; color:#888; }
 .bc-legend-item { display:flex; align-items:center; gap:5px; }
 .bc-legend-dot { width:10px; height:10px; border-radius:50%; }
 .bc-legend-dot.closed-color { background:#fce0e0; border:1px solid #c94d4d; }
-.bc-legend-dot.today-color { background:#fef9e9; border:1px solid #e8a13a; }
+.bc-legend-dot.today-color { background:#ffd88a; border:1px solid #d97e00; }
 /* Newsletter */
 .newsletter-body { text-align:center; max-width:560px; margin:0 auto; }
 .newsletter-body p { color:#666; font-size:0.95rem; line-height:1.8; margin-bottom:28px; }
@@ -306,7 +306,7 @@
                 <div class="contact-info">
                     <p>〒100-0000 東京都千代田区丸の内 1-2-3</p>
                     <p>TEL: 03-1234-5678</p>
-                    <p>営業時間: 10:00 - 19:00 (水曜定休)</p>
+                    <p>営業時間: 10:00 - 14:00 (定休日は不定期)</p>
                     <div class="business-calendar" id="business-calendar">
                         <div class="bc-header">
                             <button class="bc-nav" id="bc-prev" aria-label="前月">‹</button>

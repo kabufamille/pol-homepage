@@ -1,12 +1,13 @@
 {
   "regularClosedDays": [
     0,
-    3
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
   ],
   "specialClosedDates": [],
-  "specialOpenDates": [
-    "2026-05-02",
-    "2026-05-12",
-    "2026-05-16"
-  ]
+  "specialOpenDates": []
 }
