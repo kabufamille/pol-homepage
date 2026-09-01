@@ -556,9 +556,10 @@
         ];
         // --- フォールバックデータ終了 ---
 
+        const localIso = d => d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
         document.addEventListener('DOMContentLoaded', async () => {
             // 日付の初期値
-            const today = new Date().toISOString().split('T')[0];
+            const today = localIso(new Date());
             document.getElementById('e-date').value = today;
             document.getElementById('n-date').value = today;
 
@@ -791,11 +792,11 @@
             });
             const firstDay = new Date(y,m,1).getDay();
             const lastDate = new Date(y,m+1,0).getDate();
-            const todayIso = new Date().toISOString().split('T')[0];
+            const todayIso = localIso(new Date());
             for(let i=0;i<firstDay;i++){const el=document.createElement('div');el.className='ac-day ac-empty';grid.appendChild(el);}
             for(let d=1;d<=lastDate;d++){
                 const date = new Date(y,m,d);
-                const iso = date.toISOString().split('T')[0];
+                const iso = localIso(date);
                 const el = document.createElement('div');
                 el.className = 'ac-day';
                 const isRegClosed = calData.regularClosedDays.includes(date.getDay());
