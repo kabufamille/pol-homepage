@@ -30,7 +30,8 @@
                     <li><a href="index.html#news">お知らせ</a></li>
                     <li><a href="index.html#about">こだわり</a></li>
                     <li><a href="index.html#menu">焼き菓子・パン</a></li>
-                    <li><a href="reservation.html" class="active">お取り置き</a></li>
+                    <!-- 【開業まで非表示・2026-09-04 けんじ指示】 戻すとき＝ data-hidden-until-open が付いた要素から style="display:none;" を消すだけ。 非表示にした全箇所の一覧は  grep -rn "hidden-until-open" *.html  で出ます。 -->
+                    <li data-hidden-until-open="2026-09-04" style="display:none;"><a href="reservation.html" class="active">お取り置き</a></li>
                     <li><a href="index.html#instagram">最近の投稿</a></li>
                     <li><a href="index.html#faq">FAQ</a></li>
                     <li><a href="index.html#contact">アクセス</a></li>
