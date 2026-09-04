@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Online Shop | pol</title>
+    <!-- 【開業まで】BASE未開設のためカート・決済は動かない。検索に載せない（再開時にこの1行を削除）。 -->
+    <meta name="robots" content="noindex,nofollow">
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -53,7 +55,7 @@
                     <li><a href="index.html#about" class="hover:text-[#c1a173] transition">こだわり</a></li>
                     <li><a href="index.html#menu" class="hover:text-[#c1a173] transition">商品紹介</a></li>
                     <li><a href="online_shop.html" class="text-[#c1a173] border-b-2 border-[#c1a173]">オンラインショップ</a></li>
-                    <li><a href="reservation.html" class="hover:text-[#c1a173] transition">お取り置き</a></li>
+                    <li data-hidden-until-open="2026-09-04" style="display:none;"><a href="reservation.html" class="hover:text-[#c1a173] transition">お取り置き</a></li>
                     <li><a href="index.html#contact" class="hover:text-[#c1a173] transition">アクセス</a></li>
                 </ul>
             </nav>
@@ -64,7 +66,8 @@
     </header>
 
     <!-- Cart Sidebar -->
-    <div id="cart-sidebar" class="fixed top-0 right-[-100%] w-full max-w-md h-full bg-white z-[1100] shadow-2xl transition-all duration-300 flex flex-col">
+    <!-- 【開業まで非表示・2026-09-04 けんじ指示】 戻すとき＝ data-hidden-until-open が付いた要素から style="display:none;" を消すだけ。 全箇所は  grep -rn "hidden-until-open" *.html  で出ます。 -->
+    <div id="cart-sidebar" data-hidden-until-open="2026-09-04" style="display:none;" class="fixed top-0 right-[-100%] w-full max-w-md h-full bg-white z-[1100] shadow-2xl transition-all duration-300 flex flex-col">
         <div class="p-6 border-b flex justify-between items-center bg-gray-50">
             <h3 class="text-lg font-bold font-kiwi">ショッピングカート</h3>
             <button id="close-cart" class="text-3xl text-gray-400 hover:text-gray-600 transition">&times;</button>
@@ -84,7 +87,7 @@
     <div id="cart-overlay" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-[1050] hidden opacity-0 transition-opacity duration-300"></div>
 
     <!-- Floating Cart Button -->
-    <button id="cart-toggle" class="fixed bottom-8 right-8 w-16 h-16 bg-[#7d6b5d] text-white rounded-full shadow-2xl z-[999] flex items-center justify-center transition-transform hover:scale-110 active:scale-90 group">
+    <button id="cart-toggle" data-hidden-until-open="2026-09-04" style="display:none;" class="fixed bottom-8 right-8 w-16 h-16 bg-[#7d6b5d] text-white rounded-full shadow-2xl z-[999] flex items-center justify-center transition-transform hover:scale-110 active:scale-90 group">
         <span class="text-2xl group-hover:rotate-12 transition-transform">🛒</span>
         <span id="cart-count" class="absolute -top-1 -right-1 bg-[#d98d8d] text-white text-xs w-6 h-6 rounded-full border-2 border-white flex items-center justify-center font-bold">0</span>
     </button>
@@ -96,6 +99,8 @@
                     <span class="section-subtitle">ONLINE SHOP</span>
                     <h3 class="section-title">オンラインショップ</h3>
                 </div>
+
+                <p style="text-align:center; max-width:620px; margin:0 auto 36px; padding:18px 20px; background:#FFF8F0; border:1px solid #E9E2D8; border-radius:10px; color:#7d6b5d; font-size:0.95rem; line-height:1.9;">オンラインショップは現在準備中です。<br>開店のお知らせは、トップページのお知らせとLINEでご案内します。</p>
 
                 <!-- Category Filter -->
                 <div class="flex justify-center gap-4 mb-12">

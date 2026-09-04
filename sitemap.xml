@@ -1,18 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- 2026-09-04: online_shop.html（BASE未開設でカート・決済が動かない）と
+       reservation.html（開業までお取り置きを受け付けない）を検索対象から外した。
+       再開するときはこの下に <url> ブロックを戻す。 -->
   <url>
     <loc>https://kabufamille.github.io/pol-homepage/</loc>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
-  </url>
-  <url>
-    <loc>https://kabufamille.github.io/pol-homepage/online_shop.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kabufamille.github.io/pol-homepage/reservation.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
 </urlset>
