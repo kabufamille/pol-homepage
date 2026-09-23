@@ -106,7 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <label for="${item.id}">${item.name} (¥${item.price.toLocaleString()})</label>
                     </div>
                     <div class="product-quantity-input">
-                        <input type="number" id="${qtyId}" name="quantity_${item.name}" value="1" min="1" disabled>
+                        <input type="number" id="${qtyId}" name="quantity_${item.name}" value="1" min="1" max="99" disabled>
                         <span>個</span>
                     </div>
                 `;
@@ -219,7 +219,11 @@ document.addEventListener('DOMContentLoaded', () => {
             totalPrice: total,
             pickupDate: document.getElementById('pickup-date').value,
             pickupTime: document.getElementById('pickup-time').value,
-            notes: document.getElementById('notes').value
+            notes: document.getElementById('notes').value,
+            // 受付ガード用（GAS側で照合）。secret は公開JSに書く＝秘密ではなく、URLを拾っただけのボット除け
+            secret: 'ZymyE65B7WQcWnaR3od8A7xv',
+            // 人には見えない欄。ボットが埋めるとGAS側で弾く
+            hp: (document.getElementById('hp-field') || {}).value || ''
         };
 
         // 送信ボタンを無効化
