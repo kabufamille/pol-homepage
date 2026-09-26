@@ -1397,3 +1397,9 @@ h4 {
         font-size: 2rem;
     }
 }
+/* とても狭い画面（360px以下）で店名とメニューボタンの間に余白を残す（2026-09-26） */
+@media (max-width: 360px) {
+    .logo-text {
+        font-size: 0.9rem;
+    }
+}
