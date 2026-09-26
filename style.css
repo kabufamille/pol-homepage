@@ -1047,6 +1047,16 @@ h4 {
 
 /* iPhone and Small Mobile Devices */
 @media (max-width: 480px) {
+    /* 店名が「sweets&bread」で長くなり、狭い画面でメニューボタンを押し出したため（2026-09-26） */
+    .logo img {
+        height: 40px;
+    }
+
+    .logo-text {
+        font-size: 1rem;
+        margin-left: 8px;
+    }
+
     .hero-title {
         font-size: 1.8rem !important;
     }
