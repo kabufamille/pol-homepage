@@ -14,7 +14,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@300;400;500&family=Noto+Sans+JP:wght@300;400;500&family=Noto+Serif+JP:wght@400;700&display=swap"
         rel="stylesheet">
-    <link rel="icon" href="images/pol_logo.webp" type="image/webp">
+    <link rel="icon" href="images/pol_logo_muffin.webp" type="image/webp">
     <link rel="stylesheet" href="style.css?v=14">
     <script src="main.js" defer></script>
     <style>
@@ -46,7 +46,7 @@
 
     <header class="header">
         <div class="container header-container">
-            <h1 class="logo"><a href="index.html"><img src="images/pol_logo.webp" alt="pol"><span class="logo-text"><span
+            <h1 class="logo"><a href="index.html"><img src="images/pol_logo_muffin.webp" alt="pol"><span class="logo-text"><span
                             class="text-sand">p</span>ol sweets<span class="text-raspberry">&</span>bread</span></a></h1>
             <nav class="hidden md:block">
                 <ul class="flex gap-8 text-sm font-medium">
@@ -157,7 +157,7 @@
             },
             "p-chiffon": {
                 name: "シフォンケーキ",
-                image: "images/pol_logo.webp",
+                image: "images/pol_logo_muffin.webp",
                 description: "ふわふわしっとりとした食感にこだわったpol特製のシフォンケーキです。"
             },
             "p-caramel-financier": {
@@ -167,17 +167,17 @@
             },
             "p-kouglof-chocolat": {
                 name: "クグロフショコラ",
-                image: "images/pol_logo.webp",
+                image: "images/pol_logo_muffin.webp",
                 description: "上品なチョコレートの甘みとナッツの香ばしさが詰まったクグロフです。"
             },
             "p-focaccia": {
                 name: "フォカッチャ",
-                image: "images/pol_logo.webp",
+                image: "images/pol_logo_muffin.webp",
                 description: "自家製フルーツ酵母を使用した、もっちりジューシーなオリーブ香るフォカッチャです。"
             },
             "p-petit-pain": {
                 name: "プチパン",
-                image: "images/pol_logo.webp",
+                image: "images/pol_logo_muffin.webp",
                 description: "自家製フルーツ酵母で焼き上げた、小麦本来の甘みが噛みしめるほどに広がるシンプルなプチパン。"
             }
         };
@@ -210,7 +210,7 @@
                     categories.forEach(cat => {
                         cat.items.forEach(item => {
                             const details = DEFAULT_PRODUCT_DETAILS[item.id] || {
-                                image: "images/pol_logo.webp",
+                                image: "images/pol_logo_muffin.webp",
                                 description: "自家製素材とこだわりの製法で仕上げた、pol自慢の一品です。"
                             };
                             products.push({
@@ -258,7 +258,7 @@
                         <div class="relative overflow-hidden h-[200px] w-full bg-[#faf8f5] flex items-center justify-center p-2">
                             <img src="${product.image}" alt="${product.name}"
                                 class="max-w-full max-h-full object-contain rounded-lg group-hover:scale-105 transition-transform duration-700"
-                                onerror="this.src='images/pol_logo.webp'">
+                                onerror="this.src='images/pol_logo_muffin.webp'">
                             <span class="absolute top-4 left-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-[10px] font-bold tracking-widest text-[#7d6b5d] shadow-sm">
                                 ${product.category}
                             </span>
@@ -342,7 +342,7 @@
                 } else {
                     cartItemsContainer.innerHTML = cart.map(item => `
                         <div class="flex gap-4 mb-6 border-b border-gray-50 pb-6 animate-fade-in">
-                            <img src="${item.image}" alt="${item.name}" class="w-16 h-16 object-cover rounded-lg shadow-sm" onerror="this.src='images/pol_logo.webp'">
+                            <img src="${item.image}" alt="${item.name}" class="w-16 h-16 object-cover rounded-lg shadow-sm" onerror="this.src='images/pol_logo_muffin.webp'">
                             <div class="flex-1">
                                 <h5 class="text-sm font-bold text-gray-800 font-kiwi">${item.name}</h5>
                                 <p class="text-xs text-[#7d6b5d] font-bold" style="display:none;">¥${item.price.toLocaleString()}</p>
