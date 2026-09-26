@@ -75,6 +75,7 @@ h4 {
 
 .mobile-menu-toggle {
     display: none;
+    flex-shrink: 0;
     flex-direction: column;
     justify-content: space-between;
     width: 30px;
