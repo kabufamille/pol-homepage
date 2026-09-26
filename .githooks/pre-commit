@@ -1,0 +1,53 @@
+#!/bin/sh
+# pol-homepage コミット前チェック（2026-09-26 けんじ依頼「次回も同じことが起きない仕組み」）
+# 更新はたまにしかしない＝手順を覚えていられない前提で、コミットの瞬間に機械が止める。
+#
+#  ① お客さまに見える変更（html・products.json・images/）をしたのに news.json に今日の日付の行が無い → 止める
+#  ② style.css / timeline.css / main.js / news.js を変えたのに、html 側の ?v= 番号が上がっていない → 止める
+#     （上げないと、見る人のブラウザが古いファイルを使い続ける）
+#
+# わざと載せない変更（表示の微調整だけ等）は:  NO_NEWS=1 git commit ...
+# 有効化（各PCで1回）:  git config core.hooksPath .githooks
+
+staged=$(git diff --cached --name-only --diff-filter=ACMRD)
+[ -z "$staged" ] && exit 0
+ng=0
+
+# ---- ① お知らせ ----
+visible=$(printf '%s\n' "$staged" | grep -E '^products\.json$|^images/' )
+# html は「?v= の番号を上げただけ」なら見た目は変わらないので数えない
+for h in $(printf '%s\n' "$staged" | grep -E '^(index|online_shop|reservation)\.html$'); do
+    if git diff --cached -U0 -- "$h" | grep -E '^[-+][^-+]' | sed -E 's/^[-+]//; s/\?v=[0-9]+//g' | sort | uniq -u | grep -q .; then
+        visible=$(printf '%s\n%s' "$visible" "$h" | grep .)
+    fi
+done
+if [ -n "$visible" ] && [ "${NO_NEWS:-0}" != "1" ]; then
+    today=$(date +%Y.%m.%d)
+    if ! git diff --cached -U0 -- news.json event_news.json | grep -q "^+.*\"$today\""; then
+        echo ""
+        echo "✋ お知らせ（news.json）に今日（$today）の行がありません。"
+        echo "   お客さまに見える変更が入っています:"
+        printf '%s\n' "$visible" | sed 's/^/     - /'
+        echo "   → news.json の先頭に次の形で1行足して git add してから、もう一度コミットしてください:"
+        echo "     {\"date\": \"$today\", \"content\": \"（何を変えたか・お客さま向けの言葉で）\"},"
+        echo "   載せる必要のない変更なら:  NO_NEWS=1 git commit ..."
+        ng=1
+    fi
+fi
+
+# ---- ② キャッシュ番号 ----
+for f in style.css timeline.css main.js news.js; do
+    printf '%s\n' "$staged" | grep -qx "$f" || continue
+    # その f を ?v= 付きで読み込んでいる html のうち、?v= の行が変わっていないもの
+    for h in $(grep -l "$f?v=" *.html 2>/dev/null); do
+        if ! git diff --cached -U0 -- "$h" | grep -q "^+.*$f?v="; then
+            echo ""
+            echo "✋ $f を変えましたが、$h の \"$f?v=番号\" が上がっていません。"
+            echo "   → 番号を1つ上げないと、見る人のブラウザが古い $f を使い続けます。"
+            ng=1
+        fi
+    done
+done
+
+[ $ng -eq 0 ] || { echo ""; exit 1; }
+exit 0
