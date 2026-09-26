@@ -13,6 +13,24 @@ async function fetchJsonNoCache(filename) {
     return res.ok ? await res.json() : [];
 }
 
+function ymd(d) {
+    return `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}`;
+}
+
+// イベントの開催日（YYYYMMDD）。
+// "eventDate": "2026.10.04" があればそれを使い、無ければ本文の「10月4日」から読む。
+// 年は掲載日（date）の年とし、掲載日より前になるなら翌年とみなす。読めなければ掲載日。
+function eventDay(item) {
+    const posted = item.date.replace(/\./g, '');
+    if (item.eventDate) return item.eventDate.replace(/\./g, '');
+    const m = String(item.content).match(/(\d{1,2})\s*月\s*(\d{1,2})\s*日/);
+    if (!m) return posted;
+    const md = m[1].padStart(2, '0') + m[2].padStart(2, '0');
+    let year = Number(posted.slice(0, 4));
+    if (`${year}${md}` < posted) year += 1;
+    return `${year}${md}`;
+}
+
 async function loadTimeline() {
     const timelineEl = document.getElementById('news-timeline');
     if (!timelineEl) return;
@@ -42,6 +60,14 @@ async function loadTimeline() {
             const db = b.date.replace(/\./g, '');
             return db.localeCompare(da);
         });
+
+        // 開催日が今日以降のイベントは、常に一番上へ（開催日が近い順）
+        const today = ymd(new Date());
+        const upcoming = allItems
+            .filter(item => item.type === 'event' && eventDay(item) >= today)
+            .sort((a, b) => eventDay(a).localeCompare(eventDay(b)));
+        const rest = allItems.filter(item => !upcoming.includes(item));
+        allItems.splice(0, allItems.length, ...upcoming, ...rest);
 
         timelineEl.innerHTML = '';
 
