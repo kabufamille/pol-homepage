@@ -88,6 +88,10 @@
             <form id="survey-form">
                 <h4 class="survey-group-title">1. 基本情報</h4>
                 <div class="form-group"><label class="form-label">ご購入いただいた商品 <span class="required">*</span></label><select id="productName" name="productName" class="form-select" required><option value="">選択してください (読み込み中...)</option></select></div>
+                <div class="form-group" id="favGroup" style="display:none;">
+                    <label class="form-label">お気に入りはどれでしたか？（いくつでも） <span class="required">*</span></label>
+                    <div class="radio-group-vertical" id="favList"></div>
+                </div>
                 <div class="form-group"><label class="form-label">性別 <span class="required">*</span></label><div style="display: flex; gap: 20px;"><label><input type="radio" name="gender" value="男性" required> 男性</label><label><input type="radio" name="gender" value="女性"> 女性</label><label><input type="radio" name="gender" value="回答しない"> 回答しない</label></div></div>
                 <div class="form-group"><label class="form-label">年代 *</label><select name="ageGroup" class="form-select" required><option value="">選択してください</option><option value="10代以下">10代以下</option><option value="20代">20代</option><option value="30代">30代</option><option value="40代">40代</option><option value="50代">50代</option><option value="60代以上">60代以上</option></select></div>
                 <h4 class="survey-group-title">2. 商品の評価</h4><div id="ratings-container"></div>
@@ -128,6 +132,13 @@
     <script>
         const GAS_URL = 'https://script.google.com/macros/s/AKfycbzeEDn75a4L_JEc9np4zhIBC06kVE1Z1p7SEpLLZCFVWmSgSwtiZoF1EsQqld16kGW6nQ/exec';
         let ratingKeys = [];
+        // 詰め合わせセットの中身（商品名に「8点セット」を含むものを選ぶと「お気に入り」欄が出る）
+        const SET_ITEMS = ['バジル酵母のベーコンチーズ', 'レーズン酵母のツナカレー', 'ヨーグルト酵母の香ばしまるパン', '麹酵母のプチパン', 'りんご酵母のチョコレートパン', 'ローズマリー酵母のハーブパン', 'バナナキャラメルパウンド', 'コーヒーパウンド'];
+        const isSet = () => document.getElementById('productName').value.includes('8点セット');
+        document.getElementById('favList').innerHTML = SET_ITEMS.map(n => `<label><input type="checkbox" name="favorite" value="${n}"> ${n}</label>`).join('');
+        document.getElementById('productName').addEventListener('change', () => {
+            document.getElementById('favGroup').style.display = isSet() ? 'block' : 'none';
+        });
         window.onload = async () => {
             const res = await fetch(GAS_URL);
             const cfg = await res.json();
@@ -150,6 +161,14 @@
             // バリデーションチェック
             const purchaseTriggersSelected = form.querySelectorAll('input[name="purchaseTrigger"]:checked');
             const nextOccasionsSelected = form.querySelectorAll('input[name="nextOccasion"]:checked');
+            const favoritesSelected = form.querySelectorAll('input[name="favorite"]:checked');
+            if (isSet() && favoritesSelected.length === 0) {
+                alert('まだ未入力がありますよ');
+                const g = document.getElementById('favGroup');
+                g.classList.add('has-error'); setTimeout(() => g.classList.remove('has-error'), 1000);
+                g.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return;
+            }
             
             if (!form.checkValidity() || purchaseTriggersSelected.length === 0 || nextOccasionsSelected.length === 0) {
                 alert('まだ未入力がありますよ');
@@ -183,6 +202,9 @@
             // 複数選択の値を結合
             const purchaseTriggers = fd.getAll('purchaseTrigger').join('、');
             const nextOccasions = fd.getAll('nextOccasion').join('、');
+            // お気に入りは集計シートに専用の列が無いので、メッセージ欄の先頭に入れる（LINE通知にも出る）
+            const favorites = isSet() ? fd.getAll('favorite').join('、') : '';
+            const messageText = (favorites ? '【お気に入り】' + favorites + '\n' : '') + (fd.get('message') || '');
 
             const data = { 
                 productName: fd.get('productName'), 
@@ -191,7 +213,7 @@
                 drinkPaired: '', // 飲み物の質問は2026-10-08に削除（集計シートの列はそのまま）
                 nextOccasion: nextOccasions, 
                 purchaseTrigger: purchaseTriggers, 
-                message: fd.get('message'), 
+                message: messageText, 
                 ratings: {} 
             };
             ratingKeys.forEach((key, i) => { data.ratings[key] = fd.get(`r_${i}`); });
