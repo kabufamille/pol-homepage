@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>通販のお申し込み | pol</title>
+    <!-- 【見本】奥さん・南々帆さんに見てもらうための形だけのページ。送信しても誰にも届かない。検索に載せない。 -->
+    <meta name="robots" content="noindex,nofollow">
+    <link rel="icon" href="../images/pol_logo_muffin.webp" type="image/webp">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@300;400;500&family=Noto+Sans+JP:wght@300;400;500&family=Noto+Serif+JP:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-primary: #8E6E53;
+            --color-accent: #D4A59A;
+            --color-raspberry: #C41E3A;
+            --color-sand: #D2B48C;
+            --color-bg: #FDFBF7;
+            --font-serif: 'Noto Serif JP', serif;
+            --font-kiwi: 'Kiwi Maru', serif;
+        }
+        html { scroll-behavior: smooth; }
+        body { margin: 0; padding: 0; font-family: 'Noto Sans JP', sans-serif; color: #4A4A4A; background-color: var(--color-bg); line-height: 1.8; }
+        .header { background: rgba(255, 255, 255, 0.9); padding: 15px 0; text-align: center; border-bottom: 1px solid rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; backdrop-filter: blur(5px); }
+        .logo-text { font-family: var(--font-kiwi); font-size: 1.4rem; color: var(--color-primary); font-weight: 500; }
+        .survey-section { padding: 40px 0 60px; }
+        .container { width: 90%; max-width: 800px; margin: 0 auto; }
+        .survey-form-container { background: #ffffff; padding: 40px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.03); }
+        .survey-group-title { border-left: 4px solid var(--color-accent); padding-left: 15px; margin: 40px 0 20px; color: var(--color-primary); font-family: var(--font-serif); font-size: 1.25rem; }
+        .survey-group-title:first-child { margin-top: 0; }
+        .form-group { margin-bottom: 30px; }
+        .form-label { display: block; font-weight: 500; margin-bottom: 12px; color: #333; }
+        .required { color: var(--color-raspberry); margin-left: 4px; font-size: 0.9rem; }
+        .form-select, .form-textarea, .form-input { width: 100%; padding: 12px 15px; border: 1px solid #E8DCC4; border-radius: 8px; font-size: 1rem; font-family: inherit; background-color: #fff; box-sizing: border-box; }
+        .row-2 { display: flex; gap: 12px; }
+        .row-2 > * { flex: 1; }
+        .radio-group-vertical { display: flex; flex-direction: column; gap: 12px; }
+        .radio-group-vertical label { display: flex; align-items: center; gap: 12px; cursor: pointer; padding: 12px 15px; background: #FAF9F6; border-radius: 8px; }
+        .btn-primary { width: 100%; padding: 18px; background-color: var(--color-primary); color: white; border: none; border-radius: 50px; font-size: 1.1rem; font-weight: bold; cursor: pointer; margin-top: 20px; box-shadow: 0 4px 15px rgba(142, 110, 83, 0.2); font-family: inherit; }
+        ::placeholder { color: #bbb; opacity: 0.7; font-weight: 300; }
+        .form-subtext { font-size: 0.8rem; color: #808080; margin-bottom: 15px; margin-top: -10px; }
+
+        /* 見本の目印 */
+        .mihon-banner { background: #FFF4D6; border: 1px dashed #D9B44A; color: #6B5310; border-radius: 10px; padding: 14px 18px; font-size: 0.9rem; margin-bottom: 24px; }
+        .q-tag { display: inline-block; font-size: 0.72rem; font-weight: 500; color: #6B5310; background: #FFF4D6; border: 1px solid #E8D08A; border-radius: 20px; padding: 0 9px; margin-left: 6px; vertical-align: middle; line-height: 1.7; }
+        .option-c { border: 1px dashed #D9B44A; border-radius: 10px; padding: 20px 20px 0; margin-bottom: 30px; background: #FFFDF6; }
+        .option-c-title { font-size: 0.85rem; color: #6B5310; margin: 0 0 16px; }
+
+        /* 商品の案内 */
+        .product-card { display: flex; gap: 20px; align-items: center; }
+        .product-photo { width: 160px; height: 160px; flex-shrink: 0; border-radius: 10px; background: #F3ECE2; display: flex; align-items: center; justify-content: center; color: #A89580; font-size: 0.85rem; text-align: center; }
+        .product-name { font-family: var(--font-serif); font-size: 1.2rem; color: var(--color-primary); margin: 0 0 4px; }
+        .product-price { font-size: 1.3rem; font-weight: 500; color: #333; margin: 0; }
+        .product-price small { font-size: 0.8rem; color: #808080; font-weight: 400; }
+        .status-row { display: flex; gap: 10px; margin: 20px 0 0; flex-wrap: wrap; }
+        .status-pill { flex: 1; min-width: 140px; text-align: center; background: #FAF9F6; border-radius: 8px; padding: 10px; }
+        .status-pill b { display: block; font-size: 1.3rem; color: var(--color-raspberry); font-weight: 500; }
+        .status-pill span { font-size: 0.8rem; color: #808080; }
+        .info-table { width: 100%; border-collapse: collapse; font-size: 0.92rem; margin-top: 20px; }
+        .info-table th { text-align: left; color: var(--color-primary); font-weight: 500; padding: 8px 12px 8px 0; white-space: nowrap; vertical-align: top; width: 7em; }
+        .info-table td { padding: 8px 0; border-bottom: 1px solid #F1EAE0; }
+        .info-table tr:first-child td { border-top: 1px solid #F1EAE0; }
+        .info-table tr:first-child th { border-top: 1px solid #F1EAE0; }
+        .info-table th { border-bottom: 1px solid #F1EAE0; }
+        .privacy-note { font-size: 0.8rem; color: #808080; background: #FAF9F6; border-radius: 8px; padding: 12px 15px; }
+
+        /* LINE */
+        .line-box { margin: 24px 0; padding: 18px; background: #FFF8F0; border: 1px solid #D4C5B0; border-radius: 8px; text-align: center; }
+        .line-box p { font-size: 0.85rem; color: #5C4633; margin: 0 0 12px; }
+        .line-btn { display: inline-block; background: #06C755; color: white; padding: 10px 24px; border-radius: 4px; text-decoration: none; font-size: 0.85rem; font-weight: bold; }
+
+        /* 送信後 */
+        #success-message { display: none; text-align: center; padding: 20px 0; }
+        .success-icon-container { width: 90px; height: 90px; margin: 0 auto 30px; background-color: var(--color-primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .success-icon-container svg { width: 50px; height: 50px; fill: none; stroke: white; stroke-width: 5; stroke-linecap: round; stroke-linejoin: round; }
+        .pay-box { text-align: left; background: #FAF9F6; border-radius: 8px; padding: 16px 20px; margin: 24px 0; font-size: 0.92rem; }
+        .pay-box h5 { margin: 0 0 8px; color: var(--color-primary); font-size: 1rem; }
+
+        @media (max-width: 600px) {
+            .survey-form-container { padding: 24px 18px; }
+            .product-card { flex-direction: column; align-items: stretch; }
+            .product-photo { width: 100%; height: 180px; }
+            .row-2 { flex-direction: column; gap: 12px; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header"><div class="container"><div class="logo"><span class="logo-text">pol 通販のお申し込み</span></div></div></header>
+    <main><section class="survey-section"><div class="container">
+
+        <div class="mihon-banner">
+            <b>【見本】</b>形を見てもらうためのページです。入力して送っても、どこにも届きません。<br>
+            黄色の<span class="q-tag">質問48</span>などの印は、質問シートのどの質問に関係するかを示しています（本番では消します）。
+        </div>
+
+        <div style="text-align: center; margin-bottom: 32px;"><p style="font-family: var(--font-serif); font-size: 1.05rem; color: var(--color-primary); margin: 0;">polの通販をご覧いただき、ありがとうございます。<br>数に限りがありますので、お早めにお申し込みください。</p></div>
+
+        <div class="survey-form-container">
+            <form id="order-form" novalidate>
+
+                <h4 class="survey-group-title">1. 今回の通販 <span class="q-tag">質問50</span></h4>
+                <div class="product-card">
+                    <div class="product-photo">（商品の写真）</div>
+                    <div>
+                        <p class="product-name">はじめての箱（例）</p>
+                        <p class="product-price">3,500円 <small>（送料込み・前回の値段）</small></p>
+                        <p style="font-size: 0.9rem; margin: 8px 0 0;">（箱の中身の説明がここに入ります）</p>
+                    </div>
+                </div>
+                <div class="status-row">
+                    <div class="status-pill"><b>残り ○箱</b><span>限定 ○箱 <span class="q-tag">質問48①</span></span></div>
+                    <div class="status-pill"><b>○月○日 ○時まで</b><span>締め切り <span class="q-tag">質問48②</span></span></div>
+                </div>
+                <table class="info-table">
+                    <tr><th>送料</th><td>込み（北海道・九州・沖縄は＋500円）</td></tr>
+                    <tr><th>発送日</th><td>○月○日ごろ</td></tr>
+                    <tr><th>お支払い</th><td>銀行振込（お申し込みのあとにご案内します）</td></tr>
+                    <tr><th>消費期限・保存</th><td>（ここに入ります）</td></tr>
+                    <tr><th>キャンセル</th><td>（ここに入ります）</td></tr>
+                </table>
+
+                <h4 class="survey-group-title">2. お届け先 <span class="q-tag">質問49</span></h4>
+                <div class="form-group"><label class="form-label">お名前 <span class="required">*</span></label>
+                    <div class="row-2"><input class="form-input" name="name" placeholder="例）山田 花子" required><input class="form-input" name="kana" placeholder="ふりがな　例）やまだ はなこ"></div></div>
+                <div class="form-group"><label class="form-label">電話番号 <span class="required">*</span></label>
+                    <p class="form-subtext">配送の方が連絡するときに使います</p>
+                    <input class="form-input" type="tel" name="tel" placeholder="例）090-1234-5678" required></div>
+                <div class="form-group"><label class="form-label">郵便番号 <span class="required">*</span></label>
+                    <input class="form-input" name="zip" placeholder="例）176-0000" style="max-width: 200px;" required></div>
+                <div class="form-group"><label class="form-label">ご住所 <span class="required">*</span></label>
+                    <input class="form-input" name="address" placeholder="都道府県から、建物名・部屋番号まで" required></div>
+                <div class="form-group"><label class="form-label">個数 <span class="required">*</span></label>
+                    <select class="form-select" name="qty" required style="max-width: 200px;"><option value="">選択してください</option><option>1箱</option><option>2箱</option></select></div>
+
+                <p style="font-size: 0.85rem; color: #6B5310; margin: 0 0 20px;">↑ ここまでがA案（最小限）。↓ ここからがB案で足す項目</p>
+
+                <div class="form-group"><label class="form-label">メールアドレス <span class="required">*</span></label>
+                    <p class="form-subtext">お申し込み内容とお振込先をお送りします</p>
+                    <input class="form-input" type="email" name="email" placeholder="例）pol@example.com" required></div>
+                <div class="form-group"><label class="form-label">お届けの希望時間</label>
+                    <select class="form-select" name="time"><option>指定なし</option><option>午前中</option><option>14〜16時</option><option>16〜18時</option><option>18〜20時</option><option>19〜21時</option></select></div>
+                <div class="form-group"><label class="form-label">アレルギーについて</label>
+                    <p class="form-subtext">気になる食材があれば書いてください</p>
+                    <input class="form-input" name="allergy" placeholder="例）くるみ"></div>
+                <div class="form-group"><label class="form-label">ひとこと</label>
+                    <textarea class="form-textarea" name="message" rows="3" placeholder="ご質問やご要望があればどうぞ"></textarea></div>
+
+                <div class="option-c">
+                    <p class="option-c-title">C案なら入る項目（贈り物など）</p>
+                    <div class="form-group"><label class="form-label">贈り物ですか？</label>
+                        <div class="radio-group-vertical">
+                            <label><input type="radio" name="gift" value="no" checked> 自分あて（上の住所に届ける）</label>
+                            <label><input type="radio" name="gift" value="yes"> 贈り物（別の住所に届ける）</label>
+                        </div></div>
+                    <div class="form-group" id="giftGroup" style="display: none;"><label class="form-label">お届け先（贈り先）のお名前・ご住所・電話番号</label>
+                        <textarea class="form-textarea" name="giftTo" rows="3"></textarea></div>
+                    <div class="form-group"><label class="form-label">メッセージカード</label>
+                        <input class="form-input" name="card" placeholder="カードに書く言葉（なければ空のまま）"></div>
+                    <div class="form-group"><label class="form-label">polを知ったきっかけ</label>
+                        <select class="form-select" name="source"><option value="">選択してください</option><option>Instagram</option><option>LINE</option><option>マルシェ・イベント</option><option>知り合いから</option><option>そのほか</option></select></div>
+                </div>
+
+                <h4 class="survey-group-title">3. お知らせ <span class="q-tag">質問49 おまけ</span> <span class="q-tag">質問52</span></h4>
+                <div class="form-group">
+                    <div class="radio-group-vertical">
+                        <label><input type="checkbox" name="newsletter" value="yes"> 「pol通信」（メールの読みもの）を受け取る</label>
+                    </div></div>
+                <div class="line-box">
+                    <p>🍞 次の通販やマルシェのお知らせは、LINEで先にお届けしています。</p>
+                    <a class="line-btn" href="https://lin.ee/vKcp8Xd" target="_blank" rel="noopener noreferrer">LINE で友だち追加する</a>
+                    <p style="margin: 10px 0 0; font-size: 0.75rem; color: #6B5310;">↑ 質問52のB案（フォームのいちばん上）なら、この箱をページの先頭に置きます</p>
+                </div>
+
+                <p class="privacy-note">いただいたお名前・ご住所・お電話番号は、商品の発送とご連絡にだけ使います。</p>
+
+                <button type="submit" id="submitBtn" class="btn-primary">申し込む</button>
+            </form>
+
+            <div id="success-message">
+                <div class="success-icon-container"><svg viewBox="0 0 52 52"><path d="M14.1 27.2l7.1 7.2 16.7-16.8"/></svg></div>
+                <h4 style="font-family: var(--font-serif); color: var(--color-primary); font-size: 1.2rem;">お申し込みを受け付けました</h4>
+                <p>ありがとうございます。<br>同じ内容をメールでもお送りしました。</p>
+                <div class="pay-box">
+                    <h5>お振込先 <span class="q-tag">質問50 おまけ ア</span></h5>
+                    ○○銀行 ○○支店　普通 ○○○○○○○　（名義）<br>
+                    ○月○日までにお振り込みください。入金を確かめてから発送します。
+                </div>
+                <div class="line-box">
+                    <p>🍞 次の通販やマルシェのお知らせは、LINEで先にお届けしています。<span class="q-tag">質問52 A</span></p>
+                    <a class="line-btn" href="https://lin.ee/vKcp8Xd" target="_blank" rel="noopener noreferrer">LINE で友だち追加する</a>
+                </div>
+                <button class="btn-primary" style="background: #fff; color: var(--color-primary); border: 1px solid var(--color-primary); box-shadow: none;" onclick="location.reload()">見本をもう一度見る</button>
+            </div>
+        </div>
+    </div></section></main>
+    <script>
+        // 見本なので送信はせず、送信後の画面に切り替えるだけ
+        document.querySelectorAll('input[name="gift"]').forEach(r => r.addEventListener('change', () => {
+            document.getElementById('giftGroup').style.display = document.querySelector('input[name="gift"]:checked').value === 'yes' ? 'block' : 'none';
+        }));
+        document.getElementById('order-form').onsubmit = (e) => {
+            e.preventDefault();
+            document.getElementById('order-form').style.display = 'none';
+            document.getElementById('success-message').style.display = 'block';
+            window.scrollTo(0, 0);
+        };
+    </script>
+</body>
+</html>
