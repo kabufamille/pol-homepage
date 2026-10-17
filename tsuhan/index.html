@@ -130,13 +130,8 @@
                     <input class="form-input" name="zip" placeholder="例）176-0000" style="max-width: 200px;" required></div>
                 <div class="form-group"><label class="form-label">ご住所 <span class="required">*</span></label>
                     <input class="form-input" name="address" placeholder="都道府県から、建物名・部屋番号まで" required></div>
-                <div class="form-group"><label class="form-label">個数 <span class="required">*</span></label>
-                    <select class="form-select" name="qty" required style="max-width: 200px;"><option value="">選択してください</option><option>1箱</option><option>2箱</option></select></div>
-
-                <p style="font-size: 0.85rem; color: #6B5310; margin: 0 0 20px;">↑ ここまでがA案（最小限）。↓ ここからがB案で足す項目</p>
-
                 <div class="form-group"><label class="form-label">メールアドレス <span class="required">*</span></label>
-                    <p class="form-subtext">お申し込み内容とお振込先をお送りします</p>
+                    <p class="form-subtext">お申し込み内容とお振込先、お届け後のアンケートをお送りします</p>
                     <input class="form-input" type="email" name="email" placeholder="例）pol@example.com" required></div>
                 <div class="form-group"><label class="form-label">お届けの希望時間</label>
                     <select class="form-select" name="time"><option>指定なし</option><option>午前中</option><option>14〜16時</option><option>16〜18時</option><option>18〜20時</option><option>19〜21時</option></select></div>
@@ -153,6 +148,11 @@
                             <label><input type="radio" name="gift" value="no" checked> 自分あて（上の住所に届ける）</label>
                             <label><input type="radio" name="gift" value="yes"> 贈り物（別の住所に届ける）</label>
                         </div></div>
+                <div class="form-group"><label class="form-label">個数 <span class="required">*</span></label>
+                    <select class="form-select" name="qty" required style="max-width: 200px;"><option value="">選択してください</option><option>1箱</option><option>2箱</option></select></div>
+
+                <p style="font-size: 0.85rem; color: #6B5310; margin: 0 0 20px;">↑ ここまでがA案（最小限・メールは必ずもらう：10/18決定）。↓ ここからがB案で足す項目</p>
+
                     <div class="form-group" id="giftGroup" style="display: none;"><label class="form-label">お届け先（贈り先）のお名前・ご住所・電話番号</label>
                         <textarea class="form-textarea" name="giftTo" rows="3"></textarea></div>
                     <div class="form-group"><label class="form-label">メッセージカード</label>
@@ -172,7 +172,7 @@
                     <p style="margin: 10px 0 0; font-size: 0.75rem; color: #6B5310;">↑ 質問52のB案（フォームのいちばん上）なら、この箱をページの先頭に置きます</p>
                 </div>
 
-                <p class="privacy-note">いただいたお名前・ご住所・お電話番号は、商品の発送とご連絡にだけ使います。</p>
+                <p class="privacy-note">いただいたお名前・ご住所・お電話番号・メールアドレスは、商品の発送とご連絡、お届け後のアンケートのご案内にだけ使います。</p>
 
                 <button type="submit" id="submitBtn" class="btn-primary">申し込む</button>
             </form>
