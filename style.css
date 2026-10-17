@@ -130,6 +130,14 @@ h4 {
     line-height: 1.2;
 }
 
+/* 店名 POL はロゴAと同じ字形の画像（2026-10-17 けんじ決定「以前の字体・大文字」） */
+.logo .logo-pol {
+    height: 0.72em;
+    width: auto;
+    vertical-align: baseline;
+    margin-right: 0.1em;
+}
+
 .text-sand {
     color: #D2B48C;
 }
