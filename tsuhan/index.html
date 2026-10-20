@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>通販のお申し込み | pol</title>
-    <!-- 【見本】10/20 質問48〜52の答えで作り直した版。送信しても誰にも届かない（申し込みの受け口はまだ無い）。検索に載せない。 -->
+    <!-- 2026-10-20 本物の受け口（お取り置き用GAS・kind:'tsuhan'）につないだ版。受付の時間・限定数・商品は
+         スプレッドシート「pol通販の申し込み」の「設定」タブから読む。末尾に ?mihon=1 を付けると、GASを使わずに
+         受付前・売り切れなどの画面を切り替えて見られる（見本の黄色い枠が出る）。検索に載せない。 -->
     <meta name="robots" content="noindex,nofollow">
     <link rel="icon" href="../images/pol_logo_muffin.webp" type="image/webp">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -37,18 +39,21 @@
         .row-2 > * { flex: 1; }
         .check-row { display: flex; align-items: center; gap: 12px; cursor: pointer; padding: 12px 15px; background: #FAF9F6; border-radius: 8px; }
         .btn-primary { width: 100%; padding: 18px; background-color: var(--color-primary); color: white; border: none; border-radius: 50px; font-size: 1.1rem; font-weight: bold; cursor: pointer; margin-top: 20px; box-shadow: 0 4px 15px rgba(142, 110, 83, 0.2); font-family: inherit; }
+        .btn-primary:disabled { opacity: 0.6; cursor: wait; }
         ::placeholder { color: #bbb; opacity: 0.7; font-weight: 300; }
         .form-subtext { font-size: 0.8rem; color: #808080; margin-bottom: 15px; margin-top: -10px; }
+        .hp-field { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+        .form-error { display: none; color: var(--color-raspberry); background: #FDF0F0; border-radius: 8px; padding: 12px 15px; font-size: 0.9rem; margin-top: 20px; }
 
-        /* 見本の目印（本番では消す） */
-        .mihon-banner { background: #FFF4D6; border: 1px dashed #D9B44A; color: #6B5310; border-radius: 10px; padding: 14px 18px; font-size: 0.9rem; margin-bottom: 24px; }
+        /* 見本の目印（?mihon=1 のときだけ出る） */
+        .mihon-banner { display: none; background: #FFF4D6; border: 1px dashed #D9B44A; color: #6B5310; border-radius: 10px; padding: 14px 18px; font-size: 0.9rem; margin-bottom: 24px; }
         .mihon-switch { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
         .mihon-switch button { font-family: inherit; font-size: 0.8rem; padding: 4px 12px; border-radius: 20px; border: 1px solid #D9B44A; background: #fff; color: #6B5310; cursor: pointer; }
         .mihon-switch button.on { background: #D9B44A; color: #fff; }
 
         /* 商品の案内 */
         .product-card { display: flex; gap: 20px; align-items: center; }
-        .product-photo { width: 160px; height: 160px; flex-shrink: 0; border-radius: 10px; background: #F3ECE2; display: flex; align-items: center; justify-content: center; color: #A89580; font-size: 0.85rem; text-align: center; }
+        .product-photo { width: 160px; height: 160px; flex-shrink: 0; border-radius: 10px; object-fit: cover; background: #F3ECE2; }
         .product-name { font-family: var(--font-serif); font-size: 1.2rem; color: var(--color-primary); margin: 0 0 4px; }
         .product-price { font-size: 1.3rem; font-weight: 500; color: #333; margin: 0; }
         .product-price small { font-size: 0.8rem; color: #808080; font-weight: 400; }
@@ -63,11 +68,13 @@
         .insta-note { font-size: 0.82rem; color: #808080; margin: 12px 0 0; }
         .privacy-note { font-size: 0.8rem; color: #808080; background: #FAF9F6; border-radius: 8px; padding: 12px 15px; }
 
-        /* 受付前・売り切れ・受付終了のときに出す札 */
+        /* 受付前・売り切れ・受付終了・準備中・読み込み中に出す札 */
         .closed-box { display: none; text-align: center; padding: 36px 20px; border: 1px solid #E8DCC4; border-radius: 12px; background: #FAF9F6; margin-top: 30px; }
         .closed-box h4 { font-family: var(--font-serif); color: var(--color-primary); font-size: 1.3rem; margin: 0 0 8px; }
         .closed-box p { margin: 0; font-size: 0.92rem; }
-        body[data-state="before"] #order-fields, body[data-state="soldout"] #order-fields, body[data-state="ended"] #order-fields { display: none; }
+        body:not([data-state="open"]) #order-fields { display: none; }
+        body[data-state="loading"] #product-info, body[data-state="prep"] #product-info, body[data-state="error"] #product-info { display: none; }
+        body[data-state="loading"] #closed-loading, body[data-state="prep"] #closed-prep, body[data-state="error"] #closed-error,
         body[data-state="before"] #closed-before, body[data-state="soldout"] #closed-soldout, body[data-state="ended"] #closed-ended { display: block; }
 
         /* LINE */
@@ -82,6 +89,7 @@
         .pay-box { text-align: left; background: #FAF9F6; border-radius: 8px; padding: 16px 20px; margin: 24px 0; font-size: 0.92rem; }
         .pay-box h5 { margin: 0 0 8px; color: var(--color-primary); font-size: 1rem; }
         .pay-box ul { margin: 8px 0 0; padding-left: 1.2em; }
+        #s-bank { white-space: pre-line; }
 
         @media (max-width: 600px) {
             .survey-form-container { padding: 24px 18px; }
@@ -91,16 +99,16 @@
         }
     </style>
 </head>
-<body data-state="open">
+<body data-state="loading">
     <header class="header"><div class="container"><div class="logo"><span class="logo-text">pol 通販のお申し込み</span></div></div></header>
     <main><section class="survey-section"><div class="container">
 
-        <div class="mihon-banner">
-            <b>【見本】</b>質問48〜52の答え（10/20）で作り直した形です。まだ送ってもどこにも届きません。<br>
-            下のボタンで、時間や売り切れによって画面がどう変わるかを見られます（本番ではこの黄色い枠ごと消します）。
+        <div class="mihon-banner" id="mihon-banner">
+            <b>【見本】</b>画面の切り替えを見るためのモードです（送っても届きません）。
             <div class="mihon-switch">
+                <button type="button" data-s="prep">準備中</button>
                 <button type="button" data-s="before">受付前</button>
-                <button type="button" data-s="open" class="on">受付中</button>
+                <button type="button" data-s="open">受付中</button>
                 <button type="button" data-s="soldout">売り切れ</button>
                 <button type="button" data-s="ended">受付終了</button>
                 <button type="button" data-s="done">申し込んだあと</button>
@@ -112,28 +120,39 @@
         <div class="survey-form-container">
             <form id="order-form" novalidate>
 
-                <h4 class="survey-group-title">1. 今回の通販</h4>
-                <div class="product-card">
-                    <div class="product-photo">（商品の写真）</div>
-                    <div>
-                        <p class="product-name">はじめての箱（例）</p>
-                        <p class="product-price">3,500円 <small>（税込・送料込み）</small></p>
+                <div id="product-info">
+                    <h4 class="survey-group-title">1. 今回の通販</h4>
+                    <div class="product-card">
+                        <img class="product-photo" id="product-photo" src="../images/tsuhan_box.webp" alt="" onerror="this.style.display='none'">
+                        <div>
+                            <p class="product-name" id="v-product"></p>
+                            <p class="product-price"><span id="v-price"></span> <small>（税込・送料込み）</small></p>
+                        </div>
                     </div>
+                    <div class="status-row">
+                        <div class="status-pill"><b id="v-limit"></b><span>なくなりしだい締め切ります</span></div>
+                        <div class="status-pill"><b id="v-period"></b><span>受付の時間</span></div>
+                    </div>
+                    <table class="info-table">
+                        <tr><th>送料</th><td id="v-ship-fee">込み</td></tr>
+                        <tr><th>発送日</th><td id="v-ship-date"></td></tr>
+                        <tr><th>お支払い</th><td>銀行振込（お申し込みのあとに振込先をお知らせします）</td></tr>
+                    </table>
+                    <p class="insta-note">箱の中身や保存のしかたは、Instagramの投稿をご覧ください。</p>
                 </div>
-                <div class="status-row">
-                    <div class="status-pill"><b>限定 ○箱</b><span>なくなりしだい締め切ります</span></div>
-                    <div class="status-pill"><b>○月○日 ○時〜○月○日 ○時</b><span>受付の時間</span></div>
-                </div>
-                <table class="info-table">
-                    <tr><th>送料</th><td>込み（北海道・九州・沖縄は＋500円）</td></tr>
-                    <tr><th>発送日</th><td>○月○日ごろ</td></tr>
-                    <tr><th>お支払い</th><td>銀行振込（お申し込みのあとに振込先をお知らせします）</td></tr>
-                </table>
-                <p class="insta-note">箱の中身や保存のしかたは、Instagramの投稿をご覧ください。</p>
 
+                <div id="closed-loading" class="closed-box"><p>読み込んでいます…</p></div>
+                <div id="closed-prep" class="closed-box">
+                    <h4>ただいま準備中です</h4>
+                    <p>次の通販は、LINEとInstagramでお知らせします。</p>
+                </div>
+                <div id="closed-error" class="closed-box">
+                    <h4>読み込めませんでした</h4>
+                    <p>時間をおいて、ページを開き直してください。</p>
+                </div>
                 <div id="closed-before" class="closed-box">
                     <h4>受付はまだ始まっていません</h4>
-                    <p>○月○日 ○時から受付を始めます。</p>
+                    <p><span id="v-start"></span>から受付を始めます。</p>
                 </div>
                 <div id="closed-soldout" class="closed-box">
                     <h4>売り切れました</h4>
@@ -147,26 +166,30 @@
                 <div id="order-fields">
                     <h4 class="survey-group-title">2. お届け先</h4>
                     <div class="form-group"><label class="form-label">お名前 <span class="required">*</span></label>
-                        <div class="row-2"><input class="form-input" name="name" placeholder="例）山田 花子" required><input class="form-input" name="kana" placeholder="ふりがな　例）やまだ はなこ"></div></div>
+                        <div class="row-2"><input class="form-input" name="name" autocomplete="name" placeholder="例）山田 花子" required maxlength="50"><input class="form-input" name="kana" placeholder="ふりがな　例）やまだ はなこ" maxlength="50"></div></div>
                     <div class="form-group"><label class="form-label">電話番号 <span class="required">*</span></label>
                         <p class="form-subtext">配送の方が連絡するときに使います</p>
-                        <input class="form-input" type="tel" name="tel" placeholder="例）090-1234-5678" required></div>
+                        <input class="form-input" type="tel" name="tel" autocomplete="tel" placeholder="例）090-1234-5678" required></div>
                     <div class="form-group"><label class="form-label">郵便番号 <span class="required">*</span></label>
-                        <input class="form-input" name="zip" placeholder="例）176-0000" style="max-width: 200px;" required></div>
+                        <input class="form-input" name="zip" autocomplete="postal-code" inputmode="numeric" placeholder="例）176-0000" style="max-width: 200px;" required></div>
+                    <div class="form-group"><label class="form-label">都道府県 <span class="required">*</span></label>
+                        <select class="form-select" name="pref" autocomplete="address-level1" required style="max-width: 200px;"><option value="">選択してください</option></select></div>
                     <div class="form-group"><label class="form-label">ご住所 <span class="required">*</span></label>
-                        <input class="form-input" name="address" placeholder="都道府県から、建物名・部屋番号まで" required></div>
+                        <input class="form-input" name="address" autocomplete="street-address" placeholder="市区町村から、建物名・部屋番号まで" required maxlength="200"></div>
                     <div class="form-group"><label class="form-label">メールアドレス <span class="required">*</span></label>
                         <p class="form-subtext">お申し込み内容と振込先、お届け後のアンケートをお送りします</p>
-                        <input class="form-input" type="email" name="email" placeholder="例）pol@example.com" required></div>
+                        <input class="form-input" type="email" name="email" autocomplete="email" placeholder="例）pol@example.com" required maxlength="100"></div>
                     <div class="form-group"><label class="form-label">個数 <span class="required">*</span></label>
-                        <select class="form-select" name="qty" required style="max-width: 200px;"><option value="">選択してください</option><option>1箱</option><option>2箱</option></select></div>
+                        <select class="form-select" name="qty" required style="max-width: 200px;"><option value="">選択してください</option></select></div>
 
                     <div class="form-group">
                         <label class="check-row"><input type="checkbox" name="newsletter" value="yes"> 「pol通信」（メールの読みもの）を受け取る</label>
                     </div>
+                    <div class="hp-field" aria-hidden="true"><label>この欄は空のままにしてください<input type="text" name="hp" tabindex="-1" autocomplete="off"></label></div>
 
                     <p class="privacy-note">いただいたお名前・ご住所・お電話番号・メールアドレスは、商品の発送とご連絡、お届け後のアンケートのご案内にだけ使います。</p>
 
+                    <p class="form-error" id="form-error"></p>
                     <button type="submit" id="submitBtn" class="btn-primary">申し込む</button>
                 </div>
             </form>
@@ -174,13 +197,13 @@
             <div id="success-message">
                 <div class="success-icon-container"><svg viewBox="0 0 52 52"><path d="M14.1 27.2l7.1 7.2 16.7-16.8"/></svg></div>
                 <h4 style="font-family: var(--font-serif); color: var(--color-primary); font-size: 1.2rem;">お申し込みを受け付けました</h4>
-                <p>ありがとうございます。<br>同じ内容をメールでもお送りしました。</p>
+                <p>ありがとうございます。受付番号は <b id="s-no"></b> です。<br>同じ内容をメールでもお送りしました。</p>
                 <div class="pay-box">
                     <h5>お振込先</h5>
-                    ○○銀行 ○○支店　普通 ○○○○○○○　（名義）<br>
-                    お振込の金額：○,○○○円（送料込み）
+                    <div id="s-bank"></div>
+                    お振込の金額：<b id="s-total"></b>（送料込み）
                     <ul>
-                        <li>○月○日までにお振り込みください。期限を過ぎるとキャンセルになります。</li>
+                        <li><b id="s-deadline"></b>までにお振り込みください。期限を過ぎるとキャンセルになります。</li>
                         <li>振込の名前は、お申し込みのときのお名前でお願いします。</li>
                         <li>入金を確かめたら、発送日をメールでお知らせします。</li>
                     </ul>
@@ -193,18 +216,115 @@
         </div>
     </div></section></main>
     <script>
-        // 見本なので送信はせず、画面を切り替えるだけ
-        const form = document.getElementById('order-form');
-        const success = document.getElementById('success-message');
-        function show(state) {
-            const done = state === 'done';
-            document.body.dataset.state = done ? 'open' : state;
-            form.style.display = done ? 'none' : '';
-            success.style.display = done ? 'block' : 'none';
-            document.querySelectorAll('.mihon-switch button').forEach(b => b.classList.toggle('on', b.dataset.s === state));
+        // 受け口＝お取り置き用GAS（同じURL・kind:'tsuhan' で通販として扱う）。secret は公開JSに書く合言葉＝URLを拾っただけのボット除け
+        const GAS_URL = 'https://script.google.com/macros/s/AKfycbyMT-ZX9lwH-6Grdb-oJvYlXr7lHse0w8MQgHAgZ6sjHcDEblv8uH9_kj1_wAO4W2__/exec';
+        const SECRET = 'ZymyE65B7WQcWnaR3od8A7xv';
+        const PREFS = ['北海道','青森県','岩手県','宮城県','秋田県','山形県','福島県','茨城県','栃木県','群馬県','埼玉県','千葉県','東京都','神奈川県','新潟県','富山県','石川県','福井県','山梨県','長野県','岐阜県','静岡県','愛知県','三重県','滋賀県','京都府','大阪府','兵庫県','奈良県','和歌山県','鳥取県','島根県','岡山県','広島県','山口県','徳島県','香川県','愛媛県','高知県','福岡県','佐賀県','長崎県','熊本県','大分県','宮崎県','鹿児島県','沖縄県'];
+
+        const $ = (id) => document.getElementById(id);
+        const form = $('order-form');
+        const success = $('success-message');
+        const yen = (n) => Number(n).toLocaleString() + '円';
+
+        const prefSel = form.elements.pref;
+        PREFS.forEach(p => prefSel.add(new Option(p, p)));
+
+        function setState(state) {
+            document.body.dataset.state = state;
         }
-        document.querySelectorAll('.mihon-switch button').forEach(b => b.addEventListener('click', () => show(b.dataset.s)));
-        form.onsubmit = (e) => { e.preventDefault(); show('done'); window.scrollTo(0, 0); };
+
+        function applyInfo(info) {
+            $('v-product').textContent = info.product || '';
+            $('v-price').textContent = info.price ? yen(info.price) : '';
+            $('v-limit').textContent = info.limit ? '限定 ' + info.limit + '箱' : '';
+            $('v-period').textContent = (info.start && info.end) ? info.start + ' 〜 ' + info.end : '';
+            $('v-start').textContent = info.start || '';
+            $('v-ship-date').textContent = info.shipDate || '';
+            $('v-ship-fee').textContent = info.farFee ? '込み（北海道・九州・沖縄は＋' + yen(info.farFee) + '）' : '込み';
+            const qty = form.elements.qty;
+            while (qty.options.length > 1) qty.remove(1);
+            for (let i = 1; i <= (info.perPerson || 2); i++) qty.add(new Option(i + '箱', String(i)));
+        }
+
+        function showDone(r) {
+            $('s-no').textContent = r.orderNo;
+            $('s-total').textContent = yen(r.total);
+            $('s-deadline').textContent = r.deadline;
+            $('s-bank').textContent = r.bank;
+            form.style.display = 'none';
+            success.style.display = 'block';
+            window.scrollTo(0, 0);
+        }
+
+        function showError(msg) {
+            const el = $('form-error');
+            el.textContent = msg;
+            el.style.display = msg ? 'block' : 'none';
+        }
+
+        // ---- 見本モード（?mihon=1）：GASを使わずに画面だけ切り替える ----
+        const MIHON = new URLSearchParams(location.search).get('mihon') === '1';
+        if (MIHON) {
+            $('mihon-banner').style.display = 'block';
+            applyInfo({ product: 'はじめての箱（例）', price: 3500, limit: 4, perPerson: 2, farFee: 500, shipDate: '12月10日ごろ', start: '11月20日（金）20:00', end: '11月22日（日）20:00' });
+            const pick = (s) => {
+                document.querySelectorAll('.mihon-switch button').forEach(b => b.classList.toggle('on', b.dataset.s === s));
+                if (s === 'done') { setState('open'); showDone({ orderNo: 1, total: 3500, deadline: '11月23日（月）', bank: '○○銀行 ○○支店　普通 1234567\n名義 ○○○○' }); return; }
+                form.style.display = ''; success.style.display = 'none'; setState(s);
+            };
+            document.querySelectorAll('.mihon-switch button').forEach(b => b.addEventListener('click', () => pick(b.dataset.s)));
+            pick('open');
+        } else {
+            fetch(GAS_URL + '?q=tsuhan', { cache: 'no-store' })
+                .then(r => r.json())
+                .then(info => {
+                    if (info.status !== 'ok') throw new Error('status');
+                    applyInfo(info);
+                    setState(info.state);
+                })
+                .catch(() => setState('error'));
+        }
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            showError('');
+            const f = form.elements;
+            const need = [['name', 'お名前'], ['tel', '電話番号'], ['zip', '郵便番号'], ['pref', '都道府県'], ['address', 'ご住所'], ['email', 'メールアドレス'], ['qty', '個数']];
+            const missing = need.filter(([k]) => !String(f[k].value).trim()).map(([, label]) => label);
+            if (missing.length) { showError(missing.join('・') + 'を入力してください'); return; }
+            if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(f.email.value.trim())) { showError('メールアドレスの形を確かめてください'); return; }
+            const tel = f.tel.value.replace(/[^\d]/g, '');
+            if (tel.length < 10 || tel.length > 11) { showError('電話番号を確かめてください（数字10〜11けた）'); return; }
+            const zip = f.zip.value.replace(/[^\d]/g, '');
+            if (zip.length !== 7) { showError('郵便番号を確かめてください（数字7けた）'); return; }
+
+            if (MIHON) { showDone({ orderNo: 1, total: 3500, deadline: '11月23日（月）', bank: '○○銀行 ○○支店　普通 1234567\n名義 ○○○○' }); return; }
+
+            const btn = $('submitBtn');
+            btn.disabled = true;
+            btn.textContent = '送信中…';
+            try {
+                const res = await fetch(GAS_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain' },
+                    body: JSON.stringify({
+                        kind: 'tsuhan', secret: SECRET, hp: f.hp.value,
+                        name: f.name.value.trim(), kana: f.kana.value.trim(), tel: f.tel.value.trim(),
+                        zip: zip, pref: f.pref.value, address: f.address.value.trim(),
+                        email: f.email.value.trim(), qty: Number(f.qty.value), newsletter: f.newsletter.checked
+                    })
+                });
+                const r = await res.json();
+                if (r.status === 'success') { showDone(r); return; }
+                if (r.status === 'closed') { setState(r.state || 'ended'); window.scrollTo(0, 0); return; }
+                showError(r.message || '送信に失敗しました。お手数ですが、polのLINEへご連絡ください');
+            } catch (err) {
+                showError('送信できませんでした。通信の状態を確かめて、もう一度押してください。解決しない場合は、polのLINEへご連絡ください');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = '申し込む';
+            }
+        });
     </script>
 </body>
 </html>
