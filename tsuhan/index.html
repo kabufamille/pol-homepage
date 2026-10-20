@@ -67,7 +67,6 @@
         .closed-box { display: none; text-align: center; padding: 36px 20px; border: 1px solid #E8DCC4; border-radius: 12px; background: #FAF9F6; margin-top: 30px; }
         .closed-box h4 { font-family: var(--font-serif); color: var(--color-primary); font-size: 1.3rem; margin: 0 0 8px; }
         .closed-box p { margin: 0; font-size: 0.92rem; }
-        .closed-box .soldout-time { font-size: 0.8rem; color: #808080; margin-top: 6px; }
         body[data-state="before"] #order-fields, body[data-state="soldout"] #order-fields, body[data-state="ended"] #order-fields { display: none; }
         body[data-state="before"] #closed-before, body[data-state="soldout"] #closed-soldout, body[data-state="ended"] #closed-ended { display: block; }
 
@@ -139,7 +138,6 @@
                 <div id="closed-soldout" class="closed-box">
                     <h4>売り切れました</h4>
                     <p>たくさんのお申し込み、ありがとうございました。</p>
-                    <p class="soldout-time">受付開始から○分で売り切れました</p>
                 </div>
                 <div id="closed-ended" class="closed-box">
                     <h4>受付は終わりました</h4>
