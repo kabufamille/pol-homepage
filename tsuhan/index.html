@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>通販のお申し込み | pol</title>
+    <title>通販のお申し込み | POL</title>
     <!-- 2026-10-20 本物の受け口（お取り置き用GAS・kind:'tsuhan'）につないだ版。受付の時間・限定数・商品は
          スプレッドシート「pol通販の申し込み」の「設定」タブから読む。末尾に ?mihon=1 を付けると、GASを使わずに
          受付前・売り切れなどの画面を切り替えて見られる（見本の黄色い枠が出る）。検索に載せない。 -->
@@ -100,7 +100,7 @@
     </style>
 </head>
 <body data-state="loading">
-    <header class="header"><div class="container"><div class="logo"><span class="logo-text">pol 通販のお申し込み</span></div></div></header>
+    <header class="header"><div class="container"><div class="logo"><span class="logo-text">POL 通販のお申し込み</span></div></div></header>
     <main><section class="survey-section"><div class="container">
 
         <div class="mihon-banner" id="mihon-banner">
@@ -115,7 +115,7 @@
             </div>
         </div>
 
-        <div style="text-align: center; margin-bottom: 32px;"><p style="font-family: var(--font-serif); font-size: 1.05rem; color: var(--color-primary); margin: 0;">polの通販をご覧いただき、ありがとうございます。<br>数に限りがありますので、お早めにお申し込みください。</p></div>
+        <div style="text-align: center; margin-bottom: 32px;"><p style="font-family: var(--font-serif); font-size: 1.05rem; color: var(--color-primary); margin: 0;">POLの通販をご覧いただき、ありがとうございます。<br>数に限りがありますので、お早めにお申し込みください。</p></div>
 
         <div class="survey-form-container">
             <form id="order-form" novalidate>
@@ -342,9 +342,9 @@
                 const r = await res.json();
                 if (r.status === 'success') { showDone(r); return; }
                 if (r.status === 'closed') { setState(r.state || 'ended'); window.scrollTo(0, 0); return; }
-                showError(r.message || '送信に失敗しました。お手数ですが、polのLINEへご連絡ください');
+                showError(r.message || '送信に失敗しました。お手数ですが、POLのLINEへご連絡ください');
             } catch (err) {
-                showError('送信できませんでした。通信の状態を確かめて、もう一度押してください。解決しない場合は、polのLINEへご連絡ください');
+                showError('送信できませんでした。通信の状態を確かめて、もう一度押してください。解決しない場合は、POLのLINEへご連絡ください');
             } finally {
                 btn.disabled = false;
                 btn.textContent = '申し込む';
