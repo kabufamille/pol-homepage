@@ -4,8 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- 2026-10-27 このページだけ CSP（個人情報を扱うので、決まった先にしか読み込み・送信させない）。GitHub Pages はヘッダーを変えられないので meta で。
-         送信先を足したら（GASのURLを変える・計測を変える等）ここにも足す。script.googleusercontent.com は GAS の応答のリダイレクト先。 -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://gc.zgo.at; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://pol-hp.goatcounter.com; connect-src https://script.google.com https://script.googleusercontent.com https://pol-hp.goatcounter.com; object-src 'none'; base-uri 'none'; form-action 'none'">
+         送信先を足したら（GASのURLを変える・計測を変える等）ここにも足す。script.googleusercontent.com は GAS の応答のリダイレクト先。
+         challenges.cloudflare.com は Turnstile（ボット確認・2026-10-27）＝Cloudflare公式の指定どおり script-src と frame-src。 -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://gc.zgo.at https://challenges.cloudflare.com; frame-src https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://pol-hp.goatcounter.com; connect-src https://script.google.com https://script.googleusercontent.com https://pol-hp.goatcounter.com; object-src 'none'; base-uri 'none'; form-action 'none'">
     <title>通販のお申し込み | POL</title>
     <!-- 2026-10-20 本物の受け口（お取り置き用GAS・kind:'tsuhan'）につないだ版。受付の時間・限定数・商品は
          スプレッドシート「pol通販の申し込み」の「設定」タブから読む。末尾に ?mihon=1 を付けると、GASを使わずに
@@ -43,6 +44,9 @@
         .check-row { display: flex; align-items: center; gap: 12px; cursor: pointer; padding: 12px 15px; background: #FAF9F6; border-radius: 8px; }
         .btn-primary { width: 100%; padding: 18px; background-color: var(--color-primary); color: white; border: none; border-radius: 50px; font-size: 1.1rem; font-weight: bold; cursor: pointer; margin-top: 20px; box-shadow: 0 4px 15px rgba(142, 110, 83, 0.2); font-family: inherit; }
         .btn-primary:disabled { opacity: 0.6; cursor: wait; }
+        /* Turnstile（ボット確認）の置き場。受付中だけ出る（#order-fields の中） */
+        .ts-box { margin: 22px 0 4px; min-height: 65px; }
+        .ts-note { font-size: 0.8rem; color: #808080; margin: 4px 0 0; }
         ::placeholder { color: #bbb; opacity: 0.7; font-weight: 300; }
         .form-subtext { font-size: 0.8rem; color: #808080; margin-bottom: 15px; margin-top: -10px; }
         .hp-field { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
@@ -192,6 +196,8 @@
 
                     <p class="privacy-note">いただいたお名前・ご住所・お電話番号・メールアドレスは、商品の発送とご連絡、お届け後のアンケートのご案内にのみ使わせていただきます。<br>お支払い・キャンセル・返品については <a href="tokushoho.html" style="color: var(--color-primary);">特定商取引法に基づく表記</a> をご覧ください。</p>
 
+                    <div class="ts-box" id="ts-box"></div>
+                    <p class="ts-note" id="ts-note">上の確認（自動で終わることがほとんどです）が済むと「申し込む」を押せるようになります。</p>
                     <p class="form-error" id="form-error"></p>
                     <button type="submit" id="submitBtn" class="btn-primary">申し込む</button>
                 </div>
@@ -222,6 +228,9 @@
         // 受け口＝お取り置き用GAS（同じURL・kind:'tsuhan' で通販として扱う）。secret は公開JSに書く合言葉＝URLを拾っただけのボット除け
         const GAS_URL = 'https://script.google.com/macros/s/AKfycbyMT-ZX9lwH-6Grdb-oJvYlXr7lHse0w8MQgHAgZ6sjHcDEblv8uH9_kj1_wAO4W2__/exec';
         const SECRET = 'ZymyE65B7WQcWnaR3od8A7xv';
+        // Turnstile（Cloudflareのボット確認・2026-10-27）のサイトキー。★本物のキーはここ1か所を差し替えるだけ。
+        // 今の値は Cloudflare 公式のテスト用（必ず通る・どのドメインでも動く）。秘密キーは GAS のスクリプトプロパティ TURNSTILE_SECRET 側
+        const TURNSTILE_SITEKEY = '1x00000000000000000000AA';
         const PREFS = ['北海道','青森県','岩手県','宮城県','秋田県','山形県','福島県','茨城県','栃木県','群馬県','埼玉県','千葉県','東京都','神奈川県','新潟県','富山県','石川県','福井県','山梨県','長野県','岐阜県','静岡県','愛知県','三重県','滋賀県','京都府','大阪府','兵庫県','奈良県','和歌山県','鳥取県','島根県','岡山県','広島県','山口県','徳島県','香川県','愛媛県','高知県','福岡県','佐賀県','長崎県','熊本県','大分県','宮崎県','鹿児島県','沖縄県'];
 
         const $ = (id) => document.getElementById(id);
@@ -290,10 +299,44 @@
             el.style.display = msg ? 'block' : 'none';
         }
 
+        // ---- Turnstile（ボット確認）：受付中のときだけ読み込んで出す。見本モード・準備中・売り切れでは読み込まない ----
+        let tsToken = '', tsWidget = null;
+        const submitBtn = $('submitBtn');
+        function updateSubmit() {
+            if (MIHON) return;
+            submitBtn.disabled = !tsToken;
+            $('ts-note').style.display = tsToken ? 'none' : 'block';
+        }
+        function startTurnstile() {
+            if (MIHON || document.getElementById('ts-script')) return;
+            updateSubmit();
+            window.onTurnstileLoad = () => {
+                tsWidget = turnstile.render('#ts-box', {
+                    sitekey: TURNSTILE_SITEKEY, language: 'ja',
+                    callback: (t) => { tsToken = t; updateSubmit(); },
+                    'expired-callback': () => { tsToken = ''; updateSubmit(); },
+                    'error-callback': () => { tsToken = ''; updateSubmit(); }
+                });
+            };
+            const s = document.createElement('script');
+            s.id = 'ts-script';
+            s.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=onTurnstileLoad';
+            s.async = true;
+            s.onerror = () => { $('ts-note').textContent = '確認の部品を読み込めませんでした。ページを開き直すか、広告ブロック等を外してお試しください。解決しない場合は、POLのLINEへご連絡ください。'; };
+            document.head.appendChild(s);
+        }
+        // トークンは1回しか使えない＝送ったあと（受付できなかった時）は確認をやり直す
+        function resetTurnstile() {
+            tsToken = '';
+            if (tsWidget !== null && window.turnstile) turnstile.reset(tsWidget);
+            updateSubmit();
+        }
+
         // ---- 見本モード（?mihon=1）：GASを使わずに画面だけ切り替える ----
         const MIHON = new URLSearchParams(location.search).get('mihon') === '1';
         if (MIHON) {
             $('mihon-banner').style.display = 'block';
+            $('ts-note').style.display = 'none'; $('ts-box').style.display = 'none';  // 見本ではボット確認を出さない
             applyInfo({ product: 'はじめての箱（例）', price: 3500, limit: 4, perPerson: 2, farFee: 500, shipDate: '12月10日ごろ', start: '11月20日（金）20:00', end: '11月22日（日）20:00' });
             const pick = (s) => {
                 document.querySelectorAll('.mihon-switch button').forEach(b => b.classList.toggle('on', b.dataset.s === s));
@@ -309,6 +352,7 @@
                     if (info.status !== 'ok') throw new Error('status');
                     applyInfo(info);
                     setState(info.state);
+                    if (info.state === 'open') startTurnstile();
                 })
                 .catch(() => setState('error'));
         }
@@ -327,8 +371,9 @@
             if (zip.length !== 7) { showError('郵便番号を確かめてください（数字7けた）'); return; }
 
             if (MIHON) { showDone({ orderNo: 1, total: 3500, deadline: '11月23日（月）', bank: '○○銀行 ○○支店　普通 1234567\n名義 ○○○○' }); return; }
+            if (!tsToken) { showError('「申し込む」の上の確認が済んでから、もう一度押してください'); return; }
 
-            const btn = $('submitBtn');
+            const btn = submitBtn;
             btn.disabled = true;
             btn.textContent = '送信中…';
             try {
@@ -339,18 +384,21 @@
                         kind: 'tsuhan', secret: SECRET, hp: f.hp.value,
                         name: f.name.value.trim(), kana: f.kana.value.trim(), tel: f.tel.value.trim(),
                         zip: zip, pref: f.pref.value, address: f.address.value.trim(),
-                        email: f.email.value.trim(), qty: Number(f.qty.value), newsletter: f.newsletter.checked
+                        email: f.email.value.trim(), qty: Number(f.qty.value), newsletter: f.newsletter.checked,
+                        turnstileToken: tsToken
                     })
                 });
                 const r = await res.json();
                 if (r.status === 'success') { showDone(r); return; }
+                resetTurnstile();
                 if (r.status === 'closed') { setState(r.state || 'ended'); window.scrollTo(0, 0); return; }
                 showError(r.message || '送信に失敗しました。お手数ですが、POLのLINEへご連絡ください');
             } catch (err) {
+                resetTurnstile();
                 showError('送信できませんでした。通信の状態を確かめて、もう一度押してください。解決しない場合は、POLのLINEへご連絡ください');
             } finally {
-                btn.disabled = false;
                 btn.textContent = '申し込む';
+                if (MIHON) btn.disabled = false; else updateSubmit();
             }
         });
     </script>
