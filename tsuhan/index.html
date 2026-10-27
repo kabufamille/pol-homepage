@@ -206,8 +206,8 @@
             <div id="success-message">
                 <div class="success-icon-container"><svg viewBox="0 0 52 52"><path d="M14.1 27.2l7.1 7.2 16.7-16.8"/></svg></div>
                 <h4 style="font-family: var(--font-serif); color: var(--color-primary); font-size: 1.2rem;">お申し込みを受け付けました</h4>
-                <p>ありがとうございます。受付番号は <b id="s-no"></b> です。<br>同じ内容をメールでもお送りしました。</p>
-                <div class="pay-box">
+                <p id="s-msg">ありがとうございます。受付番号は <b id="s-no"></b> です。<br>同じ内容をメールでもお送りしました。</p>
+                <div class="pay-box" id="s-pay">
                     <h5>お振込先</h5>
                     <div id="s-bank"></div>
                     お振込の金額：<b id="s-total"></b>（送料込み）
@@ -289,6 +289,16 @@
             $('s-total').textContent = yen(r.total);
             $('s-deadline').textContent = r.deadline;
             $('s-bank').textContent = r.bank;
+            form.style.display = 'none';
+            success.style.display = 'block';
+            window.scrollTo(0, 0);
+        }
+
+        // 二度押し（同じ方から10分以内の2回目）：GASは「受け付けている」ことだけを返す（2026-10-27）。
+        // 受付番号・金額・振込先は確認メールで見てもらう。古いGASが番号つきで返してきても、ここでは出さない
+        function showDupDone(r) {
+            $('s-msg').textContent = r.message || 'さきほどのお申し込みを受け付けています。確認メールをご覧ください';
+            $('s-pay').style.display = 'none';
             form.style.display = 'none';
             success.style.display = 'block';
             window.scrollTo(0, 0);
@@ -390,7 +400,7 @@
                     })
                 });
                 const r = await res.json();
-                if (r.status === 'success') { showDone(r); return; }
+                if (r.status === 'success') { if (r.duplicate) showDupDone(r); else showDone(r); return; }
                 resetTurnstile();
                 if (r.status === 'closed') { setState(r.state || 'ended'); window.scrollTo(0, 0); return; }
                 showError(r.message || '送信に失敗しました。お手数ですが、POLのLINEへご連絡ください');
