@@ -13,6 +13,43 @@ staged=$(git diff --cached --name-only --diff-filter=ACMRD)
 [ -z "$staged" ] && exit 0
 ng=0
 
+# ---- ⓪ 秘密・内部ファイル（2026-10-27 点検で追加）----
+# このリポジトリは公開。トークン・鍵や、社内用のファイルが入りそうになったら止める。
+# 当たった値そのものは画面に出さない（ファイル名と種類だけ）。外す方法は用意しない＝本当に要るならけんじに相談。
+#   ファイル名：.github_config／.claude/ の中／.clasprc.json／.env
+#   中身（足した行）：ghp_・github_pat_（GitHub）／AIza（Google）／sk-（各社のAPIキー）／-----BEGIN（鍵・証明書）
+#                     ／.github_config・.claude/ という文字（.gitignore と このファイル自身は除く）
+list=$(git -c core.quotepath=off diff --cached --name-only --diff-filter=ACMR)
+while IFS= read -r f; do
+    [ -z "$f" ] && continue
+    case "$f" in
+        .github_config|*/.github_config|.claude/*|.clasprc.json|*/.clasprc.json|.env|*/.env|.env.*)
+            echo ""
+            echo "✋ 公開してはいけないファイルが入っています: $f"
+            echo "   → git restore --staged \"$f\" で外してください（.gitignore にも入っているか確かめる）"
+            ng=1; continue ;;
+    esac
+    added=$(git diff --cached -U0 -- "$f" | grep -E '^\+' | grep -vE '^\+\+\+ ')
+    [ -z "$added" ] && continue
+    kinds=""
+    printf '%s\n' "$added" | grep -qE 'ghp_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,}' && kinds="$kinds GitHubのトークン"
+    printf '%s\n' "$added" | grep -qE 'AIza[0-9A-Za-z_-]{30,}' && kinds="$kinds GoogleのAPIキー"
+    printf '%s\n' "$added" | grep -qE '(^|[^A-Za-z0-9])sk-[A-Za-z0-9_-]{20,}' && kinds="$kinds APIキー(sk-)"
+    printf '%s\n' "$added" | grep -qE -- '-----BEGIN[ ]' && kinds="$kinds 鍵・証明書(-----BEGIN)"
+    case "$f" in
+        .gitignore|.githooks/*) ;;
+        *) printf '%s\n' "$added" | grep -qE '\.github_config|\.claude/' && kinds="$kinds 内部ファイルの名前(.github_config/.claude/)" ;;
+    esac
+    if [ -n "$kinds" ]; then
+        echo ""
+        echo "✋ $f に、公開してはいけないものが入っています:$kinds"
+        echo "   → その行を消して git add し直してください（値はここには出しません）"
+        ng=1
+    fi
+done <<EOF_LIST
+$list
+EOF_LIST
+
 # ---- ① お知らせ ----
 visible=$(printf '%s\n' "$staged" | grep -E '^products\.json$|^images/' )
 # html は「?v= の番号を上げただけ」なら見た目は変わらないので数えない

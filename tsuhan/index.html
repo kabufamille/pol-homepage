@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 2026-10-27 このページだけ CSP（個人情報を扱うので、決まった先にしか読み込み・送信させない）。GitHub Pages はヘッダーを変えられないので meta で。
+         送信先を足したら（GASのURLを変える・計測を変える等）ここにも足す。script.googleusercontent.com は GAS の応答のリダイレクト先。 -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://gc.zgo.at; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://pol-hp.goatcounter.com; connect-src https://script.google.com https://script.googleusercontent.com https://pol-hp.goatcounter.com; object-src 'none'; base-uri 'none'; form-action 'none'">
     <title>通販のお申し込み | POL</title>
     <!-- 2026-10-20 本物の受け口（お取り置き用GAS・kind:'tsuhan'）につないだ版。受付の時間・限定数・商品は
          スプレッドシート「pol通販の申し込み」の「設定」タブから読む。末尾に ?mihon=1 を付けると、GASを使わずに
@@ -353,6 +356,6 @@
     </script>
     <!-- 訪問者数の計測（GoatCounter pol-hp・Cookieなし）。見本モード(?mihon=1)は数えない -->
     <script>if (/[?&]mihon=1/.test(location.search)) window.goatcounter = { no_onload: true };</script>
-    <script data-goatcounter="https://pol-hp.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+    <script data-goatcounter="https://pol-hp.goatcounter.com/count" async src="https://gc.zgo.at/count.v4.js" crossorigin="anonymous" integrity="sha384-nRw6qfbWyJha9LhsOtSb2YJDyZdKvvCFh0fJYlkquSFjUxp9FVNugbfy8q1jdxI+"></script>
 </body>
 </html>
