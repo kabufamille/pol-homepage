@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>お客様アンケート | Ferme</title>
+    <title>お客様アンケート | POL</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@300;400;500&family=Noto+Sans+JP:wght@300;400;500&family=Noto+Serif+JP:wght@400;700&display=swap" rel="stylesheet">
@@ -81,9 +81,9 @@
     </style>
 </head>
 <body>
-    <header class="header"><div class="container"><div class="logo"><span class="logo-text">Fermeアンケート</span></div></div></header>
+    <header class="header"><div class="container"><div class="logo"><span class="logo-text">POL アンケート</span></div></div></header>
     <main><section class="survey-section"><div class="container">
-        <div style="text-align: center; margin-bottom: 40px;"><p style="font-family: var(--font-serif); font-size: 1.1rem; color: var(--color-primary);">Fermeのお菓子をお楽しみいただき、ありがとうございます。<br>より良いパン・お菓子作りのため、ぜひあなたの声をお聞かせください。</p></div>
+        <div style="text-align: center; margin-bottom: 40px;"><p style="font-family: var(--font-serif); font-size: 1.1rem; color: var(--color-primary);">POLのパン・お菓子をお楽しみいただき、ありがとうございます。<br>より良いパン・お菓子作りのため、ぜひあなたの声をお聞かせください。</p></div>
         <div class="survey-form-container">
             <form id="survey-form">
                 <h4 class="survey-group-title">1. 基本情報</h4>
@@ -125,23 +125,34 @@
                     <svg viewBox="0 0 52 52"><path d="M14.1 27.2l7.1 7.2 16.7-16.8"/></svg>
                 </div>
                 <h4>アンケートにお答えいただき、ありがとうございます</h4>
-                <p>いただいたお声は、これからのFermeのお菓子作りのために大切にさせていただきます。</p>
+                <p>いただいたお声は、これからのPOLのパン・お菓子作りのために大切にさせていただきます。</p>
             </div>
         </div>
     </div></section></main>
     <script>
         const GAS_URL = 'https://script.google.com/macros/s/AKfycbzeEDn75a4L_JEc9np4zhIBC06kVE1Z1p7SEpLLZCFVWmSgSwtiZoF1EsQqld16kGW6nQ/exec';
         let ratingKeys = [];
-        // 詰め合わせセットの中身（商品名に「8点セット」を含むものを選ぶと「お気に入り」欄が出る）
-        const SET_ITEMS = ['バジル酵母のベーコンチーズ', 'レーズン酵母のツナカレー', 'ヨーグルト酵母の香ばしまるパン', '麹酵母のプチパン', 'りんご酵母のチョコレートパン', 'ローズマリー酵母のハーブパン', 'バナナキャラメルパウンド', 'コーヒーパウンド'];
-        const isSet = () => document.getElementById('productName').value.includes('8点セット');
-        document.getElementById('favList').innerHTML = SET_ITEMS.map(n => `<label><input type="checkbox" name="favorite" value="${n}"> ${n}</label>`).join('');
+        // 箱の中身は集計シート「設定」のC列（商品ごと・「・」区切り）から読む（2026-10-28）。
+        // 中身がある商品を選ぶと「お気に入り」欄が出る。回ごとに中身が変わってもページは直さない
+        let CONTENTS = {};
+        const favItems = () => CONTENTS[document.getElementById('productName').value] || [];
+        const isSet = () => favItems().length > 0;
         document.getElementById('productName').addEventListener('change', () => {
+            const list = document.getElementById('favList');
+            list.textContent = '';
+            favItems().forEach(n => {
+                const lb = document.createElement('label');
+                const cb = document.createElement('input');
+                cb.type = 'checkbox'; cb.name = 'favorite'; cb.value = n;
+                lb.appendChild(cb); lb.appendChild(document.createTextNode(' ' + n));
+                list.appendChild(lb);
+            });
             document.getElementById('favGroup').style.display = isSet() ? 'block' : 'none';
         });
         window.onload = async () => {
             const res = await fetch(GAS_URL);
             const cfg = await res.json();
+            CONTENTS = cfg.contents || {};
             const pSel = document.getElementById('productName');
             pSel.innerHTML = '<option value="">選択してください</option>';
             cfg.products.forEach(p => { const opt = document.createElement('option'); opt.value = opt.textContent = p; pSel.appendChild(opt); });
