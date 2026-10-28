@@ -29,7 +29,7 @@
         href="https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@300;400;500&family=Noto+Sans+JP:wght@300;400;500&family=Noto+Serif+JP:wght@400;700&display=swap"
         rel="stylesheet">
     <link rel="icon" href="images/pol_logo_muffin.webp" type="image/webp">
-    <link rel="stylesheet" href="style.css?v=15">
+    <link rel="stylesheet" href="style.css?v=16">
 <link rel="stylesheet" href="timeline.css?v=2">
     <script src="main.js?v=3" defer></script>
     <script src="news.js?v=4" defer></script>
@@ -82,6 +82,7 @@
                 <ul>
                     <li><a href="#hero">ホーム</a></li>
                     <li><a href="#news">お知らせ</a></li>
+                    <li><a href="#greeting">ご挨拶</a></li>
                     <li><a href="#about">こだわり</a></li>
                     <li><a href="#menu">焼き菓子・パン</a></li>
                     <!-- 【開業まで非表示・2026-09-04 けんじ指示】 戻すとき＝ data-hidden-until-open が付いた要素から style="display:none;" を消すだけ。 非表示にした全箇所の一覧は  grep -rn "hidden-until-open" *.html  で出ます。 -->
@@ -145,6 +146,30 @@
         </div>
     </div>
 </div>
+            </div>
+        </section>
+
+        <section id="greeting" class="section greeting">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-subtitle">Greeting</span>
+                    <h3 class="section-title">ご挨拶</h3>
+                </div>
+                <p class="greet-lead">polでは、お菓子とパンをそれぞれの担当が心をこめて焼いています。</p>
+                <div class="greet-grid">
+                    <article class="greet-card" data-scroll>
+                        <div class="greet-photo" aria-hidden="true"><span>Sweets</span></div>
+                        <p class="greet-role">お菓子担当</p>
+                        <p class="greet-career">レコールバンタン グランパティシエ学部 卒業</p>
+                        <p class="greet-text">鎧塚シェフの授業で、お菓子づくりの基本と楽しさを学びました。<br>いつもの日常が少しだけ特別になるような、ほっと一息つく時間にそっと寄り添うお菓子をお届けします。</p>
+                    </article>
+                    <article class="greet-card" data-scroll>
+                        <div class="greet-photo"><img src="images/greeting/bread-yeast-jars.webp" alt="フルーツなどから起こした酵母の瓶" width="480" height="480" loading="lazy"></div>
+                        <p class="greet-role">パン担当</p>
+                        <p class="greet-career">自家製酵母の培養・研究</p>
+                        <p class="greet-text">パンの酵母は、季節のフルーツやハーブ、ドライフルーツ、ヨーグルトなどから起こしています。素材ごとに違う香りや発酵の力を確かめながら、その素材らしさをパンにどう残すか、日々研究を続けています。噛むほどにじんわり甘い、やさしい味わいのパンを焼いています。</p>
+                    </article>
+                </div>
             </div>
         </section>
 
