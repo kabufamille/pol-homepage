@@ -64,6 +64,9 @@
         .product-name { font-family: var(--font-serif); font-size: 1.2rem; color: var(--color-primary); margin: 0 0 4px; }
         .product-price { font-size: 1.3rem; font-weight: 500; color: #333; margin: 0; }
         .product-price small { font-size: 0.8rem; color: #808080; font-weight: 400; }
+        .product-price .price-line { display: block; font-size: 1.05rem; }
+        .qty-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; flex-wrap: wrap; }
+        .qty-row .qty-name { min-width: 10em; color: #333; }
         .status-row { display: flex; gap: 10px; margin: 20px 0 0; flex-wrap: wrap; }
         .status-pill { flex: 1; min-width: 140px; text-align: center; background: #FAF9F6; border-radius: 8px; padding: 10px; }
         .status-pill b { display: block; font-size: 1.15rem; color: var(--color-raspberry); font-weight: 500; }
@@ -187,7 +190,8 @@
                         <p class="form-subtext">お申し込み内容と振込先、お届け後のアンケートをお送りします</p>
                         <input class="form-input" type="email" name="email" autocomplete="email" placeholder="例）pol@example.com" required maxlength="100"></div>
                     <div class="form-group"><label class="form-label">個数 <span class="required">*</span></label>
-                        <select class="form-select" name="qty" required style="max-width: 200px;"><option value="">選択してください</option></select></div>
+                        <p class="form-subtext" id="qty-note"></p>
+                        <div id="qty-rows"></div></div>
 
                     <div class="form-group">
                         <label class="check-row"><input type="checkbox" name="newsletter" value="yes"> 「pol通信」（メールの読みもの）を受け取る</label>
@@ -271,18 +275,64 @@
             document.body.dataset.state = state;
         }
 
+        // 箱は2種類まで（2026-10-28）。GASが items を返さない古い版でも product・price で1種類として出す
+        let ITEMS = [], PER_PERSON = 2;
         function applyInfo(info) {
-            $('v-product').textContent = info.product || '';
-            $('v-price').textContent = info.price ? yen(info.price) : '';
-            $('v-limit').textContent = info.limit ? '限定 ' + info.limit + '箱' : '';
+            ITEMS = (info.items && info.items.length) ? info.items : [{ name: info.product || '', price: info.price || 0 }];
+            PER_PERSON = info.perPerson || 2;
+            const multi = ITEMS.length > 1;
+            $('v-product').textContent = multi ? ITEMS.length + '種類の箱からお選びいただけます' : (ITEMS[0].name || '');
+            const priceEl = $('v-price');
+            priceEl.textContent = '';
+            if (multi) {
+                ITEMS.forEach(it => {
+                    const line = document.createElement('span');
+                    line.className = 'price-line';
+                    line.textContent = it.name + '　' + yen(it.price) + (it.soldout ? '（売り切れ）' : '');
+                    priceEl.appendChild(line);
+                });
+            } else {
+                priceEl.textContent = ITEMS[0].price ? yen(ITEMS[0].price) : '';
+            }
+            $('v-limit').textContent = info.limit ? '限定 ' + info.limit + '箱' + (multi ? '（合わせて）' : '') : '';
             $('v-period').textContent = (info.start && info.end) ? info.start + ' 〜 ' + info.end : '';
             $('v-start').textContent = info.start || '';
             $('v-ship-date').textContent = info.shipDate || '';
-            $('v-ship-fee').textContent = info.farFee ? '込み（北海道・九州・沖縄は＋' + yen(info.farFee) + '）' : '込み';
-            const qty = form.elements.qty;
-            while (qty.options.length > 1) qty.remove(1);
-            for (let i = 1; i <= (info.perPerson || 2); i++) qty.add(new Option(i + '箱', String(i)));
+            const extra = [];
+            if (info.midFee) extra.push('中国・四国は＋' + yen(info.midFee));
+            if (info.farFee) extra.push('北海道・九州・沖縄は＋' + yen(info.farFee));
+            $('v-ship-fee').textContent = extra.length ? '込み（' + extra.join('、') + '）' : '込み';
+
+            // 個数：1種類なら今までどおり1つの選択欄。2種類なら種類ごとに「0箱〜」で選ぶ
+            const rows = $('qty-rows');
+            rows.textContent = '';
+            $('qty-note').textContent = multi ? '合わせて' + PER_PERSON + '箱までお申し込みいただけます' : '';
+            ITEMS.forEach((it, i) => {
+                const wrap = document.createElement('div');
+                wrap.className = 'qty-row';
+                if (multi) {
+                    const lb = document.createElement('span');
+                    lb.className = 'qty-name';
+                    lb.textContent = it.name;
+                    wrap.appendChild(lb);
+                }
+                const sel = document.createElement('select');
+                sel.className = 'form-select';
+                sel.name = 'qty' + i;
+                sel.style.maxWidth = '200px';
+                if (multi) {
+                    sel.add(new Option(it.soldout ? '売り切れ' : '0箱', '0'));
+                    if (!it.soldout) for (let n = 1; n <= PER_PERSON; n++) sel.add(new Option(n + '箱', String(n)));
+                    sel.disabled = !!it.soldout;
+                } else {
+                    sel.add(new Option('選択してください', ''));
+                    for (let n = 1; n <= PER_PERSON; n++) sel.add(new Option(n + '箱', String(n)));
+                }
+                wrap.appendChild(sel);
+                rows.appendChild(wrap);
+            });
         }
+        const readQtys = () => ITEMS.map((_, i) => Number((form.elements['qty' + i] || {}).value || 0));
 
         function showDone(r) {
             $('s-no').textContent = r.orderNo;
@@ -348,7 +398,13 @@
         if (MIHON) {
             $('mihon-banner').style.display = 'block';
             $('ts-note').style.display = 'none'; $('ts-box').style.display = 'none';  // 見本ではボット確認を出さない
-            applyInfo({ product: 'はじめての箱（例）', price: 3500, limit: 4, perPerson: 2, farFee: 500, shipDate: '12月10日ごろ', start: '11月20日（金）20:00', end: '11月22日（日）20:00' });
+            // 見本は2種類の形（?mihon=1&one=1 で1種類の形）
+            const ONE = new URLSearchParams(location.search).get('one') === '1';
+            applyInfo({
+                items: ONE ? [{ name: 'はじめての箱（例）', price: 3500 }]
+                           : [{ name: 'いつもの箱（例）', price: 3800 }, { name: 'シュトーレン入りの箱（例）', price: 5200 }],
+                limit: 8, perPerson: 2, midFee: 200, farFee: 500, shipDate: '12月7日〜9日ごろ', start: '11月20日（金）20:00', end: '11月22日（日）20:00'
+            });
             const pick = (s) => {
                 document.querySelectorAll('.mihon-switch button').forEach(b => b.classList.toggle('on', b.dataset.s === s));
                 if (s === 'done') { setState('open'); showDone({ orderNo: 1, total: 3500, deadline: '11月23日（月）', bank: '○○銀行 ○○支店　普通 1234567\n名義 ○○○○' }); return; }
@@ -372,9 +428,13 @@
             e.preventDefault();
             showError('');
             const f = form.elements;
-            const need = [['name', 'お名前'], ['tel', '電話番号'], ['zip', '郵便番号'], ['pref', '都道府県'], ['address', 'ご住所'], ['email', 'メールアドレス'], ['qty', '個数']];
+            const need = [['name', 'お名前'], ['tel', '電話番号'], ['zip', '郵便番号'], ['pref', '都道府県'], ['address', 'ご住所'], ['email', 'メールアドレス']];
             const missing = need.filter(([k]) => !String(f[k].value).trim()).map(([, label]) => label);
+            const qtys = readQtys();
+            const qtyTotal = qtys.reduce((a, n) => a + n, 0);
+            if (!qtyTotal) missing.push('個数');
             if (missing.length) { showError(missing.join('・') + 'を入力してください'); return; }
+            if (qtyTotal > PER_PERSON) { showError('お1人さま合わせて' + PER_PERSON + '箱までです。個数を減らしてください'); return; }
             if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(f.email.value.trim())) { showError('メールアドレスの形を確かめてください'); return; }
             const tel = f.tel.value.replace(/[^\d]/g, '');
             if (tel.length < 10 || tel.length > 11) { showError('電話番号を確かめてください（数字10〜11けた）'); return; }
@@ -395,7 +455,7 @@
                         kind: 'tsuhan', secret: SECRET, hp: f.hp.value,
                         name: f.name.value.trim(), kana: f.kana.value.trim(), tel: f.tel.value.trim(),
                         zip: zip, pref: f.pref.value, address: f.address.value.trim(),
-                        email: f.email.value.trim(), qty: Number(f.qty.value), newsletter: f.newsletter.checked,
+                        email: f.email.value.trim(), qty: qtyTotal, qtys: qtys, newsletter: f.newsletter.checked,
                         turnstileToken: tsToken
                     })
                 });
