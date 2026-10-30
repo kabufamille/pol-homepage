@@ -4,17 +4,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sweets & Bread | pol</title>
+    <title>pol｜自家製酵母のパンと全粒粉を使った焼き菓子</title>
 
     <!-- 検索結果・SNS共有用（2026-09-04 追加）。
          LINEやInstagramでURLを送ったときに出るカード＝ここの og:* を読んでいます。
          画像を差し替えたら images/ogp.png を上書きし、下の ?v=1 の番号を1つ上げること
          （LINEは一度取得したOGP画像を強くキャッシュするため）。 -->
-    <meta name="description" content="季節のフルーツやハーブ、ドライフルーツ、ヨーグルトなどから起こした自家製酵母のパンと、何度も焼き直して仕上げた焼き菓子。北海道産小麦・全粒粉・国産卵。マルシェ・イベントで販売しています。">
+    <meta name="description" content="自家製酵母のパンと、全粒粉を使った焼き菓子をつくる pol（ポル）。パンの酵母は、季節のフルーツやハーブ、ドライフルーツ、ヨーグルトなどから起こしています。焼き菓子は薄力粉に全粒粉を合わせ、卵は国産です。小麦は北海道産が主です。現在はマルシェ・イベントで販売しています。">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="pol sweets &amp; bread">
-    <meta property="og:title" content="pol｜自家製酵母のパンと焼き菓子">
-    <meta property="og:description" content="季節のフルーツやハーブ、ドライフルーツ、ヨーグルトなどから起こした自家製酵母のパンと、何度も焼き直して仕上げた焼き菓子。北海道産小麦・全粒粉・国産卵。マルシェ・イベントで販売しています。">
+    <meta property="og:title" content="pol｜自家製酵母のパンと全粒粉を使った焼き菓子">
+    <meta property="og:description" content="自家製酵母のパンと、全粒粉を使った焼き菓子をつくる pol（ポル）。パンの酵母は、季節のフルーツやハーブ、ドライフルーツ、ヨーグルトなどから起こしています。焼き菓子は薄力粉に全粒粉を合わせ、卵は国産です。小麦は北海道産が主です。現在はマルシェ・イベントで販売しています。">
     <meta property="og:url" content="https://kabufamille.github.io/pol-homepage/">
     <meta property="og:image" content="https://kabufamille.github.io/pol-homepage/images/ogp_pol.png?v=5">
     <meta property="og:image:width" content="1200">
@@ -58,6 +58,8 @@
 .newsletter-body { text-align:center; max-width:560px; margin:0 auto; }
 .newsletter-body p { color:#666; font-size:0.95rem; line-height:1.8; margin-bottom:28px; }
 .newsletter-note { font-size:0.78rem; color:#aaa; margin-top:12px; margin-bottom:0; }
+/* 画面には出さず、検索・読み上げにだけ伝える文字（h1 の説明など） */
+.visually-hidden { position:absolute !important; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
 /* FAQ */
 .faq-list { max-width:760px; margin:0 auto; }
 .faq-item { background:#fff; border:1px solid #eee; border-radius:12px; margin-bottom:10px; overflow:hidden; transition:box-shadow .2s; }
@@ -72,12 +74,101 @@
 .faq-a-pad { padding:4px 20px 18px 58px; color:#666; font-size:0.92rem; line-height:1.75; border-top:1px dashed #f0f0f0; }
 </style>
 
+    <!-- 構造化データ（2026-10-30 追加・AI検索／Google が読む）。
+         FAQ を直したら下の FAQPage も同じ文に直すこと。住所・電話は実店舗が決まるまで入れない。 -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Bakery",
+          "@id": "https://kabufamille.github.io/pol-homepage/#bakery",
+          "name": "pol",
+          "alternateName": [
+            "ポル",
+            "pol sweets & bread"
+          ],
+          "description": "自家製酵母のパンと、全粒粉を使った焼き菓子をつくる pol（ポル）。パンの酵母は、季節のフルーツやハーブ、ドライフルーツ、ヨーグルトなどから起こしています。焼き菓子は薄力粉に全粒粉を合わせ、卵は国産です。小麦は北海道産が主です。現在はマルシェ・イベントで販売しています。",
+          "url": "https://kabufamille.github.io/pol-homepage/",
+          "logo": "https://kabufamille.github.io/pol-homepage/images/pol_logo_muffin.webp",
+          "image": "https://kabufamille.github.io/pol-homepage/images/ogp_pol.png",
+          "keywords": "自家製酵母のパン, 全粒粉を使った焼き菓子",
+          "sameAs": [
+            "https://www.instagram.com/ferme_bread/",
+            "https://lin.ee/vKcp8Xd"
+          ]
+        },
+        {
+          "@type": "FAQPage",
+          "@id": "https://kabufamille.github.io/pol-homepage/#faq",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "どこで買えますか？",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "現在はマルシェ・イベントで販売しています。出店の予定は、このページの「お知らせ」とLINEでお知らせします。実店舗は準備中です。"
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "通販はありますか？",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "通販は、受付期間を決めてお申し込みを受け付けています。受付期間のほかは、通販のページは「準備中」になっています。受付の予定は、LINEとこのページの「お知らせ」でお知らせします。"
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "お取り置きはできますか？",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "現在、お取り置きは受け付けていません。"
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "賞味期限・保存方法を教えてください",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "焼き菓子は製造日から約14日、酵母パンはお渡し後3日以内が目安です。直射日光と高温多湿を避け、常温で保存してください。"
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "支払い方法は何が使えますか？",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "通販は銀行振込です。お申し込みのあとに振込先をお知らせします。マルシェ・イベントでのお支払い方法は、LINEでお問い合わせください。"
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "原材料やアレルゲンを知りたいです",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "原材料やアレルゲン（特定原材料）については、LINEでお問い合わせください。"
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "問い合わせはどこにすればよいですか？",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "お問い合わせはLINEで受け付けています。電話での受け付けはしていません。"
+              }
+            }
+          ]
+        }
+      ]
+    }
+    </script>
 </head>
 
 <body>
     <header class="header">
         <div class="container header-container">
-            <h1 class="logo"><a href="#hero"><img src="images/pol_logo_muffin.webp" alt="pol"><span class="logo-text"><span class="text-sand">P</span>OL sweets<span class="text-raspberry">&</span>bread</span></a></h1>
+            <h1 class="logo"><a href="#hero"><img src="images/pol_logo_muffin.webp" alt="pol"><span class="logo-text"><span class="text-sand">P</span>OL sweets<span class="text-raspberry">&</span>bread</span></a><span class="visually-hidden">pol｜自家製酵母のパンと全粒粉を使った焼き菓子</span></h1>
             <nav class="nav">
                 <ul>
                     <li><a href="#hero">ホーム</a></li>
@@ -371,14 +462,15 @@
                     <span class="section-subtitle">FAQ</span>
                     <h3 class="section-title">よくある質問</h3>
                 </div>
+                <!-- FAQ を直したら、head の中の FAQPage（JSON-LD）も同じ文に直すこと（AI検索・Google が読む） -->
                 <div class="faq-list">
-                    <div class="faq-item" style="display:none;"><div class="faq-q">配送はどのエリアまでですか？</div><div class="faq-a"><div class="faq-a-inner"><div class="faq-a-pad">全国に配送可能です。沖縄・離島は別途送料がかかる場合があります。注文確定後にご連絡いたします。</div></div></div></div>
+                    <div class="faq-item"><div class="faq-q">どこで買えますか？</div><div class="faq-a"><div class="faq-a-inner"><div class="faq-a-pad">現在はマルシェ・イベントで販売しています。出店の予定は、このページの「お知らせ」とLINEでお知らせします。実店舗は準備中です。</div></div></div></div>
+                    <div class="faq-item"><div class="faq-q">通販はありますか？</div><div class="faq-a"><div class="faq-a-inner"><div class="faq-a-pad">通販は、受付期間を決めてお申し込みを受け付けています。受付期間のほかは、通販のページは「準備中」になっています。受付の予定は、LINEとこのページの「お知らせ」でお知らせします。</div></div></div></div>
+                    <div class="faq-item"><div class="faq-q">お取り置きはできますか？</div><div class="faq-a"><div class="faq-a-inner"><div class="faq-a-pad">現在、お取り置きは受け付けていません。</div></div></div></div>
                     <div class="faq-item"><div class="faq-q">賞味期限・保存方法を教えてください</div><div class="faq-a"><div class="faq-a-inner"><div class="faq-a-pad">焼き菓子は製造日から約14日、酵母パンはお渡し後3日以内が目安です。直射日光と高温多湿を避け、常温で保存してください。</div></div></div></div>
-                    <div class="faq-item"><div class="faq-q">支払い方法は何が使えますか？</div><div class="faq-a"><div class="faq-a-inner"><div class="faq-a-pad">店頭でのお受け取り時は現金をご利用いただけます。オンラインショップは現在準備中です。</div></div></div></div>
-                    <div class="faq-item" data-hidden-until-open="2026-09-04" style="display:none;"><div class="faq-q">注文後のキャンセル・変更はできますか？</div><div class="faq-a"><div class="faq-a-inner"><div class="faq-a-pad">発送前であれば変更・キャンセル可能です。お問い合わせフォームまたはお電話にてご連絡ください。</div></div></div></div>
-                    <div class="faq-item" data-hidden-until-open="2026-09-04" style="display:none;"><div class="faq-q">アレルゲン情報はどこで確認できますか？</div><div class="faq-a"><div class="faq-a-inner"><div class="faq-a-pad">アレルゲン（特定原材料）に関する情報をご用意しています。お問い合わせフォームまたはお電話にてお気軽にご確認ください。</div></div></div></div>
-                    <div class="faq-item" data-hidden-until-open="2026-09-04" style="display:none;"><div class="faq-q">ギフト用の包装は可能ですか？</div><div class="faq-a"><div class="faq-a-inner"><div class="faq-a-pad">のし・リボン包装に対応しています。ご注文時に備考欄でお伝えください。メッセージカードも無料でお付けできます。</div></div></div></div>
-                    <div class="faq-item" data-hidden-until-open="2026-09-04" style="display:none;"><div class="faq-q">店頭受取はできますか？</div><div class="faq-a"><div class="faq-a-inner"><div class="faq-a-pad">はい、可能です。「お取り置き」ページからご予約ください。お受け取り当日に商品をご用意いたします。</div></div></div></div>
+                    <div class="faq-item"><div class="faq-q">支払い方法は何が使えますか？</div><div class="faq-a"><div class="faq-a-inner"><div class="faq-a-pad">通販は銀行振込です。お申し込みのあとに振込先をお知らせします。マルシェ・イベントでのお支払い方法は、LINEでお問い合わせください。</div></div></div></div>
+                    <div class="faq-item"><div class="faq-q">原材料やアレルゲンを知りたいです</div><div class="faq-a"><div class="faq-a-inner"><div class="faq-a-pad">原材料やアレルゲン（特定原材料）については、LINEでお問い合わせください。</div></div></div></div>
+                    <div class="faq-item"><div class="faq-q">問い合わせはどこにすればよいですか？</div><div class="faq-a"><div class="faq-a-inner"><div class="faq-a-pad">お問い合わせはLINEで受け付けています。電話での受け付けはしていません。</div></div></div></div>
                 </div>
             </div>
         </section>
@@ -392,9 +484,8 @@
                 <div class="contact-info">
                     <p>実店舗は準備中です。場所・オープン時期は決まり次第、このページとLINEでお知らせします。</p>
                     <p>現在はマルシェ・イベントでの販売が中心です。</p>
-                    <p data-hidden-until-open="2026-09-04" style="display:none;">〒100-0000 東京都千代田区丸の内 1-2-3</p>
-                    <p data-hidden-until-open="2026-09-04" style="display:none;">TEL: 03-1234-5678</p>
-                    <p data-hidden-until-open="2026-09-04" style="display:none;">営業時間: 10:00 - 14:00 (定休日は不定期)</p>
+                    <p>出店の予定やお知らせはLINEでお届けしています。お問い合わせもLINEで受け付けています。</p>
+                    <!-- 2026-10-30：仮の住所・電話・営業時間と仮の地図を消した（AI検索に本物と取られないため）。実店舗が決まったら本物を入れる -->
                     <div class="business-calendar" id="business-calendar" data-hidden-until-open="2026-09-04" style="display:none;">
                         <div class="bc-header">
                             <button class="bc-nav" id="bc-prev" aria-label="前月">‹</button>
@@ -411,12 +502,6 @@
 
                 </div>
 
-                <div class="map-container" data-hidden-until-open="2026-09-04" style="display:none;">
-                    <iframe
-                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3241.6830776735747!2d139.7275034762888!3d35.666986531139946!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x60188c8191cbba31%3A0xe53d0e4a77914e6b!2z4DCNVTA3LTMLTAW0NjIg5p2x5Lqs6YO95riv5Yy66Z2S5bGxIDEtMi0zPC9wPg0K!5e0!3m2!1sja!2sjp!4v1700000000000!5m2!1sja!2sjp"
-                        width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"
-                        referrerpolicy="no-referrer-when-downgrade"></iframe>
-                </div>
             </div>
         </section>
     </main>

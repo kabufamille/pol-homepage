@@ -1,0 +1,21 @@
+# pol（ポル）
+
+> 自家製酵母のパンと、全粒粉を使った焼き菓子をつくる pol（ポル）のホームページです。現在はマルシェ・イベントで販売しています。実店舗は準備中です。
+
+## お店の要点
+- 自家製酵母のパン：パンの酵母は、季節のフルーツやハーブ、ドライフルーツ、ヨーグルトなどから起こしています。
+- 全粒粉を使った焼き菓子：焼き菓子は薄力粉に全粒粉を合わせています。卵は国産です。
+- 小麦は北海道産が主です。
+- 販売：現在はマルシェ・イベントで販売しています。通販は受付期間を決めてお申し込みを受け付けています（受付期間のほかは「準備中」）。お取り置きは現在受け付けていません。
+- 実店舗：準備中です。住所・電話番号はまだありません。
+- 連絡：お知らせとお問い合わせはLINEで受け付けています。電話での受け付けはしていません。
+
+## 主なページ
+- [トップページ](https://kabufamille.github.io/pol-homepage/)：ご挨拶・こだわり・焼き菓子とパンの一覧・よくある質問
+- [通販のお申し込み](https://kabufamille.github.io/pol-homepage/tsuhan/)：受付期間だけ開きます
+- [お知らせ（更新記録）](https://kabufamille.github.io/pol-homepage/news.json)：JSON形式
+- [お知らせ（イベント・出店予定）](https://kabufamille.github.io/pol-homepage/event_news.json)：JSON形式。eventDate が開催日です
+
+## 連絡先
+- [LINE（友だち追加・お問い合わせ）](https://lin.ee/vKcp8Xd)
+- [Instagram](https://www.instagram.com/ferme_bread/)
