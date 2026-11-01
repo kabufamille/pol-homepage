@@ -401,8 +401,8 @@
             // 見本は2種類の形（?mihon=1&one=1 で1種類の形）
             const ONE = new URLSearchParams(location.search).get('one') === '1';
             applyInfo({
-                items: ONE ? [{ name: 'はじめての箱（例）', price: 3500 }]
-                           : [{ name: 'いつもの箱（例）', price: 3800 }, { name: 'シュトーレン入りの箱（例）', price: 5200 }],
+                items: ONE ? [{ name: '冬のPol便（例）', price: 3500 }]
+                           : [{ name: '冬のPol便（例）', price: 3800 }, { name: '冬のPol便シュトレン入り（例）', price: 5200 }],
                 limit: 8, perPerson: 2, midFee: 200, farFee: 500, shipDate: '12月7日〜9日ごろ', start: '11月20日（金）20:00', end: '11月22日（日）20:00'
             });
             const pick = (s) => {
