@@ -15,7 +15,7 @@
     <link rel="icon" href="images/pol_logo_muffin.webp" type="image/webp">
     <link rel="stylesheet" href="style.css?v=16">
     <script src="main.js" defer></script>
-    <script src="reservation.js" defer></script>
+    <script src="reservation.js?v=2" defer></script>
 </head>
 
 <body>
@@ -54,7 +54,14 @@
                     <h3 class="section-title">お取り置き</h3>
                 </div>
                 <div class="reservation-form-container">
-                    <form id="reservation-form" class="reservation-form">
+                    <!-- 2026-11-05: お取り置きは休止中（GAS側も RESERVATION_OPEN=false）。再開するときは、この札を消し、下の form の hidden と style="display:none;" を消し、reservation.js の RESERVATION_OPEN を true にする。 -->
+                    <div id="reservation-closed" style="text-align: center; padding: 28px 18px; background: #FFF8F0; border: 1px solid #D4C5B0; border-radius: 6px;">
+                        <p style="font-size: 16px; color: #5C4633; margin: 0 0 10px 0; font-weight: 500;">いまは、お取り置き（予約）を休止しています。</p>
+                        <p style="font-size: 14px; color: #5C4633; margin: 0 0 18px 0; line-height: 1.8;">お問い合わせは、LINEからお願いします。</p>
+                        <a href="https://lin.ee/vKcp8Xd" target="_blank" rel="noopener noreferrer" style="display: inline-block; background: #00B900; color: white; padding: 10px 24px; border-radius: 4px; text-decoration: none; font-size: 14px; font-weight: bold;">LINE でつながる</a>
+                        <p style="margin: 18px 0 0 0;"><a href="index.html" style="color: #5C4633; font-size: 13px;">トップページへ戻る</a></p>
+                    </div>
+                    <form id="reservation-form" class="reservation-form" hidden style="display:none;">
                         <div class="form-group">
                             <label for="name" class="form-label">お名前 <span class="required">*</span></label>
                             <input type="text" id="name" name="name" class="form-input" required>

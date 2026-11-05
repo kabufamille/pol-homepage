@@ -1,3 +1,6 @@
+// お取り置きの受付（GAS側の RESERVATION_OPEN と合わせる）。2026-11-05 休止中＝false
+const RESERVATION_OPEN = false;
+
 window.onerror = function (msg, url, lineNo, columnNo, error) {
     alert('システムエラーが発生しました: ' + msg);
     return false;
@@ -191,6 +194,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // フォーム送信処理
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
+        // 2026-11-05: お取り置きは休止中。再開するときはファイル先頭の RESERVATION_OPEN を true にする
+        if (!RESERVATION_OPEN) {
+            alert('いまは、お取り置き（予約）を休止しています。お問い合わせは、LINEからお願いします。');
+            return;
+        }
 
         // 商品が選択されているかチェック
         const selectedProducts = Array.from(productCheckboxes).filter(cb => cb.checked);
@@ -292,7 +300,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return result;
         } catch (fetchError) {
             console.error('Fetch operation failed:', fetchError);
-            throw new Error('通知の送信に失敗しました。時間をおいて再度お試しいただくか、お電話にてご連絡ください。\n（理由: ' + fetchError.message + '）');
+            throw new Error('通知の送信に失敗しました。時間をおいて再度お試しいただくか、LINEからご連絡ください。\n（理由: ' + fetchError.message + '）');
         }
     }
 
