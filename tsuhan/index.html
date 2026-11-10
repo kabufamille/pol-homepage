@@ -275,7 +275,8 @@
             document.body.dataset.state = state;
         }
 
-        // 箱は2種類まで（2026-10-28）。GASが items を返さない古い版でも product・price で1種類として出す
+        // 箱は3種類まで（2026-10-28 に2種類・2026-11-10 に3種類）。GASが返す items の数だけ欄を出す（ここに種類の数は書かない）。
+        // GASが items を返さない古い版でも product・price で1種類として出す
         let ITEMS = [], PER_PERSON = 2;
         function applyInfo(info) {
             ITEMS = (info.items && info.items.length) ? info.items : [{ name: info.product || '', price: info.price || 0 }];
@@ -303,7 +304,7 @@
             if (info.farFee) extra.push('北海道・九州・沖縄は＋' + yen(info.farFee));
             $('v-ship-fee').textContent = extra.length ? '込み（' + extra.join('、') + '）' : '込み';
 
-            // 個数：1種類なら今までどおり1つの選択欄。2種類なら種類ごとに「0箱〜」で選ぶ
+            // 個数：1種類なら今までどおり1つの選択欄。2・3種類なら種類ごとに「0箱〜」で選ぶ
             const rows = $('qty-rows');
             rows.textContent = '';
             $('qty-note').textContent = multi ? '合わせて' + PER_PERSON + '箱までお申し込みいただけます' : '';
@@ -398,10 +399,12 @@
         if (MIHON) {
             $('mihon-banner').style.display = 'block';
             $('ts-note').style.display = 'none'; $('ts-box').style.display = 'none';  // 見本ではボット確認を出さない
-            // 見本は2種類の形（?mihon=1&one=1 で1種類の形）
-            const ONE = new URLSearchParams(location.search).get('one') === '1';
+            // 見本は2種類の形（?mihon=1&one=1 で1種類の形・?mihon=1&three=1 で3種類の形＝3種類目は売り切れの見え方）
+            const MQ = new URLSearchParams(location.search);
+            const ONE = MQ.get('one') === '1', THREE = MQ.get('three') === '1';
             applyInfo({
                 items: ONE ? [{ name: '冬のPol便（例）', price: 3500 }]
+                     : THREE ? [{ name: '冬のPol便（例）', price: 3800 }, { name: '冬のPol便シュトレン入り（例）', price: 5200 }, { name: '焼き菓子の箱（例）', price: 2800, soldout: true }]
                            : [{ name: '冬のPol便（例）', price: 3800 }, { name: '冬のPol便シュトレン入り（例）', price: 5200 }],
                 limit: 8, perPerson: 2, midFee: 200, farFee: 500, shipDate: '12月7日〜9日ごろ', start: '11月20日（金）20:00', end: '11月22日（日）20:00'
             });
