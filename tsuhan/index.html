@@ -416,10 +416,22 @@
             document.querySelectorAll('.mihon-switch button').forEach(b => b.addEventListener('click', () => pick(b.dataset.s)));
             pick('open');
         } else {
-            fetch(GAS_URL + '?q=tsuhan', { cache: 'no-store' })
+            // 受付状態の問い合わせ（読むだけ）は、失敗したら少し待って最大3回やり直す（2026-11-13）。
+            // 混み合ってGASの同時実行の上限に当たった時の取りこぼし対策。待つ間は「読み込んでいます…」のまま。
+            // 待ち時間は 1秒→2秒→4秒 にランダムな0〜0.5秒を足す（一斉に再送しないため）。申し込みの送信（POST）はやり直さない
+            const RETRY_WAITS = [1000, 2000, 4000];
+            const loadInfo = (n) => fetch(GAS_URL + '?q=tsuhan', { cache: 'no-store' })
                 .then(r => r.json())
                 .then(info => {
                     if (info.status !== 'ok') throw new Error('status');
+                    return info;
+                })
+                .catch(err => {
+                    if (n >= RETRY_WAITS.length) throw err;
+                    return new Promise(res => setTimeout(res, RETRY_WAITS[n] + Math.random() * 500)).then(() => loadInfo(n + 1));
+                });
+            loadInfo(0)
+                .then(info => {
                     applyInfo(info);
                     setState(info.state);
                     if (info.state === 'open') startTurnstile();
