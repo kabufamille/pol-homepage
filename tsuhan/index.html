@@ -83,6 +83,7 @@
         .closed-box h4 { font-family: var(--font-serif); color: var(--color-primary); font-size: 1.3rem; margin: 0 0 8px; }
         .closed-box p { margin: 0; font-size: 0.92rem; }
         body:not([data-state="open"]) #order-fields { display: none; }
+        body:not([data-state="before"]):not([data-state="open"]) #hurry-line { display: none; } /* 「お早めに」は受付前・受付中だけ */
         body[data-state="loading"] #product-info, body[data-state="prep"] #product-info, body[data-state="error"] #product-info { display: none; }
         body[data-state="loading"] #closed-loading, body[data-state="prep"] #closed-prep, body[data-state="error"] #closed-error,
         body[data-state="before"] #closed-before, body[data-state="soldout"] #closed-soldout, body[data-state="ended"] #closed-ended { display: block; }
@@ -125,7 +126,7 @@
             </div>
         </div>
 
-        <div style="text-align: center; margin-bottom: 32px;"><p style="font-family: var(--font-serif); font-size: 1.05rem; color: var(--color-primary); margin: 0;">POLの通販をご覧いただき、ありがとうございます。<br>数に限りがありますので、お早めにお申し込みください。</p></div>
+        <div style="text-align: center; margin-bottom: 32px;"><p style="font-family: var(--font-serif); font-size: 1.05rem; color: var(--color-primary); margin: 0;">POLの通販をご覧いただき、ありがとうございます。<span id="hurry-line"><br>数に限りがありますので、お早めにお申し込みください。</span></p></div>
 
         <div class="survey-form-container">
             <form id="order-form" novalidate>
