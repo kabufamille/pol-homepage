@@ -78,6 +78,24 @@
         .insta-note { font-size: 0.82rem; color: #808080; margin: 12px 0 0; }
         .privacy-note { font-size: 0.8rem; color: #808080; background: #FAF9F6; border-radius: 8px; padding: 12px 15px; }
 
+        /* 12月の通販の告知（2026-11-13・どの状態でも出す） */
+        .notice-figure { max-width: 420px; margin: 0 auto 28px; text-align: center; }
+        .notice-figure .notice-lead { font-family: var(--font-serif); color: var(--color-primary); font-size: 1.05rem; margin: 0 0 4px; }
+        .notice-figure .notice-dates { font-size: 0.92rem; margin: 0; }
+        /* 箱の中身と値段（2026-11-15 けんじ「HPにはこの中身をのせて」） */
+        .notice-items { list-style: none; padding: 0; margin: 14px 0 8px; text-align: left; }
+        .notice-items li { padding: 8px 0; border-bottom: 1px dashed #D4C5B0; }
+        .notice-items li:first-child { border-top: 1px dashed #D4C5B0; }
+        .notice-items .ni-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+        .notice-items .ni-name { font-weight: bold; }
+        .notice-items .ni-price { white-space: nowrap; }
+        .notice-items .ni-desc { display: block; font-size: 0.85rem; color: #7d6b5d; margin-top: 2px; }
+        /* 箱の写真（2026-11-15）。行の中、中身の下に置く。冬のPOL便・シュトレン入りの写真も同じ形で足せる */
+        .notice-items .ni-photo { margin: 8px 0 0; }
+        .notice-items .ni-photo img { display: block; width: 100%; max-width: 420px; height: auto; border-radius: 6px; }
+        .notice-items .ni-photo figcaption { font-size: 0.78rem; color: #8B7355; margin-top: 4px; }
+        .notice-figure .notice-terms { font-size: 0.85rem; color: #7d6b5d; margin: 0; text-align: left; }
+
         /* 受付前・売り切れ・受付終了・準備中・読み込み中に出す札 */
         .closed-box { display: none; text-align: center; padding: 36px 20px; border: 1px solid #E8DCC4; border-radius: 12px; background: #FAF9F6; margin-top: 30px; }
         .closed-box h4 { font-family: var(--font-serif); color: var(--color-primary); font-size: 1.3rem; margin: 0 0 8px; }
@@ -127,6 +145,21 @@
         </div>
 
         <div style="text-align: center; margin-bottom: 32px;"><p style="font-family: var(--font-serif); font-size: 1.05rem; color: var(--color-primary); margin: 0;">POLの通販をご覧いただき、ありがとうございます。<span id="hurry-line"><br>数に限りがありますので、お早めにお申し込みください。</span></p></div>
+
+        <!-- 2026-11-13 12月の通販の告知。日程の出典＝メッセージ11/6・事業計画書6-1。受付が終わったら外す -->
+        <div class="notice-figure">
+            <p class="notice-lead">12月の通販「冬のPOL便」</p>
+            <p class="notice-dates">受付 11月20日（金）〜23日（月・祝）<br>発送 12月10日〜12日</p>
+            <ul class="notice-items">
+                <li><span class="ni-head"><span class="ni-name">冬のPOL便</span><span class="ni-price">4,000円</span></span><span class="ni-desc">焼き菓子＋パン8〜9個</span></li>
+                <li><span class="ni-head"><span class="ni-name">冬のPOL便シュトレン入り</span><span class="ni-price">5,200円</span></span><span class="ni-desc">シュトレン＋パン5個</span>
+                    <figure class="ni-photo"><img src="../images/tsuhan/stollen.webp" alt="POLのシュトレン" width="480" height="480" loading="lazy"><figcaption>シュトレン（写真はイメージです）</figcaption></figure></li>
+                <li><span class="ni-head"><span class="ni-name">冬のPOL便焼き菓子ギフト</span><span class="ni-price">3,800円</span></span><span class="ni-desc">シュトレン風パウンド＋焼き菓子5個</span>
+                    <figure class="ni-photo"><img src="../images/tsuhan/gift-sweets.webp" alt="冬のPOL便焼き菓子ギフトの例" width="480" height="480" loading="lazy"><figcaption>写真は一例です</figcaption></figure></li>
+            </ul>
+            <p class="notice-terms">税込・送料込み。北海道・九州・沖縄は＋500円、中国・四国は＋200円</p>
+            <p class="notice-terms">数に限りがあるため、お1人さま1箱までとさせていただきます</p>
+        </div>
 
         <div class="survey-form-container">
             <form id="order-form" novalidate>
@@ -217,7 +250,7 @@
                     <div id="s-bank"></div>
                     お振込の金額：<b id="s-total"></b>（送料込み）
                     <ul>
-                        <li><b id="s-deadline"></b>までにお振り込みください。期限を過ぎるとキャンセルになります。</li>
+                        <li><b id="s-deadline"></b>にお振り込みください。期限を過ぎるとキャンセルになります。</li>
                         <li>振込の名前は、お申し込みのときのお名前でお願いします。</li>
                         <li>入金を確かめたら、発送日をメールでお知らせします。</li>
                     </ul>
@@ -296,7 +329,7 @@
             } else {
                 priceEl.textContent = ITEMS[0].price ? yen(ITEMS[0].price) : '';
             }
-            $('v-limit').textContent = info.limit ? '限定 ' + info.limit + '箱' + (multi ? '（合わせて）' : '') : '';
+            $('v-limit').textContent = '限定販売';  // 合計数は見せず「限定販売」とだけ出す（2026-11-14 けんじ）
             $('v-period').textContent = (info.start && info.end) ? info.start + ' 〜 ' + info.end : '';
             $('v-start').textContent = info.start || '';
             $('v-ship-date').textContent = info.shipDate || '';
@@ -308,7 +341,7 @@
             // 個数：1種類なら今までどおり1つの選択欄。2・3種類なら種類ごとに「0箱〜」で選ぶ
             const rows = $('qty-rows');
             rows.textContent = '';
-            $('qty-note').textContent = multi ? '合わせて' + PER_PERSON + '箱までお申し込みいただけます' : '';
+            $('qty-note').textContent = multi ? '数に限りがあるため、お1人さま合わせて' + PER_PERSON + '箱までとさせていただきます' : '';
             ITEMS.forEach((it, i) => {
                 const wrap = document.createElement('div');
                 wrap.className = 'qty-row';
@@ -339,7 +372,8 @@
         function showDone(r) {
             $('s-no').textContent = r.orderNo;
             $('s-total').textContent = yen(r.total);
-            $('s-deadline').textContent = r.deadline;
+            // 振込の時期：GASが payFrom（振込を受け付け始める日）を返す回は「◯〜◯」、それ以外は「◯まで」（2026-11-15）
+            $('s-deadline').textContent = r.payFrom ? r.payFrom + '〜' + r.deadline : r.deadline + 'まで';
             $('s-bank').textContent = r.bank;
             form.style.display = 'none';
             success.style.display = 'block';
@@ -404,14 +438,14 @@
             const MQ = new URLSearchParams(location.search);
             const ONE = MQ.get('one') === '1', THREE = MQ.get('three') === '1';
             applyInfo({
-                items: ONE ? [{ name: '冬のPol便（例）', price: 3500 }]
-                     : THREE ? [{ name: '冬のPol便（例）', price: 3800 }, { name: '冬のPol便シュトレン入り（例）', price: 5200 }, { name: '焼き菓子の箱（例）', price: 2800, soldout: true }]
-                           : [{ name: '冬のPol便（例）', price: 3800 }, { name: '冬のPol便シュトレン入り（例）', price: 5200 }],
-                limit: 8, perPerson: 2, midFee: 200, farFee: 500, shipDate: '12月7日〜9日ごろ', start: '11月20日（金）20:00', end: '11月22日（日）20:00'
+                items: ONE ? [{ name: '冬のPOL便（例）', price: 3800 }]
+                     : THREE ? [{ name: '冬のPOL便（例）', price: 3800 }, { name: '冬のPOL便シュトレン入り（例）', price: 5000 }, { name: '冬のPOL便焼き菓子ギフト（例）', price: 2800, soldout: true }]
+                           : [{ name: '冬のPOL便（例）', price: 3800 }, { name: '冬のPOL便シュトレン入り（例）', price: 5000 }],
+                limit: 8, perPerson: 2, midFee: 200, farFee: 500, shipDate: '12月10日〜12日', start: '11月20日（金）20:00', end: '11月22日（日）20:00'
             });
             const pick = (s) => {
                 document.querySelectorAll('.mihon-switch button').forEach(b => b.classList.toggle('on', b.dataset.s === s));
-                if (s === 'done') { setState('open'); showDone({ orderNo: 1, total: 3500, deadline: '11月23日（月）', bank: '○○銀行 ○○支店　普通 1234567\n名義 ○○○○' }); return; }
+                if (s === 'done') { setState('open'); showDone({ orderNo: 1, total: 3800, payFrom: '11月24日（火）', deadline: '11月27日（金）', bank: '○○銀行 ○○支店　普通 1234567\n名義 ○○○○' }); return; }
                 form.style.display = ''; success.style.display = 'none'; setState(s);
             };
             document.querySelectorAll('.mihon-switch button').forEach(b => b.addEventListener('click', () => pick(b.dataset.s)));
@@ -457,7 +491,7 @@
             const zip = f.zip.value.replace(/[^\d]/g, '');
             if (zip.length !== 7) { showError('郵便番号を確かめてください（数字7けた）'); return; }
 
-            if (MIHON) { showDone({ orderNo: 1, total: 3500, deadline: '11月23日（月）', bank: '○○銀行 ○○支店　普通 1234567\n名義 ○○○○' }); return; }
+            if (MIHON) { showDone({ orderNo: 1, total: 3800, payFrom: '11月24日（火）', deadline: '11月27日（金）', bank: '○○銀行 ○○支店　普通 1234567\n名義 ○○○○' }); return; }
             if (!tsToken) { showError('「申し込む」の上の確認が済んでから、もう一度押してください'); return; }
 
             const btn = submitBtn;
