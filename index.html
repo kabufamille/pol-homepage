@@ -30,9 +30,9 @@
         rel="stylesheet">
     <link rel="icon" href="images/pol_logo_muffin.webp" type="image/webp">
     <link rel="stylesheet" href="style.css?v=16">
-<link rel="stylesheet" href="timeline.css?v=2">
+<link rel="stylesheet" href="timeline.css?v=3">
     <script src="main.js?v=3" defer></script>
-    <script src="news.js?v=4" defer></script>
+    <script src="news.js?v=5" defer></script>
 
 
 <style>
@@ -58,6 +58,10 @@
 .newsletter-body { text-align:center; max-width:560px; margin:0 auto; }
 .newsletter-body p { color:#666; font-size:0.95rem; line-height:1.8; margin-bottom:28px; }
 .newsletter-note { font-size:0.78rem; color:#aaa; margin-top:12px; margin-bottom:0; }
+/* 通販のお申し込みボタン（受付期間だけ出す・2026-11-14） */
+.tsuhan-cta { text-align:center; margin:0 auto 32px; }
+.tsuhan-cta[hidden] { display:none; }
+.tsuhan-cta-note { font-size:0.85rem; color:#7d6b5d; margin:0 0 12px; }
 /* 画面には出さず、検索・読み上げにだけ伝える文字（h1 の説明など） */
 .visually-hidden { position:absolute !important; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
 /* FAQ */
@@ -212,6 +216,20 @@
                     <span class="section-subtitle">News</span>
                     <h3 class="section-title">お知らせ</h3>
                 </div>
+
+                <!-- 通販のお申し込みボタン（2026-11-14）。data-from〜data-until（日本時間）の間だけ、下のスクリプトが出す。
+                     次の受付のときは、この2つの日時と文言を書き換える。期間外は hidden のまま＝何も出ない -->
+                <div class="tsuhan-cta" id="tsuhan-cta" data-from="2026-11-20T20:00:00+09:00" data-until="2026-11-23T23:59:59+09:00" hidden>
+                    <p class="tsuhan-cta-note">12月の通販「冬のPOL便」受付中（11月23日（月・祝）まで）</p>
+                    <a href="tsuhan/" class="btn btn-primary">通販のお申し込み</a>
+                </div>
+                <script>
+                (function(){
+                    var el=document.getElementById('tsuhan-cta'); if(!el) return;
+                    var now=Date.now(), from=Date.parse(el.dataset.from), until=Date.parse(el.dataset.until);
+                    el.hidden=!(now>=from && now<=until);
+                })();
+                </script>
 
                 <!-- Event News Section -->
                <div class="news-timeline-wrapper">
