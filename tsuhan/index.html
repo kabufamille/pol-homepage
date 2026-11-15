@@ -307,7 +307,7 @@
             } else {
                 priceEl.textContent = ITEMS[0].price ? yen(ITEMS[0].price) : '';
             }
-            $('v-limit').textContent = '限定販売';  // 合計数は見せず「限定販売」とだけ出す（2026-11-14 けんじ）
+            $('v-limit').textContent = info.limit ? '限定 ' + info.limit + '箱' + (multi ? '（合わせて）' : '') : '';
             $('v-period').textContent = (info.start && info.end) ? info.start + ' 〜 ' + info.end : '';
             $('v-start').textContent = info.start || '';
             $('v-ship-date').textContent = info.shipDate || '';

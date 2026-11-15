@@ -113,13 +113,6 @@
     line-height: 1.6;
 }
 
-/* news.json の "url" 付きの項目＝本文がリンク（2026-11-14） */
-.tl-text a {
-    color: var(--color-primary);
-    text-decoration: underline;
-    text-underline-offset: 3px;
-}
-
 @media (max-width: 600px) {
     .news-timeline-wrapper {
         padding: 0 4px;
