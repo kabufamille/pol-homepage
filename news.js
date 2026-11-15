@@ -83,6 +83,7 @@ async function loadTimeline() {
         }
 
         // 新しい順に最大 MAX_NEWS_ITEMS 件だけ表示する
+        // 項目に "url" があれば、本文をそのページへのリンクにする（無ければ今までどおり文字だけ・2026-11-14）
         allItems.slice(0, MAX_NEWS_ITEMS).forEach(item => {
             const isEvent = item.type === 'event';
             const el = document.createElement('div');
@@ -92,7 +93,7 @@ async function loadTimeline() {
                 <div class="tl-body">
                     <div class="tl-cat${isEvent ? '' : ' update'}">${isEvent ? 'EVENT' : 'UPDATE'}</div>
                     <div class="tl-date">${item.date}</div>
-                    <div class="tl-text">${item.content}</div>
+                    <div class="tl-text">${item.url ? `<a href="${item.url}">${item.content}</a>` : item.content}</div>
                 </div>`;
             timelineEl.appendChild(el);
         });
