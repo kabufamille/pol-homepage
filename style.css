@@ -156,6 +156,7 @@ h4 {
     font-size: 0.95rem;
     color: var(--color-text);
     position: relative;
+    white-space: nowrap;
 }
 
 .nav a::after {
@@ -1092,6 +1093,11 @@ h4 {
         padding: 0 20px;
     }
 
+}
+
+/* メニューの切替え（2026-11-16）：9項目になり、1280px未満では横に並びきらず各項目が2行に割れていた。
+   ハンバーガーに切り替える幅を 768px → 1279px へ広げた（もとは上の max-width:768px の中にあった） */
+@media (max-width: 1279px) {
     .mobile-menu-toggle {
         display: flex;
     }
@@ -1101,6 +1107,7 @@ h4 {
         top: 0;
         right: -100%;
         width: 70%;
+        max-width: 360px;
         height: 100vh;
         background-color: rgba(253, 251, 247, 0.98);
         padding-top: 80px;
