@@ -70,7 +70,6 @@
 
         /* 商品の案内 */
         .product-card { display: flex; gap: 20px; align-items: center; }
-        .product-photo { width: 160px; height: 160px; flex-shrink: 0; border-radius: 10px; object-fit: cover; background: #F3ECE2; }
         .product-name { font-family: var(--font-serif); font-size: 1.2rem; color: var(--color-primary); margin: 0 0 4px; }
         .product-price { font-size: 1.3rem; font-weight: 500; color: #333; margin: 0; }
         .product-price small { font-size: 0.8rem; color: #808080; font-weight: 400; }
@@ -81,6 +80,8 @@
         .status-pill { flex: 1; min-width: 140px; text-align: center; background: #FAF9F6; border-radius: 8px; padding: 10px; }
         .status-pill b { display: block; font-size: 1.15rem; color: var(--color-raspberry); font-weight: 500; }
         .status-pill span { font-size: 0.8rem; color: #808080; }
+        /* 受付期間は開始と終了を2段に。日付・時刻の途中では切らない（2026-11-16） */
+        .status-pill b .period-part { display: inline; font-size: inherit; color: inherit; white-space: nowrap; }
         .info-table { width: 100%; border-collapse: collapse; font-size: 0.92rem; margin-top: 20px; }
         .info-table th { text-align: left; color: var(--color-primary); font-weight: 500; padding: 8px 12px 8px 0; white-space: nowrap; vertical-align: top; width: 6em; border-bottom: 1px solid #F1EAE0; }
         .info-table td { padding: 8px 0; border-bottom: 1px solid #F1EAE0; }
@@ -133,7 +134,6 @@
         @media (max-width: 600px) {
             .survey-form-container { padding: 24px 18px; }
             .product-card { flex-direction: column; align-items: stretch; }
-            .product-photo { width: 100%; height: 180px; }
             .row-2 { flex-direction: column; gap: 12px; }
         }
     </style>
@@ -202,7 +202,6 @@
                 <div id="product-info">
                     <h4 class="survey-group-title">1. 今回の通販</h4>
                     <div class="product-card">
-                        <img class="product-photo" id="product-photo" src="../images/tsuhan_box.webp" alt="" onerror="this.style.display='none'">
                         <div>
                             <p class="product-name" id="v-product"></p>
                             <p class="product-price"><span id="v-price"></span> <small>（税込・送料込み）</small></p>
@@ -362,7 +361,14 @@
                 priceEl.textContent = ITEMS[0].price ? yen(ITEMS[0].price) : '';
             }
             $('v-limit').textContent = '限定販売';  // 合計数は見せず「限定販売」とだけ出す（2026-11-14 けんじ）
-            $('v-period').textContent = (info.start && info.end) ? info.start + ' 〜 ' + info.end : '';
+            // 受付の時間は2段（1段目「開始 〜」・2段目「終了」）。それぞれ途中で切れないよう nowrap の span に入れる（2026-11-16）
+            const per = $('v-period');
+            per.textContent = '';
+            if (info.start && info.end) {
+                const a = document.createElement('span'); a.className = 'period-part'; a.textContent = info.start + ' 〜';
+                const b = document.createElement('span'); b.className = 'period-part'; b.textContent = info.end;
+                per.append(a, document.createElement('br'), b);
+            }
             $('v-start').textContent = info.start || '';
             $('v-ship-date').textContent = info.shipDate || '';
             const extra = [];
@@ -466,18 +472,18 @@
         if (MIHON) {
             $('mihon-banner').style.display = 'block';
             $('ts-note').style.display = 'none'; $('ts-box').style.display = 'none';  // 見本ではボット確認を出さない
-            // 見本は2種類の形（?mihon=1&one=1 で1種類の形・?mihon=1&three=1 で3種類の形＝3種類目は売り切れの見え方）
+            // 見本は今回（2026-12 冬のPOL便）と同じ3種類の形（2026-11-16）。?mihon=1&one=1 で1種類の形・?mihon=1&three=1 で3種類目が売り切れの見え方
             const MQ = new URLSearchParams(location.search);
             const ONE = MQ.get('one') === '1', THREE = MQ.get('three') === '1';
+            const M_ITEMS = [{ name: '冬のPOL便（例）', price: 4000 }, { name: '冬のPOL便シュトレン入り（例）', price: 5200 }, { name: '冬のPOL便焼き菓子ギフト（例）', price: 3800 }];
+            if (THREE) M_ITEMS[2].soldout = true;
             applyInfo({
-                items: ONE ? [{ name: '冬のPOL便（例）', price: 3800 }]
-                     : THREE ? [{ name: '冬のPOL便（例）', price: 3800 }, { name: '冬のPOL便シュトレン入り（例）', price: 5000 }, { name: '冬のPOL便焼き菓子ギフト（例）', price: 2800, soldout: true }]
-                           : [{ name: '冬のPOL便（例）', price: 3800 }, { name: '冬のPOL便シュトレン入り（例）', price: 5000 }],
-                limit: 8, perPerson: 2, midFee: 200, farFee: 500, shipDate: '12月10日〜12日', start: '11月20日（金）20:00', end: '11月22日（日）20:00'
+                items: ONE ? [M_ITEMS[0]] : M_ITEMS,
+                limit: 15, perPerson: 1, midFee: 200, farFee: 500, shipDate: '12月10〜12日に発送予定', start: '11月20日（金）20:00', end: '11月23日（月）23:59'
             });
             const pick = (s) => {
                 document.querySelectorAll('.mihon-switch button').forEach(b => b.classList.toggle('on', b.dataset.s === s));
-                if (s === 'done') { setState('open'); showDone({ orderNo: 1, total: 3800, payFrom: '11月24日（火）', deadline: '11月27日（金）', bank: '○○銀行 ○○支店　普通 1234567\n名義 ○○○○' }); return; }
+                if (s === 'done') { setState('open'); showDone({ orderNo: 1, total: 4000, payFrom: '11月24日（火）', deadline: '11月27日（金）', bank: '○○銀行 ○○支店　普通 1234567\n名義 ○○○○' }); return; }
                 form.style.display = ''; success.style.display = 'none'; setState(s);
             };
             document.querySelectorAll('.mihon-switch button').forEach(b => b.addEventListener('click', () => pick(b.dataset.s)));
@@ -523,7 +529,7 @@
             const zip = f.zip.value.replace(/[^\d]/g, '');
             if (zip.length !== 7) { showError('郵便番号を確かめてください（数字7けた）'); return; }
 
-            if (MIHON) { showDone({ orderNo: 1, total: 3800, payFrom: '11月24日（火）', deadline: '11月27日（金）', bank: '○○銀行 ○○支店　普通 1234567\n名義 ○○○○' }); return; }
+            if (MIHON) { showDone({ orderNo: 1, total: 4000, payFrom: '11月24日（火）', deadline: '11月27日（金）', bank: '○○銀行 ○○支店　普通 1234567\n名義 ○○○○' }); return; }
             if (!tsToken) { showError('「申し込む」の上の確認が済んでから、もう一度押してください'); return; }
 
             const btn = submitBtn;
