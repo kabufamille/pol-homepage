@@ -74,6 +74,9 @@
         .product-price { font-size: 1.3rem; font-weight: 500; color: #333; margin: 0; }
         .product-price small { font-size: 0.8rem; color: #808080; font-weight: 400; }
         .product-price .price-line { display: block; font-size: 1.05rem; }
+        /* 箱の中身（GASの items[].desc・設定タブ「◯つ目の箱：中身」）。名前の下に小さく。無ければ出さない（2026-11-16） */
+        .product-price .item-desc, .product-desc { display: block; font-size: 0.82rem; font-weight: 400; color: #7d6b5d; margin: 0 0 6px; }
+        .product-desc:empty { display: none; }
         .qty-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; flex-wrap: wrap; }
         .qty-row .qty-name { min-width: 10em; color: #333; }
         .status-row { display: flex; gap: 10px; margin: 20px 0 0; flex-wrap: wrap; }
@@ -204,6 +207,7 @@
                     <div class="product-card">
                         <div>
                             <p class="product-name" id="v-product"></p>
+                            <p class="product-desc" id="v-desc"></p>
                             <p class="product-price"><span id="v-price"></span> <small>（税込・送料込み）</small></p>
                         </div>
                     </div>
@@ -348,6 +352,7 @@
             PER_PERSON = info.perPerson || 2;
             const multi = ITEMS.length > 1;
             $('v-product').textContent = multi ? ITEMS.length + '種類の箱からお選びいただけます' : (ITEMS[0].name || '');
+            $('v-desc').textContent = (!multi && ITEMS[0].desc) ? ITEMS[0].desc : '';  // 1種類のときは名前の下に中身
             const priceEl = $('v-price');
             priceEl.textContent = '';
             if (multi) {
@@ -356,6 +361,12 @@
                     line.className = 'price-line';
                     line.textContent = it.name + '　' + yen(it.price) + (it.soldout ? '（売り切れ）' : '');
                     priceEl.appendChild(line);
+                    if (it.desc) {
+                        const ds = document.createElement('span');
+                        ds.className = 'item-desc';
+                        ds.textContent = it.desc;
+                        priceEl.appendChild(ds);
+                    }
                 });
             } else {
                 priceEl.textContent = ITEMS[0].price ? yen(ITEMS[0].price) : '';
@@ -475,7 +486,8 @@
             // 見本は今回（2026-12 冬のPOL便）と同じ3種類の形（2026-11-16）。?mihon=1&one=1 で1種類の形・?mihon=1&three=1 で3種類目が売り切れの見え方
             const MQ = new URLSearchParams(location.search);
             const ONE = MQ.get('one') === '1', THREE = MQ.get('three') === '1';
-            const M_ITEMS = [{ name: '冬のPOL便（例）', price: 4000 }, { name: '冬のPOL便シュトレン入り（例）', price: 5200 }, { name: '冬のPOL便焼き菓子ギフト（例）', price: 3800 }];
+            const M_ITEMS = [{ name: '冬のPOL便（例）', price: 4000, desc: '焼き菓子＋パン8〜9個' }, { name: '冬のPOL便シュトレン入り（例）', price: 5200, desc: 'シュトレン＋パン5個' }, { name: '冬のPOL便焼き菓子ギフト（例）', price: 3800, desc: 'シュトレン風パウンド＋焼き菓子5種' }];
+            if (MQ.get('nodesc') === '1') M_ITEMS.forEach(it => delete it.desc);  // ?mihon=1&nodesc=1＝中身の無い返事（GAS @39 まで）の見え方
             if (THREE) M_ITEMS[2].soldout = true;
             applyInfo({
                 items: ONE ? [M_ITEMS[0]] : M_ITEMS,
