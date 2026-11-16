@@ -21,7 +21,7 @@
         /* 2026-11-16 ほかのページと同じヘッダー（ロゴ＋メニュー）を出すため、サイト共通の style.css を読む。
            layer(site) に入れてあるので、このページに書いた指定がいつも勝つ（フォーム・ボタンの見た目はこのページのまま）。
            style.css の ?v= を上げたら、ここも同じ番号に上げる（index.html・reservation.html・online_shop.html と揃える）。 */
-        @import url("../style.css?v=17") layer(site);
+        @import url("../style.css?v=18") layer(site);
         :root {
             --color-primary: #8E6E53;
             --color-accent: #D4A59A;
@@ -149,7 +149,7 @@
                     <li><a href="../index.html#greeting">ご挨拶</a></li>
                     <li><a href="../index.html#about">こだわり</a></li>
                     <li><a href="../index.html#menu">焼き菓子・パン</a></li>
-                    <li><a href="./" class="active">通販</a></li>
+                    <li><a href="./" class="active">通販<span class="nav-new" aria-hidden="true">NEW</span></a></li>
                     <!-- 【開業まで非表示・2026-09-04 けんじ指示】 戻すとき＝ data-hidden-until-open が付いた要素から style="display:none;" を消すだけ。 非表示にした全箇所の一覧は  grep -rn "hidden-until-open" *.html  で出ます。 -->
                     <li data-hidden-until-open="2026-09-04" style="display:none;"><a href="../reservation.html">お取り置き</a></li>
                     <li><a href="../index.html#instagram">最近の投稿</a></li>

@@ -175,6 +175,34 @@ h4 {
     width: 100%;
 }
 
+/* メニュー「通販」右上の NEW（2026-11-16 けんじ・案2）。外すときはHTMLの span.nav-new を消す。
+   位置は absolute＝文字の幅を変えない（メニューの折り返しに影響させない） */
+.nav-new {
+    position: absolute;
+    top: -9px;
+    right: -22px;
+    color: #C41E3A;
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: .04em;
+    line-height: 1;
+    pointer-events: none;
+}
+/* お知らせ欄の通販ボタン枠の文の頭に付ける NEW 札（2026-11-16） */
+.new-label {
+    display: inline-block;
+    background: #C41E3A;
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    line-height: 1;
+    padding: 4px 8px;
+    border-radius: 4px;
+    margin-right: 8px;
+    vertical-align: 2px;
+}
+
 /* Hero Section */
 .hero {
     position: relative;

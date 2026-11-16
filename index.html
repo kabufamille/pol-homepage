@@ -29,7 +29,7 @@
         href="https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@300;400;500&family=Noto+Sans+JP:wght@300;400;500&family=Noto+Serif+JP:wght@400;700&display=swap"
         rel="stylesheet">
     <link rel="icon" href="images/pol_logo_muffin.webp" type="image/webp">
-    <link rel="stylesheet" href="style.css?v=17">
+    <link rel="stylesheet" href="style.css?v=18">
 <link rel="stylesheet" href="timeline.css?v=3">
     <script src="main.js?v=3" defer></script>
     <script src="news.js?v=5" defer></script>
@@ -172,7 +172,7 @@
                     <li><a href="#greeting">ご挨拶</a></li>
                     <li><a href="#about">こだわり</a></li>
                     <li><a href="#menu">焼き菓子・パン</a></li>
-                    <li><a href="tsuhan/">通販</a></li>
+                    <li><a href="tsuhan/">通販<span class="nav-new" aria-hidden="true">NEW</span></a></li>
                     <!-- 【開業まで非表示・2026-09-04 けんじ指示】 戻すとき＝ data-hidden-until-open が付いた要素から style="display:none;" を消すだけ。 非表示にした全箇所の一覧は  grep -rn "hidden-until-open" *.html  で出ます。 -->
                     <li data-hidden-until-open="2026-09-04" style="display:none;"><a href="reservation.html">お取り置き</a></li>
                     <li><a href="#instagram">最近の投稿</a></li>
@@ -221,7 +221,7 @@
                 <!-- 通販のお申し込みボタン（2026-11-14）。data-from〜data-until（日本時間）の間だけ、下のスクリプトが出す。
                      次の受付のときは、この2つの日時と文言を書き換える。期間外は hidden のまま＝何も出ない -->
                 <div class="tsuhan-cta" id="tsuhan-cta" data-from="2026-11-20T20:00:00+09:00" data-until="2026-11-23T23:59:59+09:00" hidden>
-                    <p class="tsuhan-cta-note">12月の通販「冬のPOL便」受付中（11月23日（月・祝）まで）</p>
+                    <p class="tsuhan-cta-note"><span class="new-label">NEW</span>12月の通販「冬のPOL便」受付中（11月23日（月・祝）まで）</p>
                     <a href="tsuhan/" class="btn btn-primary">通販のお申し込み</a>
                 </div>
                 <script>
