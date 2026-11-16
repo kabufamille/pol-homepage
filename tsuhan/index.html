@@ -218,7 +218,12 @@
                     <table class="info-table">
                         <tr><th>送料</th><td id="v-ship-fee">込み</td></tr>
                         <tr><th>発送日</th><td id="v-ship-date"></td></tr>
-                        <tr><th>お支払い</th><td>銀行振込（お申し込みのあとに振込先をお知らせします）</td></tr>
+                        <tr><th>お支払い</th><td>銀行振込（前払い）。振込先はお申し込みのあとにメールでお知らせします。振込の手数料はお客さまのご負担です</td></tr>
+                        <!-- 2026-11-16 特商法12条の6（申し込む前の画面に支払の時期・キャンセル・返品を出す）。文は tokushoho.html と同じ条件。
+                             振込の時期は GAS ?q=tsuhan が payWhen（例「11月24日（火）〜11月27日（金）」）を返す回だけ日付を出す。返さないあいだは下の文のまま -->
+                        <tr><th>振込の時期</th><td id="v-pay-when">お申し込みのあとにお送りする確認メールに書いた期限までにお振り込みください。期限までにご入金がない場合は、キャンセルとさせていただきます</td></tr>
+                        <tr><th>キャンセル</th><td>ご入金の前でしたら、POLのLINEかメールでご連絡いただければキャンセルできます。ご入金のあとは、お客さまのご都合によるキャンセルはお受けしておりません</td></tr>
+                        <tr><th>返品・交換</th><td>食品のため、お客さまのご都合による返品・交換はお受けしておりません。破損や品違いがあった場合は、お届けから3日以内にPOLのLINEかメールでご連絡ください（代わりの品の発送か、ご返金で対応します）</td></tr>
                     </table>
                     <p class="insta-note">箱の中身や保存のしかたは、Instagramの投稿をご覧ください。<br><a href="tokushoho.html" style="color: #808080;">特定商取引法に基づく表記</a></p>
                 </div>
@@ -382,6 +387,7 @@
             }
             $('v-start').textContent = info.start || '';
             $('v-ship-date').textContent = info.shipDate || '';
+            if (info.payWhen) $('v-pay-when').textContent = info.payWhen + 'にお振り込みください。期限までにご入金がない場合は、キャンセルとさせていただきます';
             const extra = [];
             if (info.midFee) extra.push('中国・四国は＋' + yen(info.midFee));
             if (info.farFee) extra.push('北海道・九州・沖縄は＋' + yen(info.farFee));
@@ -491,7 +497,7 @@
             if (THREE) M_ITEMS[2].soldout = true;
             applyInfo({
                 items: ONE ? [M_ITEMS[0]] : M_ITEMS,
-                limit: 15, perPerson: 1, midFee: 200, farFee: 500, shipDate: '12月10〜12日に発送予定', start: '11月20日（金）20:00', end: '11月23日（月）23:59'
+                limit: 15, perPerson: 1, midFee: 200, farFee: 500, shipDate: '12月10〜12日に発送予定', payWhen: MQ.get('nopay') === '1' ? '' : '11月24日（火）〜11月27日（金）', start: '11月20日（金）20:00', end: '11月23日（月）23:59'
             });
             const pick = (s) => {
                 document.querySelectorAll('.mihon-switch button').forEach(b => b.classList.toggle('on', b.dataset.s === s));
