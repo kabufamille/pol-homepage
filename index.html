@@ -218,17 +218,23 @@
                     <h3 class="section-title">お知らせ</h3>
                 </div>
 
-                <!-- 通販のお申し込みボタン（2026-11-14）。data-from〜data-until（日本時間）の間だけ、下のスクリプトが出す。
-                     次の受付のときは、この2つの日時と文言を書き換える。期間外は hidden のまま＝何も出ない -->
-                <div class="tsuhan-cta" id="tsuhan-cta" data-from="2026-11-20T20:00:00+09:00" data-until="2026-11-23T23:59:59+09:00" hidden>
-                    <p class="tsuhan-cta-note"><span class="new-label">NEW</span>12月の通販「冬のPOL便」受付中（11月23日（月・祝）まで）</p>
+                <!-- 通販のお申し込みボタン（2026-11-14・11/16 から受付の状態に連動）。
+                     通販の受け口（お取り置き用GAS ?q=tsuhan）が state:"open"（受付中）を返したときだけ出す。
+                     準備中・受付前・売り切れ・受付終了・読み込み失敗のときは hidden のまま＝何も出ない。日時をここに書かなくてよい -->
+                <div class="tsuhan-cta" id="tsuhan-cta" hidden>
+                    <p class="tsuhan-cta-note"><span class="new-label">NEW</span>通販のお申し込みを受け付けています<span id="tsuhan-cta-end"></span></p>
                     <a href="tsuhan/" class="btn btn-primary">通販のお申し込み</a>
                 </div>
                 <script>
                 (function(){
-                    var el=document.getElementById('tsuhan-cta'); if(!el) return;
-                    var now=Date.now(), from=Date.parse(el.dataset.from), until=Date.parse(el.dataset.until);
-                    el.hidden=!(now>=from && now<=until);
+                    var el=document.getElementById('tsuhan-cta'); if(!el || !window.fetch) return;
+                    // tsuhan/index.html の GAS_URL と同じ（デプロイIDを変えたら両方直す）
+                    var url='https://script.google.com/macros/s/AKfycbyMT-ZX9lwH-6Grdb-oJvYlXr7lHse0w8MQgHAgZ6sjHcDEblv8uH9_kj1_wAO4W2__/exec?q=tsuhan';
+                    fetch(url,{cache:'no-store'}).then(function(r){return r.json();}).then(function(info){
+                        if(!info || info.status!=='ok' || info.state!=='open') return;
+                        if(info.end) document.getElementById('tsuhan-cta-end').textContent='（'+info.end+'まで）';
+                        el.hidden=false;
+                    }).catch(function(){});
                 })();
                 </script>
 
