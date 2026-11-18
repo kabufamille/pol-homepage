@@ -196,7 +196,8 @@
                     <figure class="ni-photo"><img src="../images/tsuhan/gift-sweets.webp" alt="冬のPOL便焼き菓子ギフトの例" width="480" height="480" loading="lazy"><figcaption>写真は一例です</figcaption></figure></li>
             </ul>
             <p class="notice-terms">税込・送料込み。北海道・九州・沖縄は＋500円、中国・四国は＋200円</p>
-            <p class="notice-terms">数に限りがあるため、お1人さま1箱までとさせていただきます</p>
+            <p class="notice-terms">冷凍でお届けします。届いたら、すぐに冷凍庫に入れてください。</p>
+            <p class="notice-terms">数に限りがあるため、お1人様1箱までとさせていただきます</p>
         </div>
 
         <div class="survey-form-container">
@@ -293,7 +294,7 @@
                     <ul>
                         <li><b id="s-deadline"></b>にお振り込みください。期限を過ぎた場合は、キャンセルとさせていただきます。</li>
                         <li>振込の名前は、お申し込みのときのお名前でお願いします。</li>
-                        <li>入金が確認できましたら、発送日をメールでお知らせします。</li>
+                        <li>ご入金を確認できましたら、確認のメールをお送りします。</li>
                     </ul>
                 </div>
                 <div class="line-box">
@@ -397,7 +398,7 @@
             // 個数：1種類なら今までどおり1つの選択欄。2・3種類なら種類ごとに「0箱〜」で選ぶ
             const rows = $('qty-rows');
             rows.textContent = '';
-            $('qty-note').textContent = multi ? (PER_PERSON === 1 ? '数に限りがあるため、お1人さま1箱までとさせていただきます。どれか1つをお選びください' : '数に限りがあるため、お1人さま合わせて' + PER_PERSON + '箱までとさせていただきます') : '';
+            $('qty-note').textContent = multi ? (PER_PERSON === 1 ? '数に限りがあるため、お1人様1箱までとさせていただきます。どれか1つをお選びください' : '数に限りがあるため、お1人様合わせて' + PER_PERSON + '箱までとさせていただきます') : '';
             ITEMS.forEach((it, i) => {
                 const wrap = document.createElement('div');
                 wrap.className = 'qty-row';
@@ -541,7 +542,7 @@
             const qtyTotal = qtys.reduce((a, n) => a + n, 0);
             if (!qtyTotal) missing.push('個数');
             if (missing.length) { showError(missing.join('・') + 'を入力してください'); return; }
-            if (qtyTotal > PER_PERSON) { showError(PER_PERSON === 1 ? 'お1人さま1箱までです。どれか1つに絞ってください' : 'お1人さま合わせて' + PER_PERSON + '箱までです。個数を減らしてください'); return; }
+            if (qtyTotal > PER_PERSON) { showError(PER_PERSON === 1 ? 'お1人様1箱までです。どれか1つに絞ってください' : 'お1人様合わせて' + PER_PERSON + '箱までです。個数を減らしてください'); return; }
             if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(f.email.value.trim())) { showError('メールアドレスの形を確かめてください'); return; }
             const tel = f.tel.value.replace(/[^\d]/g, '');
             if (tel.length < 10 || tel.length > 11) { showError('電話番号を確かめてください（数字10〜11けた）'); return; }
