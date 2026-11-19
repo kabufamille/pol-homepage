@@ -108,6 +108,26 @@
         .notice-items .ni-photo { margin: 8px 0 0; }
         .notice-items .ni-photo img { display: block; width: 100%; max-width: 420px; height: auto; border-radius: 6px; }
         .notice-items .ni-photo figcaption { font-size: 0.78rem; color: #8B7355; margin-top: 4px; }
+        /* 焼き菓子ギフトの中身写真（小窓＋拡大） */
+        .gift-gallery { margin-top: 12px; }
+        .gift-gallery .gg-title { font-family: var(--font-serif); color: var(--color-primary); font-size: 0.9rem; font-weight: bold; margin: 0 0 6px; }
+        .gg-list { list-style: none; display: flex; gap: 6px; margin: 0; padding: 0; }
+        .notice-items .gg-list li { flex: 1 1 0; min-width: 0; padding: 0; border: 0; }
+        .gg-thumb { display: block; width: 100%; padding: 0; border: 0; background: none; font: inherit; color: #4A4A4A; cursor: pointer; text-align: center; }
+        .gg-thumb img { display: block; width: 100%; height: auto; aspect-ratio: 1; object-fit: cover; border-radius: 8px; }
+        .gg-thumb span { display: block; font-size: 0.62rem; line-height: 1.35; margin-top: 4px; }
+        .gg-thumb:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; border-radius: 8px; }
+        .gg-lightbox { position: fixed; inset: 0; z-index: 10000; background: rgba(15,15,15,0.96); display: none; flex-direction: column; align-items: center; justify-content: center; color: #fff; touch-action: pan-y; }
+        .gg-lightbox.open { display: flex; }
+        .gg-count { font-size: 0.95rem; margin-bottom: 8px; }
+        .gg-img { max-width: 92vw; max-height: 68vh; object-fit: contain; border-radius: 4px; }
+        .gg-cap { font-family: var(--font-serif); font-size: 1rem; margin: 12px 24px 0; text-align: center; }
+        .gg-hint { font-size: 0.75rem; color: #ccc; margin: 6px 24px 0; text-align: center; }
+        .gg-btn { position: absolute; background: rgba(255,255,255,0.15); color: #fff; border: 0; border-radius: 50%; width: 44px; height: 44px; font-size: 1.6rem; line-height: 1; cursor: pointer; }
+        .gg-close { top: 12px; right: 12px; }
+        .gg-prev { left: 8px; top: 50%; transform: translateY(-50%); }
+        .gg-next { right: 8px; top: 50%; transform: translateY(-50%); }
+        body.gg-noscroll { overflow: hidden; }
         .notice-figure .notice-terms { font-size: 0.85rem; color: #7d6b5d; margin: 0; text-align: left; }
 
         /* 受付前・売り切れ・受付終了・準備中・読み込み中に出す札 */
@@ -193,7 +213,8 @@
                 <li><span class="ni-head"><span class="ni-name">冬のPOL便シュトレン入り</span><span class="ni-price">5,200円</span></span><span class="ni-desc">シュトレン＋パン5個</span>
                     <figure class="ni-photo"><img src="../images/tsuhan/stollen.webp" alt="POLのシュトレン" width="480" height="480" loading="lazy"><figcaption>シュトレン（写真はイメージです）</figcaption></figure></li>
                 <li><span class="ni-head"><span class="ni-name">冬のPOL便焼き菓子ギフト</span><span class="ni-price">3,800円</span></span><span class="ni-desc">シュトレン風パウンド＋焼き菓子5種</span>
-                    <figure class="ni-photo"><img src="../images/tsuhan/gift-sweets.webp" alt="冬のPOL便焼き菓子ギフトの例" width="480" height="480" loading="lazy"><figcaption>写真は一例です</figcaption></figure></li>
+                    <figure class="ni-photo"><img src="../images/tsuhan/gift-sweets.webp" alt="冬のPOL便焼き菓子ギフトの例" width="480" height="480" loading="lazy"><figcaption>写真は一例です</figcaption></figure>
+                    <div class="gift-gallery"><p class="gg-title">中身の写真（タップで拡大）</p><ul class="gg-list"><li><button type="button" class="gg-thumb" data-i="0" aria-label="シュトレン風パウンドの写真を拡大して見る"><img src="../images/tsuhan/gift/thumb-1.webp" alt="シュトレン風パウンド" width="240" height="240" loading="lazy"><span>シュトレン風<br>パウンド</span></button></li><li><button type="button" class="gg-thumb" data-i="1" aria-label="ディアマンクッキー 3種（抹茶ホワイトチョコ・ココアオレンジ・プレーン）の写真を拡大して見る"><img src="../images/tsuhan/gift/thumb-2.webp" alt="ディアマンクッキー 3種（抹茶ホワイトチョコ・ココアオレンジ・プレーン）" width="240" height="240" loading="lazy"><span>ディアマン<br>クッキー<br>3種</span></button></li><li><button type="button" class="gg-thumb" data-i="2" aria-label="ブールドネージュ プレーンの写真を拡大して見る"><img src="../images/tsuhan/gift/thumb-3.webp" alt="ブールドネージュ プレーン" width="240" height="240" loading="lazy"><span>ブールド<br>ネージュ<br>プレーン</span></button></li><li><button type="button" class="gg-thumb" data-i="3" aria-label="ブールドネージュ イチゴの写真を拡大して見る"><img src="../images/tsuhan/gift/thumb-4.webp" alt="ブールドネージュ イチゴ" width="240" height="240" loading="lazy"><span>ブールド<br>ネージュ<br>イチゴ</span></button></li><li><button type="button" class="gg-thumb" data-i="4" aria-label="ブールドネージュ プレーンとイチゴの写真を拡大して見る"><img src="../images/tsuhan/gift/thumb-5.webp" alt="ブールドネージュ プレーンとイチゴ" width="240" height="240" loading="lazy"><span>ブールド<br>ネージュ<br>プレーンとイチゴ</span></button></li></ul></div></li>
             </ul>
             <p class="notice-terms">税込・送料込み。北海道・九州・沖縄は＋500円、中国・四国は＋200円</p>
             <p class="notice-terms">冷凍でお届けします。届いたら、すぐに冷凍庫に入れてください。</p>
@@ -582,6 +603,56 @@
         });
     </script>
     <!-- 訪問者数の計測（GoatCounter pol-hp・Cookieなし）。見本モード(?mihon=1)は数えない -->
+    <div class="gg-lightbox" id="gg-lightbox" role="dialog" aria-modal="true" aria-label="中身の写真" hidden>
+        <p class="gg-count" id="gg-count" aria-live="polite"></p>
+        <img class="gg-img" id="gg-img" alt="">
+        <p class="gg-cap" id="gg-cap"></p>
+        <p class="gg-hint">左右にスワイプで次の写真 ／ ×かまわりをタップで閉じる</p>
+        <button type="button" class="gg-btn gg-close" id="gg-close" aria-label="閉じる">&times;</button>
+        <button type="button" class="gg-btn gg-prev" id="gg-prev" aria-label="前の写真">&lsaquo;</button>
+        <button type="button" class="gg-btn gg-next" id="gg-next" aria-label="次の写真">&rsaquo;</button>
+    </div>
+    <script>
+    (function () {
+        var thumbs = document.querySelectorAll('.gg-thumb');
+        var box = document.getElementById('gg-lightbox');
+        if (!thumbs.length || !box) return;
+        var img = document.getElementById('gg-img'), cap = document.getElementById('gg-cap'), cnt = document.getElementById('gg-count');
+        var idx = 0, opener = null, x0 = null;
+        function show(i) {
+            idx = (i + thumbs.length) % thumbs.length;
+            var t = thumbs[idx].querySelector('img');
+            img.src = t.src.replace('thumb-', 'large-');
+            img.alt = t.alt; cap.textContent = t.alt;
+            cnt.textContent = (idx + 1) + ' / ' + thumbs.length;
+        }
+        function open(i, btn) {
+            opener = btn; show(i); box.hidden = false; box.classList.add('open');
+            document.body.classList.add('gg-noscroll'); document.getElementById('gg-close').focus();
+        }
+        function close() {
+            box.classList.remove('open'); box.hidden = true; img.removeAttribute('src');
+            document.body.classList.remove('gg-noscroll'); if (opener) opener.focus();
+        }
+        thumbs.forEach(function (b, i) { b.addEventListener('click', function () { open(i, b); }); });
+        document.getElementById('gg-close').addEventListener('click', close);
+        document.getElementById('gg-prev').addEventListener('click', function () { show(idx - 1); });
+        document.getElementById('gg-next').addEventListener('click', function () { show(idx + 1); });
+        box.addEventListener('click', function (e) { if (e.target === box) close(); });
+        document.addEventListener('keydown', function (e) {
+            if (box.hidden) return;
+            if (e.key === 'Escape') close();
+            else if (e.key === 'ArrowLeft') show(idx - 1);
+            else if (e.key === 'ArrowRight') show(idx + 1);
+        });
+        box.addEventListener('touchstart', function (e) { x0 = e.touches[0].clientX; }, { passive: true });
+        box.addEventListener('touchend', function (e) {
+            if (x0 === null) return;
+            var d = e.changedTouches[0].clientX - x0; x0 = null;
+            if (Math.abs(d) > 40) show(idx + (d < 0 ? 1 : -1));
+        });
+    })();
+    </script>
     <script>if (/[?&]mihon=1/.test(location.search)) window.goatcounter = { no_onload: true };</script>
     <script data-goatcounter="https://pol-hp.goatcounter.com/count" async src="https://gc.zgo.at/count.v4.js" crossorigin="anonymous" integrity="sha384-nRw6qfbWyJha9LhsOtSb2YJDyZdKvvCFh0fJYlkquSFjUxp9FVNugbfy8q1jdxI+"></script>
 </body>
