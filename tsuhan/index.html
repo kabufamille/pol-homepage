@@ -209,8 +209,8 @@
             <p class="notice-lead">12月の通販「冬のPOL便」</p>
             <p class="notice-dates">受付 11月20日（金）20:00〜23日（月・祝）23:59<br>発送 12月10日〜12日</p>
             <ul class="notice-items">
-                <li><span class="ni-head"><span class="ni-name">冬のPOL便</span><span class="ni-price">4,000円</span></span><span class="ni-desc">焼き菓子＋パン8〜9個</span></li>
-                <li><span class="ni-head"><span class="ni-name">冬のPOL便シュトレン入り</span><span class="ni-price">5,200円</span></span><span class="ni-desc">シュトレン＋パン5個</span>
+                <li><span class="ni-head"><span class="ni-name">冬のPOL便</span><span class="ni-price">4,000円</span></span><span class="ni-desc">焼き菓子＋パン8〜9個（パン・焼き菓子の種類はおまかせ）</span></li>
+                <li><span class="ni-head"><span class="ni-name">冬のPOL便シュトレン入り</span><span class="ni-price">5,200円</span></span><span class="ni-desc">シュトレン＋パン5個（パンの種類はおまかせ）</span>
                     <figure class="ni-photo"><img src="../images/tsuhan/stollen.webp" alt="POLのシュトレン" width="480" height="480" loading="lazy"><figcaption>シュトレン（写真はイメージです）</figcaption></figure></li>
                 <li><span class="ni-head"><span class="ni-name">冬のPOL便焼き菓子ギフト</span><span class="ni-price">3,800円</span></span><span class="ni-desc">シュトレン風パウンド＋焼き菓子5種</span>
                     <figure class="ni-photo"><img src="../images/tsuhan/gift-sweets.webp" alt="冬のPOL便焼き菓子ギフトの例" width="480" height="480" loading="lazy"><figcaption>写真は一例です</figcaption></figure>
@@ -515,7 +515,7 @@
             // 見本は今回（2026-12 冬のPOL便）と同じ3種類の形（2026-11-16）。?mihon=1&one=1 で1種類の形・?mihon=1&three=1 で3種類目が売り切れの見え方
             const MQ = new URLSearchParams(location.search);
             const ONE = MQ.get('one') === '1', THREE = MQ.get('three') === '1';
-            const M_ITEMS = [{ name: '冬のPOL便（例）', price: 4000, desc: '焼き菓子＋パン8〜9個' }, { name: '冬のPOL便シュトレン入り（例）', price: 5200, desc: 'シュトレン＋パン5個' }, { name: '冬のPOL便焼き菓子ギフト（例）', price: 3800, desc: 'シュトレン風パウンド＋焼き菓子5種' }];
+            const M_ITEMS = [{ name: '冬のPOL便（例）', price: 4000, desc: '焼き菓子＋パン8〜9個（パン・焼き菓子の種類はおまかせ）' }, { name: '冬のPOL便シュトレン入り（例）', price: 5200, desc: 'シュトレン＋パン5個（パンの種類はおまかせ）' }, { name: '冬のPOL便焼き菓子ギフト（例）', price: 3800, desc: 'シュトレン風パウンド＋焼き菓子5種' }];
             if (MQ.get('nodesc') === '1') M_ITEMS.forEach(it => delete it.desc);  // ?mihon=1&nodesc=1＝中身の無い返事（GAS @39 まで）の見え方
             if (THREE) M_ITEMS[2].soldout = true;
             applyInfo({
