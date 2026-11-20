@@ -77,6 +77,15 @@
         /* 箱の中身（GASの items[].desc・設定タブ「◯つ目の箱：中身」）。名前の下に小さく。無ければ出さない（2026-11-16） */
         .product-price .item-desc, .product-desc { display: block; font-size: 0.82rem; font-weight: 400; color: #7d6b5d; margin: 0 0 6px; }
         .product-desc:empty { display: none; }
+        .notice-items .ni-remain { display: block; text-align: left; margin: 2px 0; }
+        .notice-items .ni-remain:empty { display: none; }
+        body:not([data-state="open"]) .remain { display: none; } /* 残りは受付中だけ */
+        .notice-items .ni-remain .remain { margin-left: 0; }
+        /* 箱ごとの残り（GASの items[].remaining・実数のみ。無ければ出さない）。3箱以下は「残りわずか」で強調（2026-11-21） */
+        .remain { display: inline-block; margin-left: 8px; padding: 1px 10px; border-radius: 50px; background: #FDF0F0; color: var(--color-raspberry); border: 1px solid var(--color-raspberry); font-size: 0.9rem; font-weight: 700; line-height: 1.6; white-space: nowrap; }
+        .remain.low { background: var(--color-raspberry); color: #fff; animation: remain-pulse 1.6s ease-in-out infinite; }
+        @keyframes remain-pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.06); } }
+        @media (prefers-reduced-motion: reduce) { .remain.low { animation: none; } }
         .qty-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; flex-wrap: wrap; }
         .qty-row .qty-name { min-width: 10em; color: #333; }
         .status-row { display: flex; gap: 10px; margin: 20px 0 0; flex-wrap: wrap; }
@@ -212,11 +221,11 @@
             <p class="notice-lead">12月の通販「冬のPOL便」</p>
             <p class="notice-dates">受付 11月20日（金）20:00〜23日（月・祝）23:59<br>発送 12月10日〜12日</p>
             <ul class="notice-items">
-                <li><span class="ni-head"><span class="ni-name">冬のPOL便</span><span class="ni-price">4,000円</span></span><span class="ni-desc">焼き菓子＋パン8〜9個（パン・焼き菓子の種類はおまかせ）</span></li>
-                <li><span class="ni-head"><span class="ni-name">冬のPOL便シュトレン入り</span><span class="ni-price">5,200円</span></span><span class="ni-desc">シュトレン＋パン5個（パンの種類はおまかせ）</span>
+                <li><span class="ni-head"><span class="ni-name">冬のPOL便</span><span class="ni-price">4,000円</span></span><span class="ni-remain" data-box="0"></span><span class="ni-desc">焼き菓子＋パン8〜9個（パン・焼き菓子の種類はおまかせ）</span></li>
+                <li><span class="ni-head"><span class="ni-name">冬のPOL便シュトレン入り</span><span class="ni-price">5,200円</span></span><span class="ni-remain" data-box="1"></span><span class="ni-desc">シュトレン＋パン5個（パンの種類はおまかせ）</span>
                     <figure class="ni-photo"><img src="../images/tsuhan/stollen.webp" alt="POLのシュトレン" width="480" height="480" loading="lazy"><figcaption>シュトレン（写真はイメージです）</figcaption></figure></li>
                 <li class="ni-sample"><span class="ni-sample-title">パンの一例</span>⭐︎ローズマリー酵母のオニオンチーズフォカッチャ<br>⭐︎みかん酵母のフロマージュウールロール<br>⭐︎ヨーグルト酵母のグラタンパン<br>⭐︎りんご酵母のメロンパン<br>他</li>
-                <li><span class="ni-head"><span class="ni-name">冬のPOL便焼き菓子ギフト</span><span class="ni-price">3,800円</span></span><span class="ni-desc">シュトレン風パウンド1本＋焼き菓子5種</span>
+                <li><span class="ni-head"><span class="ni-name">冬のPOL便焼き菓子ギフト</span><span class="ni-price">3,800円</span></span><span class="ni-remain" data-box="2"></span><span class="ni-desc">シュトレン風パウンド1本＋焼き菓子5種</span>
                     <figure class="ni-photo"><img src="../images/tsuhan/gift-sweets.webp" alt="冬のPOL便焼き菓子ギフトの例" width="480" height="480" loading="lazy"><figcaption>写真は一例です</figcaption></figure>
                     <div class="gift-gallery"><p class="gg-title">中身の写真（タップで拡大）</p><ul class="gg-list"><li><button type="button" class="gg-thumb" data-i="0" aria-label="シュトレン風パウンドの写真を拡大して見る"><img src="../images/tsuhan/gift/thumb-1.webp" alt="シュトレン風パウンド" width="240" height="240" loading="lazy"><span>シュトレン風<br>パウンド</span></button></li><li><button type="button" class="gg-thumb" data-i="1" aria-label="ディアマンクッキー 3種（抹茶ホワイトチョコ・ココアオレンジ・チョコチップ）の写真を拡大して見る"><img src="../images/tsuhan/gift/thumb-2.webp" alt="ディアマンクッキー 3種（抹茶ホワイトチョコ・ココアオレンジ・チョコチップ）" width="240" height="240" loading="lazy"><span>ディアマン<br>クッキー<br>3種</span></button></li><li><button type="button" class="gg-thumb" data-i="2" aria-label="ブールドネージュ プレーンの写真を拡大して見る"><img src="../images/tsuhan/gift/thumb-3.webp" alt="ブールドネージュ プレーン" width="240" height="240" loading="lazy"><span>ブールド<br>ネージュ<br>プレーン</span></button></li><li><button type="button" class="gg-thumb" data-i="3" aria-label="ブールドネージュ イチゴの写真を拡大して見る"><img src="../images/tsuhan/gift/thumb-4.webp" alt="ブールドネージュ イチゴ" width="240" height="240" loading="lazy"><span>ブールド<br>ネージュ<br>イチゴ</span></button></li><li><button type="button" class="gg-thumb" data-i="4" aria-label="ブールドネージュ プレーンとイチゴの写真を拡大して見る"><img src="../images/tsuhan/gift/thumb-5.webp" alt="ブールドネージュ プレーンとイチゴ" width="240" height="240" loading="lazy"><span>ブールド<br>ネージュ<br>プレーンとイチゴ</span></button></li></ul></div></li>
             </ul>
@@ -379,6 +388,15 @@
         // 箱は3種類まで（2026-10-28 に2種類・2026-11-10 に3種類）。GASが返す items の数だけ欄を出す（ここに種類の数は書かない）。
         // GASが items を返さない古い版でも product・price で1種類として出す
         let ITEMS = [], PER_PERSON = 2;
+        // 箱ごとの残り：GASが実数（remaining）を返した受付中の箱だけ。無い（古い返事）・売り切れ・0以下は何も出さない
+        function remainEl(it) {
+            if (it.soldout || typeof it.remaining !== 'number' || !isFinite(it.remaining) || it.remaining < 1) return null;
+            const r = Math.floor(it.remaining);
+            const el = document.createElement('span');
+            el.className = 'remain' + (r <= 3 ? ' low' : '');
+            el.textContent = r <= 3 ? '🔥 残りわずか！あと' + r + '箱' : '残り' + r + '箱';
+            return el;
+        }
         function applyInfo(info) {
             ITEMS = (info.items && info.items.length) ? info.items : [{ name: info.product || '', price: info.price || 0 }];
             PER_PERSON = info.perPerson || 2;
@@ -392,6 +410,7 @@
                     const line = document.createElement('span');
                     line.className = 'price-line';
                     line.textContent = it.name + '　' + yen(it.price) + (it.soldout ? '（売り切れ）' : '');
+                    const rm = remainEl(it); if (rm) line.appendChild(rm);
                     priceEl.appendChild(line);
                     if (it.desc) {
                         const ds = document.createElement('span');
@@ -402,7 +421,15 @@
                 });
             } else {
                 priceEl.textContent = ITEMS[0].price ? yen(ITEMS[0].price) : '';
+                const rm1 = remainEl(ITEMS[0]); if (rm1) priceEl.appendChild(rm1);
             }
+            // ページ上部の告知（静的な3箱）にも同じ残りを出す。箱の並びは GAS の items と同じ順（1つ目・2つ目・3つ目）。毎回いったん空にして付け直す
+            document.querySelectorAll('.ni-remain').forEach(slot => {
+                slot.textContent = '';
+                const it = ITEMS[Number(slot.dataset.box)];
+                const rm = it ? remainEl(it) : null;
+                if (rm) slot.appendChild(rm);
+            });
             $('v-limit').textContent = '限定販売';  // 合計数は見せず「限定販売」とだけ出す（2026-11-14）
             // 受付の時間は2段（1段目「開始 〜」・2段目「終了」）。それぞれ途中で切れないよう nowrap の span に入れる（2026-11-16）
             const per = $('v-period');
@@ -522,6 +549,9 @@
             const M_ITEMS = [{ name: '冬のPOL便（例）', price: 4000, desc: '焼き菓子＋パン8〜9個（パン・焼き菓子の種類はおまかせ）' }, { name: '冬のPOL便シュトレン入り（例）', price: 5200, desc: 'シュトレン＋パン5個（パンの種類はおまかせ）' }, { name: '冬のPOL便焼き菓子ギフト（例）', price: 3800, desc: 'シュトレン風パウンド1本＋焼き菓子5種' }];
             if (MQ.get('nodesc') === '1') M_ITEMS.forEach(it => delete it.desc);  // ?mihon=1&nodesc=1＝中身の無い返事（GAS @39 まで）の見え方
             if (THREE) M_ITEMS[2].soldout = true;
+            // 見本：?rem=7,2,0 で箱ごとの残りの見え方（左から1・2・3つ目。0は売り切れ扱い・空欄は残数なし）
+            const REM = MQ.get('rem');
+            if (REM !== null) REM.split(',').forEach((v, i) => { if (!M_ITEMS[i] || v === '') return; const n = Number(v); if (n <= 0) M_ITEMS[i].soldout = true; else M_ITEMS[i].remaining = n; });
             applyInfo({
                 items: ONE ? [M_ITEMS[0]] : M_ITEMS,
                 limit: 15, perPerson: 1, midFee: 200, farFee: 500, shipDate: '12月10〜12日に発送予定', payWhen: MQ.get('nopay') === '1' ? '' : '11月24日（火）〜11月27日（金）', start: '11月20日（金）20:00', end: '11月23日（月）23:59'
