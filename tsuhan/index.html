@@ -84,6 +84,8 @@
         /* 箱ごとの残り（GASの items[].remaining・実数のみ。無ければ出さない）。5箱以下は「残りわずか」で強調（2026-11-21） */
         .remain { display: inline-block; margin-left: 8px; padding: 1px 10px; border-radius: 50px; background: #FDF0F0; color: var(--color-raspberry); border: 1px solid var(--color-raspberry); font-size: 0.9rem; font-weight: 700; line-height: 1.6; white-space: nowrap; }
         .remain.low { background: var(--color-raspberry); color: #fff; animation: remain-pulse 1.6s ease-in-out infinite; }
+        .remain.sold { background: #8a8a8a; color: #fff; border-color: #8a8a8a; }
+        body[data-state="open"] .notice-items li.ni-sold .ni-name, body[data-state="open"] .notice-items li.ni-sold .ni-price, body[data-state="open"] .notice-items li.ni-sold .ni-desc { color: #aaa; }
         @keyframes remain-pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.06); } }
         @media (prefers-reduced-motion: reduce) { .remain.low { animation: none; } }
         .qty-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; flex-wrap: wrap; }
@@ -390,7 +392,8 @@
         let ITEMS = [], PER_PERSON = 2;
         // 箱ごとの残り：GASが実数（remaining）を返した受付中の箱だけ。無い（古い返事）・売り切れ・0以下は何も出さない
         function remainEl(it) {
-            if (it.soldout || typeof it.remaining !== 'number' || !isFinite(it.remaining) || it.remaining < 1) return null;
+            if (it.soldout) { const sd = document.createElement('span'); sd.className = 'remain sold'; sd.textContent = '売り切れ'; return sd; }  // 売り切れは残数が無くても出す（グレーのバッジ）
+            if ( typeof it.remaining !== 'number' || !isFinite(it.remaining) || it.remaining < 1) return null;
             const r = Math.floor(it.remaining);
             const el = document.createElement('span');
             el.className = 'remain' + (r <= 5 ? ' low' : '');
@@ -410,7 +413,6 @@
                     const line = document.createElement('span');
                     line.className = 'price-line';
                     line.textContent = it.name + '　' + yen(it.price) + (it.soldout ? '（売り切れ）' : '');
-                    const rm = remainEl(it); if (rm) line.appendChild(rm);
                     priceEl.appendChild(line);
                     if (it.desc) {
                         const ds = document.createElement('span');
@@ -421,12 +423,12 @@
                 });
             } else {
                 priceEl.textContent = ITEMS[0].price ? yen(ITEMS[0].price) : '';
-                const rm1 = remainEl(ITEMS[0]); if (rm1) priceEl.appendChild(rm1);
             }
             // ページ上部の告知（静的な3箱）にも同じ残りを出す。箱の並びは GAS の items と同じ順（1つ目・2つ目・3つ目）。毎回いったん空にして付け直す
             document.querySelectorAll('.ni-remain').forEach(slot => {
                 slot.textContent = '';
                 const it = ITEMS[Number(slot.dataset.box)];
+                if (slot.parentElement) slot.parentElement.classList.toggle('ni-sold', !!(it && it.soldout));
                 const rm = it ? remainEl(it) : null;
                 if (rm) slot.appendChild(rm);
             });
