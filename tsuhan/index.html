@@ -81,7 +81,7 @@
         .notice-items .ni-remain:empty { display: none; }
         body:not([data-state="open"]) .remain { display: none; } /* 残りは受付中だけ */
         .notice-items .ni-remain .remain { margin-left: 0; }
-        /* 箱ごとの残り（GASの items[].remaining・実数のみ。無ければ出さない）。3箱以下は「残りわずか」で強調（2026-11-21） */
+        /* 箱ごとの残り（GASの items[].remaining・実数のみ。無ければ出さない）。5箱以下は「残りわずか」で強調（2026-11-21） */
         .remain { display: inline-block; margin-left: 8px; padding: 1px 10px; border-radius: 50px; background: #FDF0F0; color: var(--color-raspberry); border: 1px solid var(--color-raspberry); font-size: 0.9rem; font-weight: 700; line-height: 1.6; white-space: nowrap; }
         .remain.low { background: var(--color-raspberry); color: #fff; animation: remain-pulse 1.6s ease-in-out infinite; }
         @keyframes remain-pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.06); } }
@@ -393,8 +393,8 @@
             if (it.soldout || typeof it.remaining !== 'number' || !isFinite(it.remaining) || it.remaining < 1) return null;
             const r = Math.floor(it.remaining);
             const el = document.createElement('span');
-            el.className = 'remain' + (r <= 3 ? ' low' : '');
-            el.textContent = r <= 3 ? '🔥 残りわずか！あと' + r + '箱' : '残り' + r + '箱';
+            el.className = 'remain' + (r <= 5 ? ' low' : '');
+            el.textContent = r <= 5 ? '🔥 残りわずか！あと' + r + '箱' : '残り' + r + '箱';
             return el;
         }
         function applyInfo(info) {
