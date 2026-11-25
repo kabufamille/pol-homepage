@@ -153,6 +153,16 @@
         body[data-state="loading"] #product-info, body[data-state="prep"] #product-info, body[data-state="error"] #product-info { display: none; }
         body[data-state="loading"] #closed-loading, body[data-state="prep"] #closed-prep, body[data-state="error"] #closed-error,
         body[data-state="before"] #closed-before, body[data-state="soldout"] #closed-soldout, body[data-state="ended"] #closed-ended { display: block; }
+        /* 受付終了のあいだ（2026-11-26 けんじ「受付感謝より上はもういらない」）：上の告知・「1. 今回の通販」の箱と受付の時間を出さず、
+           お礼をあいさつのすぐ下（白い枠の一番上）へ。表（送料〜返品・交換）と特商法の表記は振込・受け取りのために残す。
+           HTMLは消していない＝次の通販で GAS が state=open/before を返せば、そのまま元の並びに戻る */
+        body[data-state="ended"] .notice-figure,
+        body[data-state="ended"] #product-info > .survey-group-title,
+        body[data-state="ended"] #product-info > .product-card,
+        body[data-state="ended"] #product-info > .status-row { display: none; }
+        body[data-state="ended"] #order-form { display: flex; flex-direction: column; }
+        body[data-state="ended"] #closed-ended { order: -1; margin: 0 0 10px; }
+        body[data-state="ended"] #product-info .info-table { margin-top: 0; }
 
         /* LINE */
         .line-box { margin: 24px 0; padding: 18px; background: #FFF8F0; border: 1px solid #D4C5B0; border-radius: 8px; text-align: center; }
@@ -218,7 +228,7 @@
 
         <div style="text-align: center; margin-bottom: 32px;"><p style="font-family: var(--font-serif); font-size: 1.05rem; color: var(--color-primary); margin: 0;">POLの通販をご覧いただき、ありがとうございます。<span id="hurry-line"><br>数に限りがありますので、お早めにお申し込みください。</span></p></div>
 
-        <!-- 2026-11-13 12月の通販の告知。受付が終わったら外す -->
+        <!-- 2026-11-13 12月の通販の告知。受付終了（data-state="ended"）のあいだは CSS で隠す（2026-11-26）。次の通販では中身を書き替えて使う -->
         <div class="notice-figure">
             <p class="notice-lead">12月の通販「冬のPOL便」</p>
             <p class="notice-dates">受付 11月20日（金）20:00〜23日（月・祝）23:59<br>発送 12月10日〜12日</p>
