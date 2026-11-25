@@ -156,6 +156,8 @@
         /* 受付終了のあいだ（2026-11-26 けんじ「受付感謝より上はもういらない」）：上の告知・「1. 今回の通販」の箱と受付の時間を出さず、
            お礼をあいさつのすぐ下（白い枠の一番上）へ。表（送料〜返品・交換）と特商法の表記は振込・受け取りのために残す。
            HTMLは消していない＝次の通販で GAS が state=open/before を返せば、そのまま元の並びに戻る */
+        /* 読み込み中も告知を出さない（11/26 けんじ「表示に違和感」）＝受付状態が分かってから、受付前・受付中・売り切れの時だけ出る */
+        body[data-state="loading"] .notice-figure,
         body[data-state="ended"] .notice-figure,
         body[data-state="ended"] #product-info > .survey-group-title,
         body[data-state="ended"] #product-info > .product-card,
