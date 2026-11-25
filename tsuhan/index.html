@@ -163,6 +163,7 @@
         body[data-state="ended"] #order-form { display: flex; flex-direction: column; }
         body[data-state="ended"] #closed-ended { order: -1; margin: 0 0 10px; }
         body[data-state="ended"] #product-info .info-table { margin-top: 0; }
+        body[data-state="ended"] #product-info .info-table tr:has(#v-ship-fee) { display: none; } /* 11/26 けんじ「送料はもういらない」 */
 
         /* LINE */
         .line-box { margin: 24px 0; padding: 18px; background: #FFF8F0; border: 1px solid #D4C5B0; border-radius: 8px; text-align: center; }
